@@ -74,7 +74,29 @@ DB_NAME=myposcore
 JWT_SECRET=your-secret-key-change-this-in-production
 ```
 
-### 4. Jalankan Aplikasi
+### 4. Initialize Database
+
+Jalankan script untuk membuat super tenant:
+
+```bash
+psql -U postgres -d myposcore -f init_tenant.sql
+```
+
+### 5. (Optional) Load Demo Data
+
+Untuk testing, Anda bisa load demo tenant dengan 2 tipe bisnis:
+
+```bash
+psql -U postgres -d myposcore -f init_demo_tenants.sql
+```
+
+Demo data termasuk:
+- 🍽️ **Tenant Restoran** dengan 12 produk makanan & minuman
+- 👔 **Tenant Fashion Store** dengan 14 produk pakaian & aksesoris
+
+Lihat [DEMO_TENANTS.md](DEMO_TENANTS.md) untuk detail lengkap credential dan data.
+
+### 6. Jalankan Aplikasi
 
 ```bash
 go run main.go
@@ -187,30 +209,69 @@ Authorization: Bearer <token>
 ## Multi-Tenancy
 
 Aplikasi menggunakan tenant isolation dengan:
-- Setiap user terikat ke satu tenant
-- Username dan email unique per tenant
-- JWT token menyimpan tenant_id
+- Setiap user terikat ke satu tenant dan branch
+- Username unique secara global
+- JWT token menyimpan tenant_id dan user_id
 - Middleware memvalidasi akses berdasarkan tenant
+- Semua resource (products, dll) terisolasi per tenant
 
 ## Testing
 
-### Membuat Tenant (Manual - via psql)
+### Quick Test dengan Demo Data
 
-Sebelum register user, buat tenant terlebih dahulu:
+Setelah menjalankan `init_demo_tenants.sql`, Anda bisa langsung testing dengan credential berikut:
+
+**Restoran:**
+```bash
+# Login sebagai admin resto
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tenant_code": "resto01",
+    "branch_code": "resto01-pusat",
+    "username": "admin_resto",
+    "password": "demo123"
+  }'
+```
+
+**Fashion Store:**
+```bash
+# Login sebagai admin fashion
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tenant_code": "fashion01",
+    "branch_code": "fashion01-plaza",
+    "username": "admin_fashion",
+    "password": "demo123"
+  }'
+```
+
+Lihat [DEMO_TENANTS.md](DEMO_TENANTS.md) untuk daftar lengkap users, branches, dan products.
+
+### Membuat Tenant Manual (via psql)
+
+Jika ingin membuat tenant sendiri:
 
 ```sql
+-- Insert tenant
 INSERT INTO tenants (name, code, is_active, created_at, updated_at) 
 VALUES ('Tenant Demo', 'TENANT001', true, NOW(), NOW());
+
+-- Insert branch
+INSERT INTO branches (tenant_id, name, code, address, phone, is_active, created_at, updated_at)
+VALUES (1, 'Branch Demo', 'BRANCH001', 'Jl. Demo No. 1', '021-12345678', true, NOW(), NOW());
 ```
 
 ### Test dengan curl
 
 ```bash
-# Register
+# Register User
 curl -X POST http://localhost:8080/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "TENANT001",
+    "branch_code": "BRANCH001",
     "username": "testuser",
     "email": "test@example.com",
     "password": "password123",
@@ -222,12 +283,17 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "TENANT001",
+    "branch_code": "BRANCH001",
     "username": "testuser",
     "password": "password123"
   }'
 
 # Get Profile (ganti <TOKEN> dengan token dari login)
 curl -X GET http://localhost:8080/api/v1/profile \
+  -H "Authorization: Bearer <TOKEN>"
+
+# Get Products (tenant isolated)
+curl -X GET http://localhost:8080/api/v1/products \
   -H "Authorization: Bearer <TOKEN>"
 ```
 

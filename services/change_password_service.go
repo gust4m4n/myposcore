@@ -21,6 +21,11 @@ func NewChangePasswordService() *ChangePasswordService {
 }
 
 func (s *ChangePasswordService) ChangePassword(userID uint, req dto.ChangePasswordRequest) error {
+	// Validate new password length
+	if len(req.NewPassword) < 6 {
+		return errors.New("new password must be at least 6 characters")
+	}
+
 	// Get user from database
 	var user models.User
 	if err := s.db.First(&user, userID).Error; err != nil {

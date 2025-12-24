@@ -15,10 +15,19 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	loginHandler := handlers.NewLoginHandler(cfg)
 	profileHandler := handlers.NewProfileHandler(cfg)
 	changePasswordHandler := handlers.NewChangePasswordHandler(cfg)
+	productHandler := handlers.NewProductHandler(cfg)
+	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 
 	// Health check
 	router.GET("/health", healthHandler.Handle)
+
+	// Dev routes (public - no authentication required)
+	dev := router.Group("/dev")
+	{
+		dev.GET("/tenants", devHandler.ListTenants)
+		dev.GET("/tenants/:tenant_id/branches", devHandler.ListBranchesByTenant)
+	}
 
 	// API v1
 	v1 := router.Group("/api/v1")
@@ -37,6 +46,13 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		{
 			protected.GET("/profile", profileHandler.Handle)
 			protected.PUT("/change-password", changePasswordHandler.Handle)
+
+			// Product routes
+			protected.GET("/products", productHandler.ListProducts)
+			protected.GET("/products/:id", productHandler.GetProduct)
+			protected.POST("/products", productHandler.CreateProduct)
+			protected.PUT("/products/:id", productHandler.UpdateProduct)
+			protected.DELETE("/products/:id", productHandler.DeleteProduct)
 		}
 
 		// Superadmin routes
