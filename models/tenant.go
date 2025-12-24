@@ -1,0 +1,20 @@
+package models
+
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
+type Tenant struct {
+	ID        uint           `gorm:"primarykey" json:"id"`
+	Name      string         `gorm:"size:255;not null" json:"name"`
+	Code      string         `gorm:"size:50;uniqueIndex;not null" json:"code"`
+	IsActive  bool           `gorm:"default:true" json:"is_active"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+
+	// Relations
+	Users []User `gorm:"foreignKey:TenantID" json:"-"`
+}

@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "kill-port-8080",
+      "type": "shell",
+      "command": "lsof -ti:8080 | xargs kill -9 2>/dev/null || true",
+      "presentation": {
+        "reveal": "never",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
