@@ -2,11 +2,13 @@ package middleware
 
 import (
 	"myposcore/config"
+	"myposcore/models"
 	"myposcore/utils"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
@@ -34,9 +36,19 @@ func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 			return
 		}
 
+		// Get user's branch_id from database
+		db := c.MustGet("db").(*gorm.DB)
+		var user models.User
+		if err := db.Select("branch_id").Where("id = ?", claims.UserID).First(&user).Error; err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+			c.Abort()
+			return
+		}
+
 		// Set user info in context
 		c.Set("user_id", claims.UserID)
 		c.Set("tenant_id", claims.TenantID)
+		c.Set("branch_id", user.BranchID)
 		c.Set("username", claims.Username)
 		c.Next()
 	}

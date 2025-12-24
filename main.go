@@ -24,6 +24,12 @@ func main() {
 	// Setup Gin router
 	router := gin.Default()
 
+	// Add DB to context
+	router.Use(func(c *gin.Context) {
+		c.Set("db", database.DB)
+		c.Next()
+	})
+
 	// Setup routes
 	routes.SetupRoutes(router, cfg)
 

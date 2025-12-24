@@ -2,13 +2,19 @@ package routes
 
 import (
 	"myposcore/config"
+	"myposcore/database"
 	"myposcore/handlers"
 	"myposcore/middleware"
+	"myposcore/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRoutes(router *gin.Engine, cfg *config.Config) {
+	// Initialize services
+	orderService := services.NewOrderService(database.DB)
+	paymentService := services.NewPaymentService(database.DB)
+
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
 	registerHandler := handlers.NewRegisterHandler(cfg)
@@ -16,6 +22,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	profileHandler := handlers.NewProfileHandler(cfg)
 	changePasswordHandler := handlers.NewChangePasswordHandler(cfg)
 	productHandler := handlers.NewProductHandler(cfg)
+	orderHandler := handlers.NewOrderHandler(cfg, orderService)
+	paymentHandler := handlers.NewPaymentHandler(cfg, paymentService)
 	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 
@@ -54,6 +62,17 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.POST("/products", productHandler.CreateProduct)
 			protected.PUT("/products/:id", productHandler.UpdateProduct)
 			protected.DELETE("/products/:id", productHandler.DeleteProduct)
+
+			// Order routes
+			protected.POST("/orders", orderHandler.CreateOrder)
+			protected.GET("/orders", orderHandler.ListOrders)
+			protected.GET("/orders/:id", orderHandler.GetOrder)
+			protected.GET("/orders/:id/payments", paymentHandler.GetPaymentsByOrder)
+
+			// Payment routes
+			protected.POST("/payments", paymentHandler.CreatePayment)
+			protected.GET("/payments", paymentHandler.ListPayments)
+			protected.GET("/payments/:id", paymentHandler.GetPayment)
 		}
 
 		// Superadmin routes

@@ -40,6 +40,9 @@ func InitDB(cfg *config.Config) error {
 		&models.Branch{},
 		&models.User{},
 		&models.Product{},
+		&models.Order{},
+		&models.OrderItem{},
+		&models.Payment{},
 	)
 
 	if err != nil {
