@@ -62,6 +62,23 @@ func (s *RegisterService) Register(req dto.RegisterRequest) (*models.User, *mode
 		return nil, nil, err
 	}
 
+	// Set default role to 'user' if not provided
+	role := req.Role
+	if role == "" {
+		role = "user"
+	}
+
+	// Validate role
+	validRoles := map[string]bool{
+		"superadmin":  true,
+		"tenantadmin": true,
+		"branchadmin": true,
+		"user":        true,
+	}
+	if !validRoles[role] {
+		return nil, nil, errors.New("invalid role")
+	}
+
 	// Create user
 	user := models.User{
 		TenantID: tenant.ID,
@@ -70,6 +87,7 @@ func (s *RegisterService) Register(req dto.RegisterRequest) (*models.User, *mode
 		Email:    req.Email,
 		Password: hashedPassword,
 		FullName: req.FullName,
+		Role:     role,
 		IsActive: true,
 	}
 

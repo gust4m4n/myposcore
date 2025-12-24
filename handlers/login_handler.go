@@ -52,6 +52,7 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 			Username:   user.Username,
 			Email:      user.Email,
 			FullName:   user.FullName,
+			Role:       user.Role,
 			IsActive:   user.IsActive,
 		},
 	}

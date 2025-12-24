@@ -14,6 +14,7 @@ type User struct {
 	Email     string         `gorm:"size:255;not null" json:"email"`
 	Password  string         `gorm:"size:255;not null" json:"-"`
 	FullName  string         `gorm:"size:255" json:"full_name"`
+	Role      string         `gorm:"size:50;default:'user'" json:"role"`
 	IsActive  bool           `gorm:"default:true" json:"is_active"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

@@ -5,6 +5,7 @@ import (
 	"log"
 	"myposcore/config"
 	"myposcore/models"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,9 +17,15 @@ var DB *gorm.DB
 func InitDB(cfg *config.Config) error {
 	var err error
 
+	// Configure logger based on environment
+	logLevel := logger.Info
+	if os.Getenv("GIN_MODE") == "release" {
+		logLevel = logger.Warn
+	}
+
 	dsn := cfg.GetDSN()
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logLevel),
 	})
 
 	if err != nil {

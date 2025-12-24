@@ -7,6 +7,12 @@
 *.dll
 *.so
 *.dylib
+myposcore
+
+# Debug binaries
+__debug_bin*
+debug
+dlv-dap
 
 # Test binary, built with `go test -c`
 *.test
