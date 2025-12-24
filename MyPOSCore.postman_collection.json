@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "myposcore-api-collection",
 		"name": "MyPOSCore API",
-		"description": "Collection untuk MyPOSCore Backend API - Multi-tenant & Multi-branch POS System\n\nFeatures:\n- Multi-tenancy support dengan tenant code\n- Multi-branch per tenant dengan branch code\n- JWT authentication (24h expiry)\n- User management per branch\n\nArchitecture:\n- Separate services: RegisterService & LoginService\n- Clean architecture with handlers, services, models\n- PostgreSQL database with GORM\n- Gin web framework",
+		"description": "Collection untuk MyPOSCore Backend API - Multi-tenant & Multi-branch POS System\n\nFeatures:\n- Multi-tenancy support dengan tenant code\n- Multi-branch per tenant dengan branch code\n- JWT authentication (24h expiry)\n- User management per branch\n- Role-based access control (superadmin, tenantadmin, branchadmin, user)\n- Superadmin management panel\n\nArchitecture:\n- Separate services: RegisterService & LoginService\n- Clean architecture with handlers, services, models\n- PostgreSQL database with GORM\n- Gin web framework\n\nRoles:\n- superadmin: Full system access, manage tenants\n- tenantadmin: Manage tenant-level resources\n- branchadmin: Manage branch-level resources\n- user: Regular user access",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "myposcore"
 	},
@@ -270,6 +270,179 @@
 							"body": "{\n  \"user_id\": 1,\n  \"tenant_id\": 1,\n  \"username\": \"johndoe\"\n}"
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Superadmin",
+			"item": [
+				{
+					"name": "Dashboard",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"dashboard"
+							]
+						},
+						"description": "Dashboard untuk superadmin menampilkan total tenants, branches, dan users. Hanya bisa diakses oleh user dengan role superadmin."
+					},
+					"response": []
+				},
+				{
+					"name": "List Tenants",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tenants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tenants"
+							]
+						},
+						"description": "Mendapatkan list semua tenant yang ada di sistem. Hanya superadmin yang bisa akses."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tenant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"New Tenant\",\n  \"code\": \"TENANT002\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tenants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tenants"
+							]
+						},
+						"description": "Membuat tenant baru. Hanya superadmin yang bisa akses."
+					},
+					"response": []
+				},
+				{
+					"name": "List Branches by Tenant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/tenants/1/branches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"tenants",
+								"1",
+								"branches"
+							]
+						},
+						"description": "Mendapatkan list semua branch dari tenant tertentu. Ganti :tenant_id dengan ID tenant yang valid."
+					},
+					"response": []
+				},
+				{
+					"name": "List Users by Branch",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/superadmin/branches/1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"superadmin",
+								"branches",
+								"1",
+								"users"
+							]
+						},
+						"description": "Mendapatkan list semua user dari branch tertentu. Ganti :branch_id dengan ID branch yang valid."
+					},
+					"response": []
 				}
 			]
 		}

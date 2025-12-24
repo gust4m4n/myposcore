@@ -14,6 +14,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	registerHandler := handlers.NewRegisterHandler(cfg)
 	loginHandler := handlers.NewLoginHandler(cfg)
 	profileHandler := handlers.NewProfileHandler(cfg)
+	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 
 	// Health check
 	router.GET("/health", healthHandler.Handle)
@@ -34,6 +35,18 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		protected.Use(middleware.TenantMiddleware())
 		{
 			protected.GET("/profile", profileHandler.Handle)
+		}
+
+		// Superadmin routes
+		superadmin := v1.Group("/superadmin")
+		superadmin.Use(middleware.AuthMiddleware(cfg))
+		superadmin.Use(middleware.SuperAdminMiddleware(cfg))
+		{
+			superadmin.GET("/dashboard", superAdminHandler.Dashboard)
+			superadmin.GET("/tenants", superAdminHandler.ListTenants)
+			superadmin.POST("/tenants", superAdminHandler.CreateTenant)
+			superadmin.GET("/tenants/:tenant_id/branches", superAdminHandler.ListBranches)
+			superadmin.GET("/branches/:branch_id/users", superAdminHandler.ListUsers)
 		}
 	}
 }
