@@ -14,6 +14,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	registerHandler := handlers.NewRegisterHandler(cfg)
 	loginHandler := handlers.NewLoginHandler(cfg)
 	profileHandler := handlers.NewProfileHandler(cfg)
+	changePasswordHandler := handlers.NewChangePasswordHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 
 	// Health check
@@ -35,6 +36,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		protected.Use(middleware.TenantMiddleware())
 		{
 			protected.GET("/profile", profileHandler.Handle)
+			protected.PUT("/change-password", changePasswordHandler.Handle)
 		}
 
 		// Superadmin routes
