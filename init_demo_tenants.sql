@@ -30,6 +30,23 @@ BEGIN
     SELECT id INTO branch1_id FROM branches WHERE code = 'resto01-pusat';
     SELECT id INTO branch2_id FROM branches WHERE code = 'resto01-menteng';
     
+    -- Insert Default Tenant Admin (Username: tenantadmin, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE tenant_id = tenant1_id AND username = 'tenantadmin') THEN
+        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+        VALUES (tenant1_id, branch1_id, 'tenantadmin', 'tenantadmin@resto.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Tenant Admin Resto', 'tenantadmin', true, NOW(), NOW());
+    END IF;
+    
+    -- Insert Default Branch Admins for each branch (Username: branchadmin, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch1_id AND username = 'branchadmin') THEN
+        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+        VALUES (tenant1_id, branch1_id, 'branchadmin', 'branchadmin.pusat@resto.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Pusat', 'branchadmin', true, NOW(), NOW());
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch2_id AND username = 'branchadmin') THEN
+        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+        VALUES (tenant1_id, branch2_id, 'branchadmin', 'branchadmin.menteng@resto.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Menteng', 'branchadmin', true, NOW(), NOW());
+    END IF;
+    
     -- Insert Users for Restaurant (Password: demo123)
     IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin_resto') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
@@ -121,6 +138,23 @@ BEGIN
     -- Get Branch IDs
     SELECT id INTO branch3_id FROM branches WHERE code = 'fashion01-plaza';
     SELECT id INTO branch4_id FROM branches WHERE code = 'fashion01-grand';
+    
+    -- Insert Default Tenant Admin (Username: tenantadmin, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE tenant_id = tenant2_id AND username = 'tenantadmin') THEN
+        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+        VALUES (tenant2_id, branch3_id, 'tenantadmin', 'tenantadmin@fashion.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Tenant Admin Fashion', 'tenantadmin', true, NOW(), NOW());
+    END IF;
+    
+    -- Insert Default Branch Admins for each branch (Username: branchadmin, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch3_id AND username = 'branchadmin') THEN
+        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+        VALUES (tenant2_id, branch3_id, 'branchadmin', 'branchadmin.plaza@fashion.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Plaza', 'branchadmin', true, NOW(), NOW());
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch4_id AND username = 'branchadmin') THEN
+        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+        VALUES (tenant2_id, branch4_id, 'branchadmin', 'branchadmin.grand@fashion.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Grand', 'branchadmin', true, NOW(), NOW());
+    END IF;
     
     -- Insert Users for Fashion Store (Password: demo123)
     IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin_fashion') THEN

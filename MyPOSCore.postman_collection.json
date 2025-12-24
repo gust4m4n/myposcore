@@ -492,6 +492,227 @@
 			]
 		},
 		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"categories"
+							]
+						},
+						"description": "Get list of unique product categories for the authenticated tenant. Returns distinct category values from products table.\n\nExample Response:\n```json\n{\n  \"data\": [\n    \"Makanan Utama\",\n    \"Minuman\",\n    \"Snack & Dessert\"\n  ]\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "List Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "Minuman",
+									"description": "Filter products by category (exact match)",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "ayam",
+									"description": "Search keyword in product name, description, or SKU (case-insensitive)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get list of all products for the authenticated tenant. Products are automatically filtered by tenant_id from JWT token.\n\nQuery Parameters:\n- category (optional): Filter by exact category name\n- search (optional): Search keyword in name, description, or SKU (case-insensitive)\n- Both filters can be combined\n\nExamples:\n- All products: /products\n- By category: /products?category=Minuman\n- By search: /products?search=ayam\n- Combined: /products?category=Makanan%20Utama&search=goreng"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						},
+						"description": "Get product details by ID. Replace '1' with actual product ID. Product must belong to authenticated tenant."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"category\": \"Makanan Utama\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						},
+						"description": "Create a new product for the authenticated tenant. Product will be automatically assigned to tenant_id from JWT token."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"category\": \"Minuman\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						},
+						"description": "Update an existing product. Replace '1' with actual product ID. Product must belong to authenticated tenant. All fields are optional for update."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"1"
+							]
+						},
+						"description": "Delete a product (soft delete). Replace '1' with actual product ID. Product must belong to authenticated tenant."
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Superadmin",
 			"item": [
 				{

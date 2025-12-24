@@ -19,12 +19,37 @@ func NewProductService() *ProductService {
 	}
 }
 
-func (s *ProductService) ListProducts(tenantID uint) ([]models.Product, error) {
+func (s *ProductService) ListProducts(tenantID uint, category, search string) ([]models.Product, error) {
 	var products []models.Product
-	if err := s.db.Where("tenant_id = ?", tenantID).Order("created_at DESC").Find(&products).Error; err != nil {
+	query := s.db.Where("tenant_id = ?", tenantID)
+
+	// Filter by category if provided
+	if category != "" {
+		query = query.Where("category = ?", category)
+	}
+
+	// Search by name, description, or SKU if provided
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query = query.Where("name ILIKE ? OR description ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern, searchPattern)
+	}
+
+	if err := query.Order("created_at DESC").Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
+}
+
+// GetCategories returns list of unique categories for a tenant
+func (s *ProductService) GetCategories(tenantID uint) ([]string, error) {
+	var categories []string
+	if err := s.db.Model(&models.Product{}).
+		Where("tenant_id = ? AND category IS NOT NULL AND category != ''", tenantID).
+		Distinct("category").
+		Pluck("category", &categories).Error; err != nil {
+		return nil, err
+	}
+	return categories, nil
 }
 
 func (s *ProductService) GetProduct(id, tenantID uint) (*models.Product, error) {
@@ -43,6 +68,7 @@ func (s *ProductService) CreateProduct(tenantID uint, req dto.CreateProductReque
 		TenantID:    tenantID,
 		Name:        req.Name,
 		Description: req.Description,
+		Category:    req.Category,
 		SKU:         req.SKU,
 		Price:       req.Price,
 		Stock:       req.Stock,
@@ -69,6 +95,9 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 	}
 	if req.Description != "" {
 		updates["description"] = req.Description
+	}
+	if req.Category != "" {
+		updates["category"] = req.Category
 	}
 	if req.SKU != "" {
 		updates["sku"] = req.SKU

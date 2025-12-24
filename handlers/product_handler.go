@@ -24,10 +24,12 @@ func NewProductHandler(cfg *config.Config) *ProductHandler {
 
 // ListProducts godoc
 // @Summary List all products
-// @Description Get list of all products for the tenant
+// @Description Get list of all products for the tenant with optional filters
 // @Tags products
 // @Accept json
 // @Produce json
+// @Param category query string false "Filter by category"
+// @Param search query string false "Search by name, description, or SKU"
 // @Success 200 {object} []dto.ProductResponse
 // @Router /api/v1/products [get]
 func (h *ProductHandler) ListProducts(c *gin.Context) {
@@ -37,7 +39,11 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 		return
 	}
 
-	products, err := h.service.ListProducts(tenantID.(uint))
+	// Get query parameters
+	category := c.Query("category")
+	search := c.Query("search")
+
+	products, err := h.service.ListProducts(tenantID.(uint), category, search)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -50,6 +56,7 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 			TenantID:    product.TenantID,
 			Name:        product.Name,
 			Description: product.Description,
+			Category:    product.Category,
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
@@ -98,6 +105,7 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 			TenantID:    product.TenantID,
 			Name:        product.Name,
 			Description: product.Description,
+			Category:    product.Category,
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
@@ -143,6 +151,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 			TenantID:    product.TenantID,
 			Name:        product.Name,
 			Description: product.Description,
+			Category:    product.Category,
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
@@ -195,6 +204,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 			TenantID:    product.TenantID,
 			Name:        product.Name,
 			Description: product.Description,
+			Category:    product.Category,
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
@@ -234,5 +244,31 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Product deleted successfully",
+	})
+}
+
+// GetCategories godoc
+// @Summary Get product categories
+// @Description Get list of unique product categories for the tenant
+// @Tags products
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string][]string
+// @Router /api/v1/products/categories [get]
+func (h *ProductHandler) GetCategories(c *gin.Context) {
+	tenantID, exists := c.Get("tenant_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		return
+	}
+
+	categories, err := h.service.GetCategories(tenantID.(uint))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": categories,
 	})
 }

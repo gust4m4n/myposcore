@@ -48,6 +48,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.PUT("/change-password", changePasswordHandler.Handle)
 
 			// Product routes
+			protected.GET("/products/categories", productHandler.GetCategories)
 			protected.GET("/products", productHandler.ListProducts)
 			protected.GET("/products/:id", productHandler.GetProduct)
 			protected.POST("/products", productHandler.CreateProduct)
