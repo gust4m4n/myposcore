@@ -14,6 +14,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	// Initialize services
 	orderService := services.NewOrderService(database.DB)
 	paymentService := services.NewPaymentService(database.DB)
+	tncService := services.NewTnCService(database.DB)
+	faqService := services.NewFAQService(database.DB)
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
@@ -24,6 +26,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	productHandler := handlers.NewProductHandler(cfg)
 	orderHandler := handlers.NewOrderHandler(cfg, orderService)
 	paymentHandler := handlers.NewPaymentHandler(cfg, paymentService)
+	tncHandler := handlers.NewTnCHandler(tncService)
+	faqHandler := handlers.NewFAQHandler(faqService)
 	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 
@@ -45,6 +49,19 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		{
 			auth.POST("/register", registerHandler.Handle)
 			auth.POST("/login", loginHandler.Handle)
+		}
+
+		// Public routes
+		public := v1.Group("")
+		{
+			// TnC routes (public)
+			public.GET("/tnc/active", tncHandler.GetActiveTnC)
+			public.GET("/tnc", tncHandler.GetAllTnC)
+			public.GET("/tnc/:id", tncHandler.GetTnCByID)
+
+			// FAQ routes (public)
+			public.GET("/faq", faqHandler.GetAllFAQ)
+			public.GET("/faq/:id", faqHandler.GetFAQByID)
 		}
 
 		// Protected routes
@@ -85,6 +102,16 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			superadmin.POST("/tenants", superAdminHandler.CreateTenant)
 			superadmin.GET("/tenants/:tenant_id/branches", superAdminHandler.ListBranches)
 			superadmin.GET("/branches/:branch_id/users", superAdminHandler.ListUsers)
+
+			// TnC management routes (superadmin only)
+			superadmin.POST("/tnc", tncHandler.CreateTnC)
+			superadmin.PUT("/tnc/:id", tncHandler.UpdateTnC)
+			superadmin.DELETE("/tnc/:id", tncHandler.DeleteTnC)
+
+			// FAQ management routes (superadmin only)
+			superadmin.POST("/faq", faqHandler.CreateFAQ)
+			superadmin.PUT("/faq/:id", faqHandler.UpdateFAQ)
+			superadmin.DELETE("/faq/:id", faqHandler.DeleteFAQ)
 		}
 	}
 }
