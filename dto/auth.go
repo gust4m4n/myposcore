@@ -38,3 +38,34 @@ type ChangePasswordRequest struct {
 	OldPassword string `json:"old_password" binding:"required"`
 	NewPassword string `json:"new_password" binding:"required,min=6"`
 }
+
+type ProfileResponse struct {
+	User   UserDetailProfile   `json:"user"`
+	Tenant TenantDetailProfile `json:"tenant"`
+	Branch BranchDetailProfile `json:"branch"`
+}
+
+type UserDetailProfile struct {
+	ID       uint   `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	FullName string `json:"full_name"`
+	Role     string `json:"role"`
+	IsActive bool   `json:"is_active"`
+}
+
+type TenantDetailProfile struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Code     string `json:"code"`
+	IsActive bool   `json:"is_active"`
+}
+
+type BranchDetailProfile struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Code     string `json:"code"`
+	Address  string `json:"address"`
+	Phone    string `json:"phone"`
+	IsActive bool   `json:"is_active"`
+}
