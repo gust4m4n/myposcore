@@ -50,7 +50,7 @@ func (s *FAQService) GetAllFAQ(category *string, activeOnly bool) ([]models.FAQ,
 		query = query.Where("category = ?", *category)
 	}
 
-	if err := query.Order("`order` ASC, created_at DESC").Find(&faqs).Error; err != nil {
+	if err := query.Order("\"order\" ASC, created_at DESC").Find(&faqs).Error; err != nil {
 		return nil, err
 	}
 

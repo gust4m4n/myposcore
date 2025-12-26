@@ -1,7 +1,7 @@
 -- Dummy FAQ for MyPOS Core
 -- Run this after table creation
 
-INSERT INTO faqs (question, answer, category, `order`, is_active, created_at, updated_at) VALUES
+INSERT INTO faqs (question, answer, category, "order", is_active, created_at, updated_at) VALUES
 
 -- General Category
 ('Apa itu MyPOS Core?',

@@ -127,7 +127,7 @@ NOW()
 - No refunds for partial months
 
 ## Transaction Refunds
-- Customer refunds are handled at the merchant\'s discretion
+- Customer refunds are handled at the merchant''s discretion
 - Processing fees are non-refundable
 - Refunds typically process within 5-7 business days
 
