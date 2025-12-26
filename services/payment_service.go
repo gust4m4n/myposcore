@@ -98,17 +98,30 @@ func (s *PaymentService) GetPayment(paymentID, tenantID uint) (*models.Payment, 
 	return &payment, nil
 }
 
-func (s *PaymentService) ListPayments(tenantID, branchID uint) ([]models.Payment, error) {
+func (s *PaymentService) ListPayments(tenantID, branchID uint, page, perPage int) ([]models.Payment, int64, error) {
 	var payments []models.Payment
-	query := s.db.Joins("JOIN orders ON orders.id = payments.order_id").
+	var total int64
+
+	query := s.db.Model(&models.Payment{}).
+		Joins("JOIN orders ON orders.id = payments.order_id").
 		Where("orders.tenant_id = ?", tenantID)
 
 	if branchID > 0 {
 		query = query.Where("orders.branch_id = ?", branchID)
 	}
 
-	if err := query.Order("payments.created_at DESC").Find(&payments).Error; err != nil {
-		return nil, err
+	// Get total count
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
-	return payments, nil
+
+	// Get paginated results
+	offset := (page - 1) * perPage
+	if err := query.Order("payments.created_at DESC").
+		Offset(offset).
+		Limit(perPage).
+		Find(&payments).Error; err != nil {
+		return nil, 0, err
+	}
+	return payments, total, nil
 }

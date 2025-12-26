@@ -133,7 +133,18 @@ func (h *OrderHandler) ListOrders(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	branchID := c.GetUint("branch_id")
 
-	orders, err := h.orderService.ListOrders(tenantID, branchID)
+	// Parse pagination parameters
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	perPage, _ := strconv.Atoi(c.DefaultQuery("per_page", "32"))
+
+	if page < 1 {
+		page = 1
+	}
+	if perPage < 1 || perPage > 100 {
+		perPage = 32
+	}
+
+	orders, total, err := h.orderService.ListOrders(tenantID, branchID, page, perPage)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -171,5 +182,14 @@ func (h *OrderHandler) ListOrders(c *gin.Context) {
 		responses[i].OrderItems = orderItems
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": responses})
+	totalPages := (int(total) + perPage - 1) / perPage
+	c.JSON(http.StatusOK, gin.H{
+		"data": responses,
+		"pagination": gin.H{
+			"page":        page,
+			"per_page":    perPage,
+			"total":       total,
+			"total_pages": totalPages,
+		},
+	})
 }

@@ -137,20 +137,31 @@ func (s *OrderService) GetOrder(orderID, tenantID uint) (*models.Order, error) {
 	return &order, nil
 }
 
-func (s *OrderService) ListOrders(tenantID, branchID uint) ([]models.Order, error) {
+func (s *OrderService) ListOrders(tenantID, branchID uint, page, perPage int) ([]models.Order, int64, error) {
 	var orders []models.Order
-	query := s.db.Where("tenant_id = ?", tenantID)
+	var total int64
+
+	query := s.db.Model(&models.Order{}).Where("tenant_id = ?", tenantID)
 
 	if branchID > 0 {
 		query = query.Where("branch_id = ?", branchID)
 	}
 
+	// Get total count
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	// Get paginated results
+	offset := (page - 1) * perPage
 	if err := query.Preload("OrderItems.Product").
 		Order("created_at DESC").
+		Offset(offset).
+		Limit(perPage).
 		Find(&orders).Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return orders, nil
+	return orders, total, nil
 }
 
 func (s *OrderService) UpdateOrderStatus(orderID, tenantID uint, status string) error {

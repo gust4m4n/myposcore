@@ -116,7 +116,18 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	branchID := c.GetUint("branch_id")
 
-	payments, err := h.paymentService.ListPayments(tenantID, branchID)
+	// Parse pagination parameters
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	perPage, _ := strconv.Atoi(c.DefaultQuery("per_page", "32"))
+
+	if page < 1 {
+		page = 1
+	}
+	if perPage < 1 || perPage > 100 {
+		perPage = 32
+	}
+
+	payments, total, err := h.paymentService.ListPayments(tenantID, branchID, page, perPage)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -136,5 +147,14 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": responses})
+	totalPages := (int(total) + perPage - 1) / perPage
+	c.JSON(http.StatusOK, gin.H{
+		"data": responses,
+		"pagination": gin.H{
+			"page":        page,
+			"per_page":    perPage,
+			"total":       total,
+			"total_pages": totalPages,
+		},
+	})
 }
