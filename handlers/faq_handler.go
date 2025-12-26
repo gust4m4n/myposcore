@@ -27,7 +27,7 @@ func NewFAQHandler(faqService *services.FAQService) *FAQHandler {
 // @Accept json
 // @Produce json
 // @Param request body dto.CreateFAQRequest true "FAQ request"
-// @Success 201 {object} dto.FAQResponse
+// @Success 200 {object} dto.FAQResponse
 // @Router /api/faq [post]
 func (h *FAQHandler) CreateFAQ(c *gin.Context) {
 	var req dto.CreateFAQRequest
@@ -53,7 +53,7 @@ func (h *FAQHandler) CreateFAQ(c *gin.Context) {
 		UpdatedAt: faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
 	}
 
-	h.SuccessResponse(c, http.StatusCreated, "FAQ created successfully", response)
+	h.SuccessResponse(c, http.StatusOK, "FAQ created successfully", response)
 }
 
 // GetAllFAQ godoc

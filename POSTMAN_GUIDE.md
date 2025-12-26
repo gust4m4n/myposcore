@@ -110,7 +110,6 @@ VALUES ('Tenant Dua', 'TENANT002', true, NOW(), NOW());
 | Code | Deskripsi |
 |------|-----------|
 | 200 | OK - Request berhasil |
-| 201 | Created - User berhasil dibuat |
 | 400 | Bad Request - Validasi error atau data tidak valid |
 | 401 | Unauthorized - Token invalid atau expired |
 | 500 | Internal Server Error |

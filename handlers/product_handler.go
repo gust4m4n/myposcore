@@ -123,7 +123,7 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body dto.CreateProductRequest true "Product data"
-// @Success 201 {object} dto.ProductResponse
+// @Success 200 {object} dto.ProductResponse
 // @Router /api/v1/products [post]
 func (h *ProductHandler) CreateProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
@@ -144,7 +144,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Product created successfully",
 		"data": dto.ProductResponse{
 			ID:          product.ID,

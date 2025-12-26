@@ -66,7 +66,7 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body dto.CreateTenantRequest true "Tenant data"
-// @Success 201 {object} dto.TenantResponse
+// @Success 200 {object} dto.TenantResponse
 // @Router /superadmin/tenants [post]
 func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 	var req dto.CreateTenantRequest
@@ -81,7 +81,7 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Tenant created successfully",
 		"data": dto.TenantResponse{
 			ID:        tenant.ID,

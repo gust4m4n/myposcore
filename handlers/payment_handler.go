@@ -48,7 +48,7 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 		UpdatedAt:     payment.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"data": response})
+	c.JSON(http.StatusOK, gin.H{"data": response})
 }
 
 func (h *PaymentHandler) GetPayment(c *gin.Context) {

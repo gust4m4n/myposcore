@@ -27,7 +27,7 @@ func NewTnCHandler(tncService *services.TnCService) *TnCHandler {
 // @Accept json
 // @Produce json
 // @Param request body dto.CreateTnCRequest true "TnC request"
-// @Success 201 {object} dto.TnCResponse
+// @Success 200 {object} dto.TnCResponse
 // @Router /api/tnc [post]
 func (h *TnCHandler) CreateTnC(c *gin.Context) {
 	var req dto.CreateTnCRequest
@@ -52,7 +52,7 @@ func (h *TnCHandler) CreateTnC(c *gin.Context) {
 		UpdatedAt: tnc.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
 	}
 
-	h.SuccessResponse(c, http.StatusCreated, "Terms and conditions created successfully", response)
+	h.SuccessResponse(c, http.StatusOK, "Terms and conditions created successfully", response)
 }
 
 // GetActiveTnC godoc
