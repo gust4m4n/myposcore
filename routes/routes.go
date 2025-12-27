@@ -74,6 +74,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		protected.Use(middleware.TenantMiddleware())
 		{
 			protected.GET("/profile", profileHandler.Handle)
+			protected.PUT("/profile", profileHandler.UpdateProfile)
 			protected.PUT("/change-password", changePasswordHandler.Handle)
 
 			// Profile photo routes

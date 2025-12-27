@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"myposcore/config"
+	"myposcore/dto"
 	"myposcore/services"
 	"net/http"
 	"os"
@@ -39,6 +40,40 @@ func (h *ProfileHandler) Handle(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, profile)
+}
+
+// UpdateProfile godoc
+// @Summary Update user profile
+// @Description Update user profile information (email, full name, PIN)
+// @Tags profile
+// @Accept json
+// @Produce json
+// @Param request body dto.UpdateProfileRequest true "Update Profile Request"
+// @Success 200 {object} map[string]interface{}
+// @Router /api/v1/profile [put]
+func (h *ProfileHandler) UpdateProfile(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	var req dto.UpdateProfileRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	profile, err := h.authService.UpdateProfile(userID.(uint), req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Profile updated successfully",
+		"data":    profile,
+	})
 }
 
 // UploadProfilePhoto godoc

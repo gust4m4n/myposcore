@@ -180,3 +180,32 @@ func (s *AuthService) UpdateProfilePhoto(userID uint, imageURL string) (*dto.Pro
 
 	return s.GetProfile(userID)
 }
+
+func (s *AuthService) UpdateProfile(userID uint, req dto.UpdateProfileRequest) (*dto.ProfileResponse, error) {
+	var user models.User
+	if err := s.db.First(&user, userID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("user not found")
+		}
+		return nil, err
+	}
+
+	// Update fields
+	user.Email = req.Email
+	user.FullName = req.FullName
+
+	// Update PIN if provided
+	if req.PIN != "" {
+		hashedPIN, err := utils.HashPassword(req.PIN)
+		if err != nil {
+			return nil, errors.New("failed to hash PIN")
+		}
+		user.PIN = hashedPIN
+	}
+
+	if err := s.db.Save(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return s.GetProfile(userID)
+}

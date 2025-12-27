@@ -39,6 +39,12 @@ type ChangePasswordRequest struct {
 	NewPassword string `json:"new_password" binding:"required,min=6"`
 }
 
+type UpdateProfileRequest struct {
+	Email    string `json:"email" binding:"required,email"`
+	FullName string `json:"full_name" binding:"required"`
+	PIN      string `json:"pin"`
+}
+
 type ProfileResponse struct {
 	User   UserDetailProfile   `json:"user"`
 	Tenant TenantDetailProfile `json:"tenant"`
