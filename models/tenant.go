@@ -9,7 +9,7 @@ import (
 type Tenant struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
 	Name      string         `gorm:"size:255;not null" json:"name"`
-	Code      string         `gorm:"size:50;uniqueIndex;not null" json:"code"`
+	Code      string         `gorm:"size:50;uniqueIndex:idx_tenant_code;not null" json:"code"`
 	IsActive  bool           `gorm:"default:true" json:"is_active"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`

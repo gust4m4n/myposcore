@@ -39,6 +39,7 @@ func InitDB(cfg *config.Config) error {
 		&models.Tenant{},
 		&models.Branch{},
 		&models.User{},
+		&models.Category{},
 		&models.Product{},
 		&models.Order{},
 		&models.OrderItem{},

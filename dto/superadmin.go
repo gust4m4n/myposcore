@@ -38,7 +38,13 @@ type UserResponse struct {
 }
 
 type DashboardResponse struct {
-	TotalTenants  int64 `json:"total_tenants"`
-	TotalBranches int64 `json:"total_branches"`
-	TotalUsers    int64 `json:"total_users"`
+	TotalTenants         int64            `json:"total_tenants"`
+	TotalBranches        int64            `json:"total_branches"`
+	TotalUsers           int64            `json:"total_users"`
+	TotalProducts        int64            `json:"total_products"`
+	TotalOrders          int64            `json:"total_orders"`
+	TotalOrdersToday     int64            `json:"total_orders_today"`
+	TotalOrdersThisWeek  int64            `json:"total_orders_this_week"`
+	TotalOrdersThisMonth int64            `json:"total_orders_this_month"`
+	Tenants              []TenantResponse `json:"tenants"`
 }

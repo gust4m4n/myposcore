@@ -16,6 +16,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	paymentService := services.NewPaymentService(database.DB)
 	tncService := services.NewTnCService(database.DB)
 	faqService := services.NewFAQService(database.DB)
+	categoryService := services.NewCategoryService(database.DB)
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
@@ -23,11 +24,14 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	loginHandler := handlers.NewLoginHandler(cfg)
 	profileHandler := handlers.NewProfileHandler(cfg)
 	changePasswordHandler := handlers.NewChangePasswordHandler(cfg)
+	pinHandler := handlers.NewPINHandler(cfg)
 	productHandler := handlers.NewProductHandler(cfg)
 	orderHandler := handlers.NewOrderHandler(cfg, orderService)
 	paymentHandler := handlers.NewPaymentHandler(cfg, paymentService)
 	tncHandler := handlers.NewTnCHandler(tncService)
 	faqHandler := handlers.NewFAQHandler(faqService)
+	categoryHandler := handlers.NewCategoryHandler(categoryService)
+	userHandler := handlers.NewUserHandler(cfg)
 	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 
@@ -72,6 +76,18 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.GET("/profile", profileHandler.Handle)
 			protected.PUT("/change-password", changePasswordHandler.Handle)
 
+			// PIN routes
+			protected.POST("/pin/create", pinHandler.CreatePIN)
+			protected.PUT("/pin/change", pinHandler.ChangePIN)
+			protected.GET("/pin/check", pinHandler.CheckPIN)
+
+			// Category routes
+			protected.GET("/categories", categoryHandler.ListCategories)
+			protected.GET("/categories/:id", categoryHandler.GetCategory)
+			protected.POST("/categories", categoryHandler.CreateCategory)
+			protected.PUT("/categories/:id", categoryHandler.UpdateCategory)
+			protected.DELETE("/categories/:id", categoryHandler.DeleteCategory)
+
 			// Product routes
 			protected.GET("/products/categories", productHandler.GetCategories)
 			protected.GET("/products", productHandler.ListProducts)
@@ -90,6 +106,13 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.POST("/payments", paymentHandler.CreatePayment)
 			protected.GET("/payments", paymentHandler.ListPayments)
 			protected.GET("/payments/:id", paymentHandler.GetPayment)
+
+			// User routes
+			protected.GET("/users", userHandler.ListUsers)
+			protected.GET("/users/:id", userHandler.GetUser)
+			protected.POST("/users", userHandler.CreateUser)
+			protected.PUT("/users/:id", userHandler.UpdateUser)
+			protected.DELETE("/users/:id", userHandler.DeleteUser)
 		}
 
 		// Superadmin routes

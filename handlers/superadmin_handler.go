@@ -177,8 +177,9 @@ func (h *SuperAdminHandler) ListUsers(c *gin.Context) {
 }
 
 // Dashboard godoc
+// Dashboard godoc
 // @Summary Get dashboard statistics
-// @Description Get total counts of tenants, branches, and users (superadmin only)
+// @Description Get comprehensive dashboard with tenant list, counts of branches, users, products, and orders (all time, today, this week, this month)
 // @Tags superadmin
 // @Accept json
 // @Produce json
