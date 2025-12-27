@@ -132,7 +132,7 @@ func (s *ProductService) DeleteProduct(id, tenantID uint) error {
 	return nil
 }
 
-func (s *ProductService) UpdateProductPhoto(id, tenantID uint, imageURL string) (*models.Product, error) {
+func (s *ProductService) UpdateProductImage(id, tenantID uint, imageURL string) (*models.Product, error) {
 	product, err := s.GetProduct(id, tenantID)
 	if err != nil {
 		return nil, err

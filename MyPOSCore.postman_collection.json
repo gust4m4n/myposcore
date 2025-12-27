@@ -601,7 +601,7 @@
 					]
 				},
 				{
-					"name": "Upload Profile Photo",
+					"name": "Upload Profile Image",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -637,7 +637,7 @@
 								"photo"
 							]
 						},
-						"description": "Upload or update user profile photo. Maximum file size: 5MB. Allowed formats: jpg, jpeg, png, gif, webp."
+						"description": "Upload or update user profile image. Maximum file size: 5MB. Allowed formats: jpg, jpeg, png, gif, webp."
 					},
 					"response": [
 						{
@@ -689,7 +689,7 @@
 					]
 				},
 				{
-					"name": "Delete Profile Photo",
+					"name": "Delete Profile Image",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -715,7 +715,7 @@
 								"photo"
 							]
 						},
-						"description": "Delete user profile photo."
+						"description": "Delete user profile image."
 					},
 					"response": [
 						{

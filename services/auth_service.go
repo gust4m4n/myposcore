@@ -164,7 +164,7 @@ func (s *AuthService) GetProfile(userID uint) (*dto.ProfileResponse, error) {
 	return profile, nil
 }
 
-func (s *AuthService) UpdateProfilePhoto(userID uint, imageURL string) (*dto.ProfileResponse, error) {
+func (s *AuthService) UpdateProfileImage(userID uint, imageURL string) (*dto.ProfileResponse, error) {
 	var user models.User
 	if err := s.db.First(&user, userID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

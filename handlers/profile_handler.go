@@ -76,16 +76,16 @@ func (h *ProfileHandler) UpdateProfile(c *gin.Context) {
 	})
 }
 
-// UploadProfilePhoto godoc
-// @Summary Upload profile photo
-// @Description Upload or update user profile photo
+// UploadProfileImage godoc
+// @Summary Upload profile image
+// @Description Upload or update user profile image
 // @Tags profile
 // @Accept multipart/form-data
 // @Produce json
-// @Param photo formData file true "Profile photo file"
+// @Param image formData file true "Profile image file"
 // @Success 200 {object} map[string]interface{}
 // @Router /api/v1/profile/photo [post]
-func (h *ProfileHandler) UploadProfilePhoto(c *gin.Context) {
+func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
@@ -100,9 +100,9 @@ func (h *ProfileHandler) UploadProfilePhoto(c *gin.Context) {
 	}
 
 	// Get uploaded file
-	file, err := c.FormFile("photo")
+	file, err := c.FormFile("image")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Photo file is required"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
 		return
 	}
 
@@ -133,7 +133,7 @@ func (h *ProfileHandler) UploadProfilePhoto(c *gin.Context) {
 		return
 	}
 
-	// Delete old photo if exists
+	// Delete old image if exists
 	if profile.User.Image != "" {
 		oldPath := filepath.Join(uploadDir, filepath.Base(profile.User.Image))
 		os.Remove(oldPath) // Ignore error if file doesn't exist
@@ -149,9 +149,9 @@ func (h *ProfileHandler) UploadProfilePhoto(c *gin.Context) {
 		return
 	}
 
-	// Update user photo URL
-	photoURL := fmt.Sprintf("/uploads/profiles/%s", filename)
-	updatedProfile, err := h.authService.UpdateProfilePhoto(userID.(uint), photoURL)
+	// Update user image URL
+	imageURL := fmt.Sprintf("/uploads/profiles/%s", filename)
+	updatedProfile, err := h.authService.UpdateProfileImage(userID.(uint), imageURL)
 	if err != nil {
 		// Delete uploaded file if database update fails
 		os.Remove(filePath)
@@ -160,20 +160,20 @@ func (h *ProfileHandler) UploadProfilePhoto(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Photo uploaded successfully",
+		"message": "Image uploaded successfully",
 		"data":    updatedProfile,
 	})
 }
 
-// DeleteProfilePhoto godoc
-// @Summary Delete profile photo
-// @Description Delete user profile photo
+// DeleteProfileImage godoc
+// @Summary Delete profile image
+// @Description Delete user profile image
 // @Tags profile
 // @Accept json
 // @Produce json
-// @Success 200 {object} map[string]string
+// @Success 200 {object} map[string]interface{}
 // @Router /api/v1/profile/photo [delete]
-func (h *ProfileHandler) DeleteProfilePhoto(c *gin.Context) {
+func (h *ProfileHandler) DeleteProfileImage(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
@@ -187,7 +187,7 @@ func (h *ProfileHandler) DeleteProfilePhoto(c *gin.Context) {
 		return
 	}
 
-	// Delete photo file if exists
+	// Delete image file if exists
 	if profile.User.Image != "" {
 		uploadDir := "uploads/profiles"
 		filePath := filepath.Join(uploadDir, filepath.Base(profile.User.Image))
@@ -195,13 +195,13 @@ func (h *ProfileHandler) DeleteProfilePhoto(c *gin.Context) {
 	}
 
 	// Update database
-	_, err = h.authService.UpdateProfilePhoto(userID.(uint), "")
+	_, err = h.authService.UpdateProfileImage(userID.(uint), "")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Photo deleted successfully",
+		"message": "Image deleted successfully",
 	})
 }
