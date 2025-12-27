@@ -28,10 +28,10 @@ func (s *ProductService) ListProducts(tenantID uint, category, search string) ([
 		query = query.Where("category = ?", category)
 	}
 
-	// Search by name, description, or SKU if provided
+	// Search by name or SKU if provided
 	if search != "" {
 		searchPattern := "%" + search + "%"
-		query = query.Where("name ILIKE ? OR description ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern, searchPattern)
+		query = query.Where("name ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern)
 	}
 
 	if err := query.Order("created_at DESC").Find(&products).Error; err != nil {
@@ -130,4 +130,18 @@ func (s *ProductService) DeleteProduct(id, tenantID uint) error {
 	}
 
 	return nil
+}
+
+func (s *ProductService) UpdateProductPhoto(id, tenantID uint, imageURL string) (*models.Product, error) {
+	product, err := s.GetProduct(id, tenantID)
+	if err != nil {
+		return nil, err
+	}
+
+	product.Image = imageURL
+	if err := s.db.Save(product).Error; err != nil {
+		return nil, err
+	}
+
+	return product, nil
 }

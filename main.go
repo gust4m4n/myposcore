@@ -24,6 +24,9 @@ func main() {
 	// Setup Gin router
 	router := gin.Default()
 
+	// Serve static files (uploads)
+	router.Static("/uploads", "./uploads")
+
 	// Add DB to context
 	router.Use(func(c *gin.Context) {
 		c.Set("db", database.DB)

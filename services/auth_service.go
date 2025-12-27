@@ -141,6 +141,7 @@ func (s *AuthService) GetProfile(userID uint) (*dto.ProfileResponse, error) {
 			Username: user.Username,
 			Email:    user.Email,
 			FullName: user.FullName,
+			Image:    user.Image,
 			Role:     user.Role,
 			IsActive: user.IsActive,
 		},
@@ -161,4 +162,21 @@ func (s *AuthService) GetProfile(userID uint) (*dto.ProfileResponse, error) {
 	}
 
 	return profile, nil
+}
+
+func (s *AuthService) UpdateProfilePhoto(userID uint, imageURL string) (*dto.ProfileResponse, error) {
+	var user models.User
+	if err := s.db.First(&user, userID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("user not found")
+		}
+		return nil, err
+	}
+
+	user.Image = imageURL
+	if err := s.db.Save(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return s.GetProfile(userID)
 }

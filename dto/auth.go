@@ -50,6 +50,7 @@ type UserDetailProfile struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	FullName string `json:"full_name"`
+	Image    string `json:"image"`
 	Role     string `json:"role"`
 	IsActive bool   `json:"is_active"`
 }

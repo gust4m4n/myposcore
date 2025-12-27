@@ -76,6 +76,10 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.GET("/profile", profileHandler.Handle)
 			protected.PUT("/change-password", changePasswordHandler.Handle)
 
+			// Profile photo routes
+			protected.POST("/profile/photo", profileHandler.UploadProfilePhoto)
+			protected.DELETE("/profile/photo", profileHandler.DeleteProfilePhoto)
+
 			// PIN routes
 			protected.POST("/pin/create", pinHandler.CreatePIN)
 			protected.PUT("/pin/change", pinHandler.ChangePIN)
@@ -95,17 +99,14 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.POST("/products", productHandler.CreateProduct)
 			protected.PUT("/products/:id", productHandler.UpdateProduct)
 			protected.DELETE("/products/:id", productHandler.DeleteProduct)
+			protected.POST("/products/:id/photo", productHandler.UploadProductPhoto)
+			protected.DELETE("/products/:id/photo", productHandler.DeleteProductPhoto)
 
 			// Order routes
 			protected.POST("/orders", orderHandler.CreateOrder)
 			protected.GET("/orders", orderHandler.ListOrders)
 			protected.GET("/orders/:id", orderHandler.GetOrder)
 			protected.GET("/orders/:id/payments", paymentHandler.GetPaymentsByOrder)
-
-			// Payment routes
-			protected.POST("/payments", paymentHandler.CreatePayment)
-			protected.GET("/payments", paymentHandler.ListPayments)
-			protected.GET("/payments/:id", paymentHandler.GetPayment)
 
 			// User routes
 			protected.GET("/users", userHandler.ListUsers)

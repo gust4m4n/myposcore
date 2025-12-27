@@ -29,6 +29,7 @@ type ProductResponse struct {
 	SKU         string  `json:"sku"`
 	Price       float64 `json:"price"`
 	Stock       int     `json:"stock"`
+	Image       string  `json:"image"`
 	IsActive    bool    `json:"is_active"`
 	CreatedAt   string  `json:"created_at"`
 	UpdatedAt   string  `json:"updated_at"`

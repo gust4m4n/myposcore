@@ -1,11 +1,16 @@
 package handlers
 
 import (
+	"fmt"
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -60,6 +65,7 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
+			Image:       product.Image,
 			IsActive:    product.IsActive,
 			CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
 			UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
@@ -109,6 +115,7 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
+			Image:       product.Image,
 			IsActive:    product.IsActive,
 			CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
 			UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
@@ -155,6 +162,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
+			Image:       product.Image,
 			IsActive:    product.IsActive,
 			CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
 			UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
@@ -208,6 +216,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 			SKU:         product.SKU,
 			Price:       product.Price,
 			Stock:       product.Stock,
+			Image:       product.Image,
 			IsActive:    product.IsActive,
 			CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
 			UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
@@ -270,5 +279,162 @@ func (h *ProductHandler) GetCategories(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"data": categories,
+	})
+}
+
+// UploadProductPhoto godoc
+// @Summary Upload product photo
+// @Description Upload or update product photo
+// @Tags products
+// @Accept multipart/form-data
+// @Produce json
+// @Param id path int true "Product ID"
+// @Param photo formData file true "Product photo file"
+// @Success 200 {object} dto.ProductResponse
+// @Router /api/v1/products/{id}/photo [post]
+func (h *ProductHandler) UploadProductPhoto(c *gin.Context) {
+	tenantID, exists := c.Get("tenant_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		return
+	}
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	}
+
+	// Get product first to verify it exists and belongs to tenant
+	product, err := h.service.GetProduct(uint(id), tenantID.(uint))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
+
+	// Get uploaded file
+	file, err := c.FormFile("photo")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Photo file is required"})
+		return
+	}
+
+	// Validate file type
+	ext := strings.ToLower(filepath.Ext(file.Filename))
+	allowedExts := map[string]bool{
+		".jpg":  true,
+		".jpeg": true,
+		".png":  true,
+		".gif":  true,
+		".webp": true,
+	}
+	if !allowedExts[ext] {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+		return
+	}
+
+	// Validate file size (max 5MB)
+	if file.Size > 5*1024*1024 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+		return
+	}
+
+	// Create uploads directory if not exists
+	uploadDir := "uploads/products"
+	if err := os.MkdirAll(uploadDir, 0755); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+		return
+	}
+
+	// Delete old photo if exists
+	if product.Image != "" {
+		oldPath := filepath.Join(uploadDir, filepath.Base(product.Image))
+		os.Remove(oldPath) // Ignore error if file doesn't exist
+	}
+
+	// Generate unique filename
+	filename := fmt.Sprintf("product_%d_%d%s", product.ID, time.Now().Unix(), ext)
+	filePath := filepath.Join(uploadDir, filename)
+
+	// Save file
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save photo"})
+		return
+	}
+
+	// Update product photo URL
+	photoURL := fmt.Sprintf("/uploads/products/%s", filename)
+	updatedProduct, err := h.service.UpdateProductPhoto(uint(id), tenantID.(uint), photoURL)
+	if err != nil {
+		// Delete uploaded file if database update fails
+		os.Remove(filePath)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Photo uploaded successfully",
+		"data": dto.ProductResponse{
+			ID:          updatedProduct.ID,
+			TenantID:    updatedProduct.TenantID,
+			Name:        updatedProduct.Name,
+			Description: updatedProduct.Description,
+			Category:    updatedProduct.Category,
+			SKU:         updatedProduct.SKU,
+			Price:       updatedProduct.Price,
+			Stock:       updatedProduct.Stock,
+			Image:       updatedProduct.Image,
+			IsActive:    updatedProduct.IsActive,
+			CreatedAt:   updatedProduct.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:   updatedProduct.UpdatedAt.Format("2006-01-02 15:04:05"),
+		},
+	})
+}
+
+// DeleteProductPhoto godoc
+// @Summary Delete product photo
+// @Description Delete product photo
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 200 {object} map[string]string
+// @Router /api/v1/products/{id}/photo [delete]
+func (h *ProductHandler) DeleteProductPhoto(c *gin.Context) {
+	tenantID, exists := c.Get("tenant_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		return
+	}
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	}
+
+	// Get product first
+	product, err := h.service.GetProduct(uint(id), tenantID.(uint))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		return
+	}
+
+	// Delete photo file if exists
+	if product.Image != "" {
+		uploadDir := "uploads/products"
+		filePath := filepath.Join(uploadDir, filepath.Base(product.Image))
+		os.Remove(filePath) // Ignore error if file doesn't exist
+	}
+
+	// Update database
+	_, err = h.service.UpdateProductPhoto(uint(id), tenantID.(uint), "")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Photo deleted successfully",
 	})
 }
