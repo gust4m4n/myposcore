@@ -37,15 +37,48 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 		return
 	}
 
-	response := dto.PaymentResponse{
+	// Get payment with full details for receipt
+	payment, order, err := h.paymentService.GetPaymentWithDetails(payment.ID, tenantID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get payment details"})
+		return
+	}
+
+	// Build order items detail
+	orderItems := make([]dto.PaymentOrderItemDetail, len(order.OrderItems))
+	for i, item := range order.OrderItems {
+		orderItems[i] = dto.PaymentOrderItemDetail{
+			ProductName: item.Product.Name,
+			Quantity:    item.Quantity,
+			Price:       item.Price,
+			Subtotal:    item.Subtotal,
+		}
+	}
+
+	// Calculate change
+	change := req.Amount - order.TotalAmount
+	if change < 0 {
+		change = 0
+	}
+
+	response := dto.PaymentDetailResponse{
 		ID:            payment.ID,
 		OrderID:       payment.OrderID,
+		OrderNumber:   order.OrderNumber,
 		Amount:        payment.Amount,
 		PaymentMethod: payment.PaymentMethod,
 		Status:        payment.Status,
 		Notes:         payment.Notes,
+		Change:        change,
 		CreatedAt:     payment.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt:     payment.UpdatedAt.Format("2006-01-02 15:04:05"),
+		Order: dto.PaymentOrderDetail{
+			TotalAmount: order.TotalAmount,
+			Status:      order.Status,
+			Notes:       order.Notes,
+			OrderItems:  orderItems,
+			CashierName: order.User.FullName,
+			BranchName:  order.Branch.Name,
+		},
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": response})

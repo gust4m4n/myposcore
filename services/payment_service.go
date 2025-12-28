@@ -78,6 +78,27 @@ func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMeth
 	return payment, nil
 }
 
+func (s *PaymentService) GetPaymentWithDetails(paymentID, tenantID uint) (*models.Payment, *models.Order, error) {
+	var payment models.Payment
+	if err := s.db.Joins("JOIN orders ON orders.id = payments.order_id").
+		Where("payments.id = ? AND orders.tenant_id = ?", paymentID, tenantID).
+		First(&payment).Error; err != nil {
+		return nil, nil, err
+	}
+
+	// Get order with all related data
+	var order models.Order
+	if err := s.db.Preload("OrderItems.Product").
+		Preload("User").
+		Preload("Branch").
+		Where("id = ?", payment.OrderID).
+		First(&order).Error; err != nil {
+		return nil, nil, err
+	}
+
+	return &payment, &order, nil
+}
+
 func (s *PaymentService) GetPaymentsByOrder(orderID, tenantID uint) ([]models.Payment, error) {
 	var payments []models.Payment
 	if err := s.db.Joins("JOIN orders ON orders.id = payments.order_id").
