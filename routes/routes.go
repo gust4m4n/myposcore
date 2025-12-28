@@ -109,6 +109,11 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.GET("/orders/:id", orderHandler.GetOrder)
 			protected.GET("/orders/:id/payments", paymentHandler.GetPaymentsByOrder)
 
+			// Payment routes
+			protected.POST("/payments", paymentHandler.CreatePayment)
+			protected.GET("/payments", paymentHandler.ListPayments)
+			protected.GET("/payments/:id", paymentHandler.GetPayment)
+
 			// User routes
 			protected.GET("/users", userHandler.ListUsers)
 			protected.GET("/users/:id", userHandler.GetUser)
