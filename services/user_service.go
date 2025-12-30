@@ -22,7 +22,7 @@ func NewUserService() *UserService {
 
 func (s *UserService) ListUsers(tenantID uint) ([]models.User, error) {
 	var users []models.User
-	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("created_at DESC").Find(&users).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("full_name ASC").Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil

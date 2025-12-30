@@ -21,7 +21,7 @@ func NewSuperAdminBranchService() *SuperAdminBranchService {
 
 func (s *SuperAdminBranchService) ListBranchesByTenant(tenantID uint) ([]models.Branch, error) {
 	var branches []models.Branch
-	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("created_at DESC").Find(&branches).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("name ASC").Find(&branches).Error; err != nil {
 		return nil, err
 	}
 	return branches, nil

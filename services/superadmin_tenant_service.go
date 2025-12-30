@@ -21,7 +21,7 @@ func NewSuperAdminTenantService() *SuperAdminTenantService {
 
 func (s *SuperAdminTenantService) ListTenants() ([]models.Tenant, error) {
 	var tenants []models.Tenant
-	if err := s.db.Preload("Creator").Preload("Updater").Order("created_at DESC").Find(&tenants).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Order("name ASC").Find(&tenants).Error; err != nil {
 		return nil, err
 	}
 	return tenants, nil

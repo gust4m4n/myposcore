@@ -34,7 +34,7 @@ func (s *ProductService) ListProducts(tenantID uint, category, search string) ([
 		query = query.Where("name ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern)
 	}
 
-	if err := query.Order("created_at DESC").Find(&products).Error; err != nil {
+	if err := query.Order("name ASC").Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
