@@ -16,4 +16,14 @@ type FAQ struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+
+	// Audit tracking
+	CreatedBy *uint `gorm:"index" json:"created_by,omitempty"`
+	UpdatedBy *uint `gorm:"index" json:"updated_by,omitempty"`
+	DeletedBy *uint `gorm:"index" json:"deleted_by,omitempty"`
+
+	// Relations for audit tracking
+	Creator *User `gorm:"foreignKey:CreatedBy;references:ID" json:"-"`
+	Updater *User `gorm:"foreignKey:UpdatedBy;references:ID" json:"-"`
+	Deleter *User `gorm:"foreignKey:DeletedBy;references:ID" json:"-"`
 }

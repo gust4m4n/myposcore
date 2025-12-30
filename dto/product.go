@@ -8,6 +8,7 @@ type CreateProductRequest struct {
 	Price       float64 `json:"price" binding:"required,min=0"`
 	Stock       int     `json:"stock" binding:"min=0"`
 	IsActive    bool    `json:"is_active"`
+	CreatedBy   *uint   `json:"-"` // Set internally, not from request
 }
 
 type UpdateProductRequest struct {
@@ -18,19 +19,24 @@ type UpdateProductRequest struct {
 	Price       float64 `json:"price" binding:"omitempty,min=0"`
 	Stock       int     `json:"stock" binding:"omitempty,min=0"`
 	IsActive    *bool   `json:"is_active"`
+	UpdatedBy   *uint   `json:"-"` // Set internally, not from request
 }
 
 type ProductResponse struct {
-	ID          uint    `json:"id"`
-	TenantID    uint    `json:"tenant_id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Category    string  `json:"category"`
-	SKU         string  `json:"sku"`
-	Price       float64 `json:"price"`
-	Stock       int     `json:"stock"`
-	Image       string  `json:"image"`
-	IsActive    bool    `json:"is_active"`
-	CreatedAt   string  `json:"created_at"`
-	UpdatedAt   string  `json:"updated_at"`
+	ID            uint    `json:"id"`
+	TenantID      uint    `json:"tenant_id"`
+	Name          string  `json:"name"`
+	Description   string  `json:"description"`
+	Category      string  `json:"category"`
+	SKU           string  `json:"sku"`
+	Price         float64 `json:"price"`
+	Stock         int     `json:"stock"`
+	Image         string  `json:"image"`
+	IsActive      bool    `json:"is_active"`
+	CreatedAt     string  `json:"created_at"`
+	UpdatedAt     string  `json:"updated_at"`
+	CreatedBy     *uint   `json:"created_by,omitempty"`
+	CreatedByName *string `json:"created_by_name,omitempty"`
+	UpdatedBy     *uint   `json:"updated_by,omitempty"`
+	UpdatedByName *string `json:"updated_by_name,omitempty"`
 }

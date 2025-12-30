@@ -15,7 +15,7 @@ func NewPaymentService(db *gorm.DB) *PaymentService {
 	return &PaymentService{db: db}
 }
 
-func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMethod, notes string, tenantID uint) (*models.Payment, error) {
+func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMethod, notes string, tenantID uint, createdBy *uint) (*models.Payment, error) {
 	// Verify order exists and belongs to tenant
 	var order models.Order
 	if err := s.db.Where("id = ? AND tenant_id = ?", orderID, tenantID).First(&order).Error; err != nil {
@@ -55,6 +55,7 @@ func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMeth
 		PaymentMethod: paymentMethod,
 		Status:        "completed",
 		Notes:         notes,
+		CreatedBy:     createdBy,
 	}
 
 	if err := tx.Create(payment).Error; err != nil {
@@ -111,7 +112,7 @@ func (s *PaymentService) GetPaymentsByOrder(orderID, tenantID uint) ([]models.Pa
 
 func (s *PaymentService) GetPayment(paymentID, tenantID uint) (*models.Payment, error) {
 	var payment models.Payment
-	if err := s.db.Joins("JOIN orders ON orders.id = payments.order_id").
+	if err := s.db.Preload("Creator").Preload("Updater").Joins("JOIN orders ON orders.id = payments.order_id").
 		Where("payments.id = ? AND orders.tenant_id = ?", paymentID, tenantID).
 		First(&payment).Error; err != nil {
 		return nil, err
@@ -138,7 +139,7 @@ func (s *PaymentService) ListPayments(tenantID, branchID uint, page, perPage int
 
 	// Get paginated results
 	offset := (page - 1) * perPage
-	if err := query.Order("payments.created_at DESC").
+	if err := query.Preload("Creator").Preload("Updater").Order("payments.created_at DESC").
 		Offset(offset).
 		Limit(perPage).
 		Find(&payments).Error; err != nil {

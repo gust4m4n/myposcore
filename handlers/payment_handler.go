@@ -31,7 +31,11 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 
 	tenantID := c.GetUint("tenant_id")
 
-	payment, err := h.paymentService.CreatePayment(req.OrderID, req.Amount, req.PaymentMethod, req.Notes, tenantID)
+	// Set created_by to current user
+	currentUserID := c.GetUint("user_id")
+	req.CreatedBy = &currentUserID
+
+	payment, err := h.paymentService.CreatePayment(req.OrderID, req.Amount, req.PaymentMethod, req.Notes, tenantID, req.CreatedBy)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -99,6 +103,16 @@ func (h *PaymentHandler) GetPayment(c *gin.Context) {
 		return
 	}
 
+	var createdByName, updatedByName *string
+	if payment.Creator != nil {
+		name := payment.Creator.FullName
+		createdByName = &name
+	}
+	if payment.Updater != nil {
+		name := payment.Updater.FullName
+		updatedByName = &name
+	}
+
 	response := dto.PaymentResponse{
 		ID:            payment.ID,
 		OrderID:       payment.OrderID,
@@ -108,6 +122,10 @@ func (h *PaymentHandler) GetPayment(c *gin.Context) {
 		Notes:         payment.Notes,
 		CreatedAt:     payment.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt:     payment.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:     payment.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     payment.UpdatedBy,
+		UpdatedByName: updatedByName,
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": response})
@@ -168,6 +186,16 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 
 	responses := make([]dto.PaymentResponse, len(payments))
 	for i, payment := range payments {
+		var createdByName, updatedByName *string
+		if payment.Creator != nil {
+			name := payment.Creator.FullName
+			createdByName = &name
+		}
+		if payment.Updater != nil {
+			name := payment.Updater.FullName
+			updatedByName = &name
+		}
+
 		responses[i] = dto.PaymentResponse{
 			ID:            payment.ID,
 			OrderID:       payment.OrderID,
@@ -177,6 +205,10 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 			Notes:         payment.Notes,
 			CreatedAt:     payment.CreatedAt.Format("2006-01-02 15:04:05"),
 			UpdatedAt:     payment.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     payment.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     payment.UpdatedBy,
+			UpdatedByName: updatedByName,
 		}
 	}
 

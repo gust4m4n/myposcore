@@ -17,7 +17,7 @@ func NewOrderService(db *gorm.DB) *OrderService {
 	return &OrderService{db: db}
 }
 
-func (s *OrderService) CreateOrder(tenantID, branchID, userID uint, items []struct {
+func (s *OrderService) CreateOrder(tenantID, branchID, userID uint, createdBy *uint, items []struct {
 	ProductID uint
 	Quantity  int
 }) (*models.Order, error) {
@@ -63,6 +63,7 @@ func (s *OrderService) CreateOrder(tenantID, branchID, userID uint, items []stru
 		UserID:      userID,
 		OrderNumber: orderNumber,
 		Status:      "pending",
+		CreatedBy:   createdBy,
 	}
 
 	if err := tx.Create(order).Error; err != nil {
@@ -129,7 +130,7 @@ func (s *OrderService) CreateOrder(tenantID, branchID, userID uint, items []stru
 
 func (s *OrderService) GetOrder(orderID, tenantID uint) (*models.Order, error) {
 	var order models.Order
-	if err := s.db.Preload("OrderItems.Product").
+	if err := s.db.Preload("Creator").Preload("Updater").Preload("OrderItems.Product").
 		Where("id = ? AND tenant_id = ?", orderID, tenantID).
 		First(&order).Error; err != nil {
 		return nil, err
@@ -154,7 +155,7 @@ func (s *OrderService) ListOrders(tenantID, branchID uint, page, perPage int) ([
 
 	// Get paginated results
 	offset := (page - 1) * perPage
-	if err := query.Preload("OrderItems.Product").
+	if err := query.Preload("Creator").Preload("Updater").Preload("OrderItems.Product").
 		Order("created_at DESC").
 		Offset(offset).
 		Limit(perPage).

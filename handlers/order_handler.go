@@ -44,7 +44,11 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
 		items[i].Quantity = item.Quantity
 	}
 
-	order, err := h.orderService.CreateOrder(tenantID, branchID, userID, items)
+	// Set created_by to current user
+	currentUserID := c.GetUint("user_id")
+	req.CreatedBy = &currentUserID
+
+	order, err := h.orderService.CreateOrder(tenantID, branchID, userID, req.CreatedBy, items)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -97,18 +101,32 @@ func (h *OrderHandler) GetOrder(c *gin.Context) {
 		return
 	}
 
+	var createdByName, updatedByName *string
+	if order.Creator != nil {
+		name := order.Creator.FullName
+		createdByName = &name
+	}
+	if order.Updater != nil {
+		name := order.Updater.FullName
+		updatedByName = &name
+	}
+
 	// Build response
 	response := dto.OrderResponse{
-		ID:          order.ID,
-		TenantID:    order.TenantID,
-		BranchID:    order.BranchID,
-		UserID:      order.UserID,
-		OrderNumber: order.OrderNumber,
-		TotalAmount: order.TotalAmount,
-		Status:      order.Status,
-		Notes:       order.Notes,
-		CreatedAt:   order.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt:   order.UpdatedAt.Format("2006-01-02 15:04:05"),
+		ID:            order.ID,
+		TenantID:      order.TenantID,
+		BranchID:      order.BranchID,
+		UserID:        order.UserID,
+		OrderNumber:   order.OrderNumber,
+		TotalAmount:   order.TotalAmount,
+		Status:        order.Status,
+		Notes:         order.Notes,
+		CreatedAt:     order.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:     order.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:     order.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     order.UpdatedBy,
+		UpdatedByName: updatedByName,
 	}
 
 	// Add order items
@@ -153,17 +171,31 @@ func (h *OrderHandler) ListOrders(c *gin.Context) {
 	// Build response
 	responses := make([]dto.OrderResponse, len(orders))
 	for i, order := range orders {
+		var createdByName, updatedByName *string
+		if order.Creator != nil {
+			name := order.Creator.FullName
+			createdByName = &name
+		}
+		if order.Updater != nil {
+			name := order.Updater.FullName
+			updatedByName = &name
+		}
+
 		responses[i] = dto.OrderResponse{
-			ID:          order.ID,
-			TenantID:    order.TenantID,
-			BranchID:    order.BranchID,
-			UserID:      order.UserID,
-			OrderNumber: order.OrderNumber,
-			TotalAmount: order.TotalAmount,
-			Status:      order.Status,
-			Notes:       order.Notes,
-			CreatedAt:   order.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   order.UpdatedAt.Format("2006-01-02 15:04:05"),
+			ID:            order.ID,
+			TenantID:      order.TenantID,
+			BranchID:      order.BranchID,
+			UserID:        order.UserID,
+			OrderNumber:   order.OrderNumber,
+			TotalAmount:   order.TotalAmount,
+			Status:        order.Status,
+			Notes:         order.Notes,
+			CreatedAt:     order.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:     order.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     order.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     order.UpdatedBy,
+			UpdatedByName: updatedByName,
 		}
 
 		// Add order items

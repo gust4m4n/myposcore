@@ -21,7 +21,7 @@ func NewProductService() *ProductService {
 
 func (s *ProductService) ListProducts(tenantID uint, category, search string) ([]models.Product, error) {
 	var products []models.Product
-	query := s.db.Where("tenant_id = ?", tenantID)
+	query := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
 
 	// Filter by category if provided
 	if category != "" {
@@ -54,7 +54,7 @@ func (s *ProductService) GetCategories(tenantID uint) ([]string, error) {
 
 func (s *ProductService) GetProduct(id, tenantID uint) (*models.Product, error) {
 	var product models.Product
-	if err := s.db.Where("id = ? AND tenant_id = ?", id, tenantID).First(&product).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Where("id = ? AND tenant_id = ?", id, tenantID).First(&product).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("product not found")
 		}
@@ -73,6 +73,7 @@ func (s *ProductService) CreateProduct(tenantID uint, req dto.CreateProductReque
 		Price:       req.Price,
 		Stock:       req.Stock,
 		IsActive:    req.IsActive,
+		CreatedBy:   req.CreatedBy,
 	}
 
 	if err := s.db.Create(&product).Error; err != nil {
@@ -112,6 +113,11 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 		updates["is_active"] = *req.IsActive
 	}
 
+	// Set updated_by
+	if req.UpdatedBy != nil {
+		updates["updated_by"] = *req.UpdatedBy
+	}
+
 	if err := s.db.Model(product).Updates(updates).Error; err != nil {
 		return nil, err
 	}
@@ -119,10 +125,18 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 	return product, nil
 }
 
-func (s *ProductService) DeleteProduct(id, tenantID uint) error {
+func (s *ProductService) DeleteProduct(id, tenantID uint, deletedBy *uint) error {
 	product, err := s.GetProduct(id, tenantID)
 	if err != nil {
 		return err
+	}
+
+	// Set deleted_by before soft delete
+	if deletedBy != nil {
+		product.DeletedBy = deletedBy
+		if err := s.db.Save(product).Error; err != nil {
+			return err
+		}
 	}
 
 	if err := s.db.Delete(product).Error; err != nil {

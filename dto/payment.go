@@ -5,6 +5,7 @@ type CreatePaymentRequest struct {
 	Amount        float64 `json:"amount" binding:"required,gt=0"`
 	PaymentMethod string  `json:"payment_method" binding:"required,oneof=cash card transfer qris"`
 	Notes         string  `json:"notes"`
+	CreatedBy     *uint   `json:"-"` // Set internally, not from request
 }
 
 type PaymentResponse struct {
@@ -16,6 +17,10 @@ type PaymentResponse struct {
 	Notes         string  `json:"notes"`
 	CreatedAt     string  `json:"created_at"`
 	UpdatedAt     string  `json:"updated_at"`
+	CreatedBy     *uint   `json:"created_by,omitempty"`
+	CreatedByName *string `json:"created_by_name,omitempty"`
+	UpdatedBy     *uint   `json:"updated_by,omitempty"`
+	UpdatedByName *string `json:"updated_by_name,omitempty"`
 }
 
 type PaymentDetailResponse struct {

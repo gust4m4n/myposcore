@@ -14,13 +14,14 @@ func NewFAQService(db *gorm.DB) *FAQService {
 	return &FAQService{db: db}
 }
 
-func (s *FAQService) CreateFAQ(question, answer, category string, order int) (*models.FAQ, error) {
+func (s *FAQService) CreateFAQ(question, answer, category string, order int, createdBy *uint) (*models.FAQ, error) {
 	faq := &models.FAQ{
-		Question: question,
-		Answer:   answer,
-		Category: category,
-		Order:    order,
-		IsActive: true,
+		Question:  question,
+		Answer:    answer,
+		Category:  category,
+		Order:     order,
+		IsActive:  true,
+		CreatedBy: createdBy,
 	}
 
 	if err := s.db.Create(faq).Error; err != nil {
@@ -32,7 +33,7 @@ func (s *FAQService) CreateFAQ(question, answer, category string, order int) (*m
 
 func (s *FAQService) GetFAQByID(id uint) (*models.FAQ, error) {
 	var faq models.FAQ
-	if err := s.db.First(&faq, id).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").First(&faq, id).Error; err != nil {
 		return nil, err
 	}
 	return &faq, nil
@@ -40,7 +41,7 @@ func (s *FAQService) GetFAQByID(id uint) (*models.FAQ, error) {
 
 func (s *FAQService) GetAllFAQ(category *string, activeOnly bool) ([]models.FAQ, error) {
 	var faqs []models.FAQ
-	query := s.db
+	query := s.db.Preload("Creator").Preload("Updater")
 
 	if activeOnly {
 		query = query.Where("is_active = ?", true)
@@ -57,7 +58,7 @@ func (s *FAQService) GetAllFAQ(category *string, activeOnly bool) ([]models.FAQ,
 	return faqs, nil
 }
 
-func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, order *int, isActive *bool) (*models.FAQ, error) {
+func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, order *int, isActive *bool, updatedBy *uint) (*models.FAQ, error) {
 	var faq models.FAQ
 	if err := s.db.First(&faq, id).Error; err != nil {
 		return nil, err
@@ -79,6 +80,9 @@ func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, orde
 	if isActive != nil {
 		updates["is_active"] = *isActive
 	}
+	if updatedBy != nil {
+		updates["updated_by"] = *updatedBy
+	}
 
 	if err := s.db.Model(&faq).Updates(updates).Error; err != nil {
 		return nil, err
@@ -87,6 +91,11 @@ func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, orde
 	return &faq, nil
 }
 
-func (s *FAQService) DeleteFAQ(id uint) error {
+func (s *FAQService) DeleteFAQ(id uint, deletedBy *uint) error {
+	if deletedBy != nil {
+		if err := s.db.Model(&models.FAQ{}).Where("id = ?", id).Update("deleted_by", deletedBy).Error; err != nil {
+			return err
+		}
+	}
 	return s.db.Delete(&models.FAQ{}, id).Error
 }

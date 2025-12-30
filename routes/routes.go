@@ -24,6 +24,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	loginHandler := handlers.NewLoginHandler(cfg)
 	profileHandler := handlers.NewProfileHandler(cfg)
 	changePasswordHandler := handlers.NewChangePasswordHandler(cfg)
+	adminChangePasswordHandler := handlers.NewAdminChangePasswordHandler(cfg)
+	adminChangePINHandler := handlers.NewAdminChangePINHandler(cfg)
 	pinHandler := handlers.NewPINHandler(cfg)
 	productHandler := handlers.NewProductHandler(cfg)
 	orderHandler := handlers.NewOrderHandler(cfg, orderService)
@@ -77,6 +79,9 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.PUT("/profile", profileHandler.UpdateProfile)
 			protected.PUT("/change-password", changePasswordHandler.Handle)
 
+			// Admin change password (for higher roles to change lower roles password)
+			protected.PUT("/admin/change-password", adminChangePasswordHandler.Handle)
+
 			// Profile image routes
 			protected.POST("/profile/photo", profileHandler.UploadProfileImage)
 			protected.DELETE("/profile/photo", profileHandler.DeleteProfileImage)
@@ -85,6 +90,9 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.POST("/pin/create", pinHandler.CreatePIN)
 			protected.PUT("/pin/change", pinHandler.ChangePIN)
 			protected.GET("/pin/check", pinHandler.CheckPIN)
+
+			// Admin change PIN (for higher roles to change lower roles PIN)
+			protected.PUT("/admin/change-pin", adminChangePINHandler.Handle)
 
 			// Category routes
 			protected.GET("/categories", categoryHandler.ListCategories)

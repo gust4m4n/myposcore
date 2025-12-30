@@ -41,22 +41,37 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		return
 	}
 
-	category, err := h.categoryService.CreateCategory(tenantID.(uint), req.Name, req.Description)
+	// Get current user ID from context
+	currentUserID := c.GetUint("user_id")
+	req.CreatedBy = &currentUserID
+
+	category, err := h.categoryService.CreateCategory(tenantID.(uint), req.Name, req.Description, req.CreatedBy)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	// Reload to get audit info
+	category, _ = h.categoryService.GetCategory(category.ID, tenantID.(uint))
+
+	var createdByName *string
+	if category.Creator != nil {
+		name := category.Creator.FullName
+		createdByName = &name
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Category created successfully",
 		"data": dto.CategoryResponse{
-			ID:          category.ID,
-			TenantID:    category.TenantID,
-			Name:        category.Name,
-			Description: category.Description,
-			IsActive:    category.IsActive,
-			CreatedAt:   category.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			ID:            category.ID,
+			TenantID:      category.TenantID,
+			Name:          category.Name,
+			Description:   category.Description,
+			IsActive:      category.IsActive,
+			CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     category.CreatedBy,
+			CreatedByName: createdByName,
 		},
 	})
 }
@@ -88,15 +103,29 @@ func (h *CategoryHandler) GetCategory(c *gin.Context) {
 		return
 	}
 
+	var createdByName, updatedByName *string
+	if category.Creator != nil {
+		name := category.Creator.FullName
+		createdByName = &name
+	}
+	if category.Updater != nil {
+		name := category.Updater.FullName
+		updatedByName = &name
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"data": dto.CategoryResponse{
-			ID:          category.ID,
-			TenantID:    category.TenantID,
-			Name:        category.Name,
-			Description: category.Description,
-			IsActive:    category.IsActive,
-			CreatedAt:   category.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			ID:            category.ID,
+			TenantID:      category.TenantID,
+			Name:          category.Name,
+			Description:   category.Description,
+			IsActive:      category.IsActive,
+			CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     category.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     category.UpdatedBy,
+			UpdatedByName: updatedByName,
 		},
 	})
 }
@@ -126,14 +155,28 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 
 	responses := make([]dto.CategoryResponse, len(categories))
 	for i, category := range categories {
+		var createdByName, updatedByName *string
+		if category.Creator != nil {
+			name := category.Creator.FullName
+			createdByName = &name
+		}
+		if category.Updater != nil {
+			name := category.Updater.FullName
+			updatedByName = &name
+		}
+
 		responses[i] = dto.CategoryResponse{
-			ID:          category.ID,
-			TenantID:    category.TenantID,
-			Name:        category.Name,
-			Description: category.Description,
-			IsActive:    category.IsActive,
-			CreatedAt:   category.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			ID:            category.ID,
+			TenantID:      category.TenantID,
+			Name:          category.Name,
+			Description:   category.Description,
+			IsActive:      category.IsActive,
+			CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     category.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     category.UpdatedBy,
+			UpdatedByName: updatedByName,
 		}
 	}
 
@@ -169,6 +212,10 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 		return
 	}
 
+	// Get current user ID from context
+	currentUserID := c.GetUint("user_id")
+	req.UpdatedBy = &currentUserID
+
 	var name, description *string
 	if req.Name != "" {
 		name = &req.Name
@@ -177,22 +224,36 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 		description = &req.Description
 	}
 
-	category, err := h.categoryService.UpdateCategory(uint(categoryID), tenantID.(uint), name, description, req.IsActive)
+	category, err := h.categoryService.UpdateCategory(uint(categoryID), tenantID.(uint), name, description, req.IsActive, req.UpdatedBy)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	var createdByName, updatedByName *string
+	if category.Creator != nil {
+		name := category.Creator.FullName
+		createdByName = &name
+	}
+	if category.Updater != nil {
+		name := category.Updater.FullName
+		updatedByName = &name
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Category updated successfully",
 		"data": dto.CategoryResponse{
-			ID:          category.ID,
-			TenantID:    category.TenantID,
-			Name:        category.Name,
-			Description: category.Description,
-			IsActive:    category.IsActive,
-			CreatedAt:   category.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			ID:            category.ID,
+			TenantID:      category.TenantID,
+			Name:          category.Name,
+			Description:   category.Description,
+			IsActive:      category.IsActive,
+			CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     category.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     category.UpdatedBy,
+			UpdatedByName: updatedByName,
 		},
 	})
 }
@@ -218,7 +279,10 @@ func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 		return
 	}
 
-	if err := h.categoryService.DeleteCategory(uint(categoryID), tenantID.(uint)); err != nil {
+	// Get current user ID from context
+	currentUserID := c.GetUint("user_id")
+
+	if err := h.categoryService.DeleteCategory(uint(categoryID), tenantID.(uint), &currentUserID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

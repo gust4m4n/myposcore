@@ -18,13 +18,19 @@ type User struct {
 	Image     string         `gorm:"type:varchar(500)" json:"image"`
 	Role      string         `gorm:"size:50;default:'user'" json:"role"`
 	IsActive  bool           `gorm:"default:true" json:"is_active"`
+	CreatedBy *uint          `gorm:"index" json:"created_by"`
+	UpdatedBy *uint          `gorm:"index" json:"updated_by"`
+	DeletedBy *uint          `gorm:"index" json:"deleted_by"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 
 	// Relations
-	Tenant Tenant `gorm:"foreignKey:TenantID" json:"tenant,omitempty"`
-	Branch Branch `gorm:"foreignKey:BranchID" json:"branch,omitempty"`
+	Tenant  Tenant `gorm:"foreignKey:TenantID" json:"tenant,omitempty"`
+	Branch  Branch `gorm:"foreignKey:BranchID" json:"branch,omitempty"`
+	Creator *User  `gorm:"foreignKey:CreatedBy" json:"creator,omitempty"`
+	Updater *User  `gorm:"foreignKey:UpdatedBy" json:"updater,omitempty"`
+	Deleter *User  `gorm:"foreignKey:DeletedBy" json:"deleter,omitempty"`
 }
 
 // Unique constraint on username per tenant

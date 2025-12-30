@@ -22,7 +22,7 @@ func NewUserService() *UserService {
 
 func (s *UserService) ListUsers(tenantID uint) ([]models.User, error) {
 	var users []models.User
-	if err := s.db.Where("tenant_id = ?", tenantID).Order("created_at DESC").Find(&users).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("created_at DESC").Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil
@@ -30,7 +30,7 @@ func (s *UserService) ListUsers(tenantID uint) ([]models.User, error) {
 
 func (s *UserService) GetUser(tenantID, userID uint) (*models.User, error) {
 	var user models.User
-	if err := s.db.Where("id = ? AND tenant_id = ?", userID, tenantID).First(&user).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Where("id = ? AND tenant_id = ?", userID, tenantID).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("user not found")
 		}
@@ -72,14 +72,15 @@ func (s *UserService) CreateUser(tenantID uint, req dto.CreateUserRequest) (*mod
 	}
 
 	user := models.User{
-		TenantID: tenantID,
-		BranchID: req.BranchID,
-		Username: req.Username,
-		Email:    req.Email,
-		Password: hashedPassword,
-		FullName: req.FullName,
-		Role:     req.Role,
-		IsActive: isActive,
+		TenantID:  tenantID,
+		BranchID:  req.BranchID,
+		Username:  req.Username,
+		Email:     req.Email,
+		Password:  hashedPassword,
+		FullName:  req.FullName,
+		Role:      req.Role,
+		IsActive:  isActive,
+		CreatedBy: req.CreatedBy,
 	}
 
 	if err := s.db.Create(&user).Error; err != nil {
@@ -149,6 +150,11 @@ func (s *UserService) UpdateUser(tenantID, userID uint, req dto.UpdateUserReques
 		updates["is_active"] = *req.IsActive
 	}
 
+	// Set updated_by
+	if req.UpdatedBy != nil {
+		updates["updated_by"] = *req.UpdatedBy
+	}
+
 	if len(updates) == 0 {
 		return user, nil
 	}
@@ -165,10 +171,18 @@ func (s *UserService) UpdateUser(tenantID, userID uint, req dto.UpdateUserReques
 	return user, nil
 }
 
-func (s *UserService) DeleteUser(tenantID, userID uint) error {
+func (s *UserService) DeleteUser(tenantID, userID uint, deletedBy *uint) error {
 	user, err := s.GetUser(tenantID, userID)
 	if err != nil {
 		return err
+	}
+
+	// Set deleted_by before soft delete
+	if deletedBy != nil {
+		user.DeletedBy = deletedBy
+		if err := s.db.Save(user).Error; err != nil {
+			return err
+		}
 	}
 
 	if err := s.db.Delete(user).Error; err != nil {
@@ -176,4 +190,18 @@ func (s *UserService) DeleteUser(tenantID, userID uint) error {
 	}
 
 	return nil
+}
+
+func (s *UserService) UpdateUserImage(userID, tenantID uint, imageURL string) (*models.User, error) {
+	user, err := s.GetUser(tenantID, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Image = imageURL
+	if err := s.db.Save(user).Error; err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

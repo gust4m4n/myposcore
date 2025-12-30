@@ -181,6 +181,58 @@ GET /api/v1/profile
 Authorization: Bearer <token>
 ```
 
+#### Change Password (Protected)
+```
+PUT /api/v1/change-password
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "old_password": "oldpass123",
+  "new_password": "newpass123"
+}
+```
+
+#### Admin Change Password (Protected)
+```
+PUT /api/v1/admin/change-password
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "username": "user123",
+  "password": "newpass123",
+  "confirm_password": "newpass123"
+}
+```
+
+**Role Requirements:**
+- Superadmin: Dapat mengubah password semua user
+- Owner: Dapat mengubah password admin dan user di branch-nya
+- Admin: Dapat mengubah password user di tenant-nya
+
+Lihat [ADMIN_CHANGE_PASSWORD_GUIDE.md](ADMIN_CHANGE_PASSWORD_GUIDE.md) untuk dokumentasi lengkap.
+
+#### Admin Change PIN (Protected)
+```
+PUT /api/v1/admin/change-pin
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "username": "user123",
+  "pin": "123456",
+  "confirm_pin": "123456"
+}
+```
+
+**Role Requirements:**
+- Superadmin: Dapat mengubah PIN semua user
+- Owner: Dapat mengubah PIN admin dan user di branch-nya
+- Admin: Dapat mengubah PIN user di tenant-nya
+
+Lihat [ADMIN_CHANGE_PIN_GUIDE.md](ADMIN_CHANGE_PIN_GUIDE.md) untuk dokumentasi lengkap.
+
 ## Database Schema
 
 ### Tenants Table

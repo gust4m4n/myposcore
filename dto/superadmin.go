@@ -26,15 +26,19 @@ type BranchResponse struct {
 }
 
 type UserResponse struct {
-	ID        uint   `json:"id"`
-	TenantID  uint   `json:"tenant_id"`
-	BranchID  uint   `json:"branch_id"`
-	Username  string `json:"username"`
-	Email     string `json:"email"`
-	FullName  string `json:"full_name"`
-	Role      string `json:"role"`
-	IsActive  bool   `json:"is_active"`
-	CreatedAt string `json:"created_at"`
+	ID            uint    `json:"id"`
+	TenantID      uint    `json:"tenant_id"`
+	BranchID      uint    `json:"branch_id"`
+	Username      string  `json:"username"`
+	Email         string  `json:"email"`
+	FullName      string  `json:"full_name"`
+	Role          string  `json:"role"`
+	IsActive      bool    `json:"is_active"`
+	CreatedAt     string  `json:"created_at"`
+	CreatedBy     *uint   `json:"created_by,omitempty"`
+	CreatedByName *string `json:"created_by_name,omitempty"`
+	UpdatedBy     *uint   `json:"updated_by,omitempty"`
+	UpdatedByName *string `json:"updated_by_name,omitempty"`
 }
 
 type DashboardResponse struct {

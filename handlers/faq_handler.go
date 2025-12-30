@@ -36,21 +36,33 @@ func (h *FAQHandler) CreateFAQ(c *gin.Context) {
 		return
 	}
 
-	faq, err := h.faqService.CreateFAQ(req.Question, req.Answer, req.Category, req.Order)
+	// Get current user ID from context
+	currentUserID := c.GetUint("user_id")
+	req.CreatedBy = &currentUserID
+
+	faq, err := h.faqService.CreateFAQ(req.Question, req.Answer, req.Category, req.Order, req.CreatedBy)
 	if err != nil {
 		h.ErrorResponse(c, http.StatusInternalServerError, "Failed to create FAQ")
 		return
 	}
 
+	var createdByName *string
+	if faq.Creator != nil {
+		name := faq.Creator.FullName
+		createdByName = &name
+	}
+
 	response := dto.FAQResponse{
-		ID:        faq.ID,
-		Question:  faq.Question,
-		Answer:    faq.Answer,
-		Category:  faq.Category,
-		Order:     faq.Order,
-		IsActive:  faq.IsActive,
-		CreatedAt: faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		UpdatedAt: faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		ID:            faq.ID,
+		Question:      faq.Question,
+		Answer:        faq.Answer,
+		Category:      faq.Category,
+		Order:         faq.Order,
+		IsActive:      faq.IsActive,
+		CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		CreatedBy:     faq.CreatedBy,
+		CreatedByName: createdByName,
 	}
 
 	h.SuccessResponse(c, http.StatusOK, "FAQ created successfully", response)
@@ -82,15 +94,29 @@ func (h *FAQHandler) GetAllFAQ(c *gin.Context) {
 
 	var responses []dto.FAQResponse
 	for _, faq := range faqs {
+		var createdByName, updatedByName *string
+		if faq.Creator != nil {
+			name := faq.Creator.FullName
+			createdByName = &name
+		}
+		if faq.Updater != nil {
+			name := faq.Updater.FullName
+			updatedByName = &name
+		}
+
 		responses = append(responses, dto.FAQResponse{
-			ID:        faq.ID,
-			Question:  faq.Question,
-			Answer:    faq.Answer,
-			Category:  faq.Category,
-			Order:     faq.Order,
-			IsActive:  faq.IsActive,
-			CreatedAt: faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-			UpdatedAt: faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			ID:            faq.ID,
+			Question:      faq.Question,
+			Answer:        faq.Answer,
+			Category:      faq.Category,
+			Order:         faq.Order,
+			IsActive:      faq.IsActive,
+			CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+			CreatedBy:     faq.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     faq.UpdatedBy,
+			UpdatedByName: updatedByName,
 		})
 	}
 
@@ -118,15 +144,29 @@ func (h *FAQHandler) GetFAQByID(c *gin.Context) {
 		return
 	}
 
+	var createdByName, updatedByName *string
+	if faq.Creator != nil {
+		name := faq.Creator.FullName
+		createdByName = &name
+	}
+	if faq.Updater != nil {
+		name := faq.Updater.FullName
+		updatedByName = &name
+	}
+
 	response := dto.FAQResponse{
-		ID:        faq.ID,
-		Question:  faq.Question,
-		Answer:    faq.Answer,
-		Category:  faq.Category,
-		Order:     faq.Order,
-		IsActive:  faq.IsActive,
-		CreatedAt: faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		UpdatedAt: faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		ID:            faq.ID,
+		Question:      faq.Question,
+		Answer:        faq.Answer,
+		Category:      faq.Category,
+		Order:         faq.Order,
+		IsActive:      faq.IsActive,
+		CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		CreatedBy:     faq.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     faq.UpdatedBy,
+		UpdatedByName: updatedByName,
 	}
 
 	h.SuccessResponse(c, http.StatusOK, "FAQ retrieved successfully", response)
@@ -155,6 +195,10 @@ func (h *FAQHandler) UpdateFAQ(c *gin.Context) {
 		return
 	}
 
+	// Get current user ID from context
+	currentUserID := c.GetUint("user_id")
+	req.UpdatedBy = &currentUserID
+
 	var question, answer, category *string
 	if req.Question != "" {
 		question = &req.Question
@@ -166,21 +210,38 @@ func (h *FAQHandler) UpdateFAQ(c *gin.Context) {
 		category = &req.Category
 	}
 
-	faq, err := h.faqService.UpdateFAQ(uint(id), question, answer, category, req.Order, req.IsActive)
+	faq, err := h.faqService.UpdateFAQ(uint(id), question, answer, category, req.Order, req.IsActive, req.UpdatedBy)
 	if err != nil {
 		h.ErrorResponse(c, http.StatusInternalServerError, "Failed to update FAQ")
 		return
 	}
 
+	// Reload to get audit info
+	faq, _ = h.faqService.GetFAQByID(uint(id))
+
+	var createdByName, updatedByName *string
+	if faq.Creator != nil {
+		name := faq.Creator.FullName
+		createdByName = &name
+	}
+	if faq.Updater != nil {
+		name := faq.Updater.FullName
+		updatedByName = &name
+	}
+
 	response := dto.FAQResponse{
-		ID:        faq.ID,
-		Question:  faq.Question,
-		Answer:    faq.Answer,
-		Category:  faq.Category,
-		Order:     faq.Order,
-		IsActive:  faq.IsActive,
-		CreatedAt: faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		UpdatedAt: faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		ID:            faq.ID,
+		Question:      faq.Question,
+		Answer:        faq.Answer,
+		Category:      faq.Category,
+		Order:         faq.Order,
+		IsActive:      faq.IsActive,
+		CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		CreatedBy:     faq.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     faq.UpdatedBy,
+		UpdatedByName: updatedByName,
 	}
 
 	h.SuccessResponse(c, http.StatusOK, "FAQ updated successfully", response)
@@ -201,7 +262,10 @@ func (h *FAQHandler) DeleteFAQ(c *gin.Context) {
 		return
 	}
 
-	if err := h.faqService.DeleteFAQ(uint(id)); err != nil {
+	// Get current user ID from context
+	currentUserID := c.GetUint("user_id")
+
+	if err := h.faqService.DeleteFAQ(uint(id), &currentUserID); err != nil {
 		h.ErrorResponse(c, http.StatusInternalServerError, "Failed to delete FAQ")
 		return
 	}
