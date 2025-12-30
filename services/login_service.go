@@ -20,38 +20,38 @@ func NewLoginService() *LoginService {
 	}
 }
 
-func (s *LoginService) Login(req dto.LoginRequest) (*models.User, *models.Branch, error) {
-	// Get tenant
-	var tenant models.Tenant
-	if err := s.db.Where("code = ? AND is_active = ?", req.TenantCode, true).First(&tenant).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil, errors.New("invalid credentials")
-		}
-		return nil, nil, err
-	}
-
-	// Check if branch exists for this tenant
-	var branch models.Branch
-	if err := s.db.Where("code = ? AND tenant_id = ? AND is_active = ?", req.BranchCode, tenant.ID, true).First(&branch).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil, errors.New("invalid credentials")
-		}
-		return nil, nil, err
-	}
-
-	// Get user
+func (s *LoginService) Login(req dto.LoginRequest) (*models.User, *models.Tenant, *models.Branch, error) {
+	// Get user by username (username is unique across all tenants)
 	var user models.User
-	if err := s.db.Where("branch_id = ? AND username = ? AND is_active = ?", branch.ID, req.Username, true).First(&user).Error; err != nil {
+	if err := s.db.Where("username = ? AND is_active = ?", req.Username, true).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil, errors.New("invalid credentials")
+			return nil, nil, nil, errors.New("invalid credentials")
 		}
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	// Check password
 	if !utils.CheckPasswordHash(req.Password, user.Password) {
-		return nil, nil, errors.New("invalid credentials")
+		return nil, nil, nil, errors.New("invalid credentials")
 	}
 
-	return &user, &branch, nil
+	// Get branch
+	var branch models.Branch
+	if err := s.db.Where("id = ? AND is_active = ?", user.BranchID, true).First(&branch).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil, nil, errors.New("branch not found or inactive")
+		}
+		return nil, nil, nil, err
+	}
+
+	// Get tenant
+	var tenant models.Tenant
+	if err := s.db.Where("id = ? AND is_active = ?", user.TenantID, true).First(&tenant).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil, nil, errors.New("tenant not found or inactive")
+		}
+		return nil, nil, nil, err
+	}
+
+	return &user, &tenant, &branch, nil
 }

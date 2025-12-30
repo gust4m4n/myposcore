@@ -2,12 +2,33 @@
 -- Run this after init_tenant.sql
 
 -- ============================================
--- TENANT 1: RESTORAN "WARUNG MAKAN SEJAHTERA"
+-- SUPERADMIN
+-- ============================================
+-- Insert Superadmin User (Username: admin@mypos.com, Password: 123456)
+-- Note: Superadmin tidak terikat dengan tenant/branch tertentu
+IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin@mypos.com') THEN
+    INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+    VALUES (NULL, NULL, 'admin@mypos.com', 'admin@mypos.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Super Admin MyPOS', 'superadmin', true, NOW(), NOW());
+END IF;
+
+-- ============================================
+-- TENANT 1: RESTORAN "WARTEG 123"
 -- ============================================
 
 -- Insert Tenant 1: Restaurant
-INSERT INTO tenants (name, code, is_active, created_at, updated_at) 
-VALUES ('Warung Makan Sejahtera', 'resto01', true, NOW(), NOW())
+INSERT INTO tenants (name, code, description, address, website, email, phone, is_active, created_at, updated_at) 
+VALUES (
+    'Warteg 123', 
+    'resto01', 
+    'Warung Tegal dengan menu masakan rumahan yang lezat dan terjangkau', 
+    'Jl. Sudirman No. 123, Jakarta Pusat, DKI Jakarta 10110',
+    'https://www.warteg123.com',
+    'info@warteg123.com',
+    '021-12345678',
+    true, 
+    NOW(), 
+    NOW()
+)
 ON CONFLICT (code) DO NOTHING;
 
 -- Get Tenant 1 ID
@@ -20,47 +41,72 @@ BEGIN
     SELECT id INTO tenant1_id FROM tenants WHERE code = 'resto01';
     
     -- Insert Branches for Restaurant
-    INSERT INTO branches (tenant_id, name, code, address, phone, is_active, created_at, updated_at)
+    INSERT INTO branches (tenant_id, name, code, description, address, website, email, phone, is_active, created_at, updated_at)
     VALUES 
-        (tenant1_id, 'Cabang Pusat', 'resto01-pusat', 'Jl. Sudirman No. 123, Jakarta', '021-12345678', true, NOW(), NOW()),
-        (tenant1_id, 'Cabang Menteng', 'resto01-menteng', 'Jl. Menteng Raya No. 45, Jakarta', '021-87654321', true, NOW(), NOW())
+        (
+            tenant1_id, 
+            'Cabang Pusat', 
+            'resto01-pusat', 
+            'Cabang utama Warteg 123 dengan menu lengkap dan tempat nyaman',
+            'Jl. Sudirman No. 123, Jakarta Pusat, DKI Jakarta 10110', 
+            'https://www.warteg123.com/cabang/pusat',
+            'pusat@warteg123.com',
+            '021-12345678', 
+            true, 
+            NOW(), 
+            NOW()
+        ),
+        (
+            tenant1_id, 
+            'Cabang Menteng', 
+            'resto01-menteng', 
+            'Cabang Warteg 123 di area Menteng dengan suasana klasik',
+            'Jl. Menteng Raya No. 45, Menteng, Jakarta Pusat, DKI Jakarta 10310', 
+            'https://www.warteg123.com/cabang/menteng',
+            'menteng@warteg123.com',
+            '021-87654321', 
+            true, 
+            NOW(), 
+            NOW()
+        )
     ON CONFLICT (code) DO NOTHING;
     
     -- Get Branch IDs
     SELECT id INTO branch1_id FROM branches WHERE code = 'resto01-pusat';
     SELECT id INTO branch2_id FROM branches WHERE code = 'resto01-menteng';
     
-    -- Insert Default Tenant Admin (Username: tenantadmin, Password: 123456)
-    IF NOT EXISTS (SELECT 1 FROM users WHERE tenant_id = tenant1_id AND username = 'tenantadmin') THEN
+    -- Insert Default Tenant Admin (Username: admin@warteg123.com, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin@warteg123.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant1_id, branch1_id, 'tenantadmin', 'tenantadmin@resto.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Tenant Admin Resto', 'tenantadmin', true, NOW(), NOW());
+        VALUES (tenant1_id, branch1_id, 'admin@warteg123.com', 'admin@warteg123.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Admin Warteg 123', 'tenantadmin', true, NOW(), NOW());
     END IF;
     
-    -- Insert Default Branch Admins for each branch (Username: branchadmin, Password: 123456)
-    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch1_id AND username = 'branchadmin') THEN
+    -- Insert Default Branch Admins for each branch (Username: admin.pusat@warteg123.com, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin.pusat@warteg123.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant1_id, branch1_id, 'branchadmin', 'branchadmin.pusat@resto.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Pusat', 'branchadmin', true, NOW(), NOW());
+        VALUES (tenant1_id, branch1_id, 'admin.pusat@warteg123.com', 'admin.pusat@warteg123.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Admin Cabang Pusat', 'branchadmin', true, NOW(), NOW());
     END IF;
     
-    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch2_id AND username = 'branchadmin') THEN
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin.menteng@warteg123.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant1_id, branch2_id, 'branchadmin', 'branchadmin.menteng@resto.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Menteng', 'branchadmin', true, NOW(), NOW());
+        VALUES (tenant1_id, branch2_id, 'admin.menteng@warteg123.com', 'admin.menteng@warteg123.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Admin Menteng Warteg 123', 'branchadmin', true, NOW(), NOW());
+    END IF;
+    
+    -- Insert johndoe user for testing new login (Username: john@warteg123.com, Password: password123)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'john@warteg123.com') THEN
+        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
+        VALUES (tenant1_id, branch1_id, 'john@warteg123.com', 'john@warteg123.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'John Doe', 'branchadmin', true, NOW(), NOW());
     END IF;
     
     -- Insert Users for Restaurant (Password: demo123)
-    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin_resto') THEN
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'cashier.pusat@warteg123.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant1_id, branch1_id, 'admin_resto', 'admin@resto.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Admin Resto', 'tenantadmin', true, NOW(), NOW());
+        VALUES (tenant1_id, branch1_id, 'cashier.pusat@warteg123.com', 'cashier.pusat@warteg123.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Pusat Warteg 123', 'user', true, NOW(), NOW());
     END IF;
     
-    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'kasir_pusat') THEN
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'cashier.menteng@warteg123.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant1_id, branch1_id, 'kasir_pusat', 'kasir.pusat@resto.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Pusat', 'user', true, NOW(), NOW());
-    END IF;
-    
-    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'kasir_menteng') THEN
-        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant1_id, branch2_id, 'kasir_menteng', 'kasir.menteng@resto.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Menteng', 'user', true, NOW(), NOW());
+        VALUES (tenant1_id, branch2_id, 'cashier.menteng@warteg123.com', 'cashier.menteng@warteg123.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Menteng Warteg 123', 'user', true, NOW(), NOW());
     END IF;
     
     -- Insert Products for Restaurant (35 products in 3 categories)
@@ -111,12 +157,23 @@ BEGIN
 END $$;
 
 -- ============================================
--- TENANT 2: TOKO BAJU "FASHION STORE"
+-- TENANT 2: TOKO BAJU "FASHION STORE 99"
 -- ============================================
 
 -- Insert Tenant 2: Clothing Store
-INSERT INTO tenants (name, code, is_active, created_at, updated_at) 
-VALUES ('Fashion Store', 'fashion01', true, NOW(), NOW())
+INSERT INTO tenants (name, code, description, address, website, email, phone, is_active, created_at, updated_at) 
+VALUES (
+    'Fashion Store 99', 
+    'fashion01', 
+    'Toko fashion modern dengan koleksi pakaian trendy dan aksesoris berkualitas', 
+    'Plaza Indonesia Lt. 3, Jl. MH Thamrin, Jakarta Pusat, DKI Jakarta 10350',
+    'https://www.fashionstore99.com',
+    'contact@fashionstore99.com',
+    '021-23456789',
+    true, 
+    NOW(), 
+    NOW()
+)
 ON CONFLICT (code) DO NOTHING;
 
 -- Get Tenant 2 ID
@@ -129,52 +186,66 @@ BEGIN
     SELECT id INTO tenant2_id FROM tenants WHERE code = 'fashion01';
     
     -- Insert Branches for Fashion Store
-    INSERT INTO branches (tenant_id, name, code, address, phone, is_active, created_at, updated_at)
+    INSERT INTO branches (tenant_id, name, code, description, address, website, email, phone, is_active, created_at, updated_at)
     VALUES 
-        (tenant2_id, 'Cabang Mall Plaza', 'fashion01-plaza', 'Mall Plaza Lt. 2 No. 45, Jakarta', '021-55556666', true, NOW(), NOW()),
-        (tenant2_id, 'Cabang Grand Mall', 'fashion01-grand', 'Grand Mall Lt. 1 No. 78, Bandung', '022-77778888', true, NOW(), NOW())
+        (
+            tenant2_id, 
+            'Cabang Mall Plaza', 
+            'fashion01-plaza', 
+            'Cabang Fashion Store 99 di Mall Plaza dengan koleksi fashion wanita',
+            'Mall Plaza Lt. 2, Jl. Asia Afrika No. 8, Jakarta Pusat, DKI Jakarta 10270', 
+            'https://www.fashionstore99.com/cabang/plaza',
+            'plaza@fashionstore99.com',
+            '021-11223344', 
+            true, 
+            NOW(), 
+            NOW()
+        ),
+        (
+            tenant2_id, 
+            'Cabang Grand Mall', 
+            'fashion01-grand', 
+            'Cabang Fashion Store 99 di Grand Mall dengan koleksi fashion pria dan wanita',
+            'Grand Mall Lt. 3, Jl. HR Rasuna Said, Jakarta Selatan, DKI Jakarta 12940', 
+            'https://www.fashionstore99.com/cabang/grand',
+            'grand@fashionstore99.com',
+            '021-99887766', 
+            true, 
+            NOW(), 
+            NOW()
+        )
     ON CONFLICT (code) DO NOTHING;
     
     -- Get Branch IDs
     SELECT id INTO branch3_id FROM branches WHERE code = 'fashion01-plaza';
     SELECT id INTO branch4_id FROM branches WHERE code = 'fashion01-grand';
     
-    -- Insert Default Tenant Admin (Username: tenantadmin, Password: 123456)
-    IF NOT EXISTS (SELECT 1 FROM users WHERE tenant_id = tenant2_id AND username = 'tenantadmin') THEN
+    -- Insert Default Tenant Admin (Username: admin@fashionstore99.com, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin@fashionstore99.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant2_id, branch3_id, 'tenantadmin', 'tenantadmin@fashion.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Tenant Admin Fashion', 'tenantadmin', true, NOW(), NOW());
+        VALUES (tenant2_id, branch3_id, 'admin@fashionstore99.com', 'admin@fashionstore99.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Admin Fashion Store 99', 'tenantadmin', true, NOW(), NOW());
     END IF;
     
-    -- Insert Default Branch Admins for each branch (Username: branchadmin, Password: 123456)
-    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch3_id AND username = 'branchadmin') THEN
+    -- Insert Default Branch Admins for each branch (Username: admin.plaza@fashionstore99.com, Password: 123456)
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin.plaza@fashionstore99.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant2_id, branch3_id, 'branchadmin', 'branchadmin.plaza@fashion.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Plaza', 'branchadmin', true, NOW(), NOW());
+        VALUES (tenant2_id, branch3_id, 'admin.plaza@fashionstore99.com', 'admin.plaza@fashionstore99.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Admin Mall Plaza', 'branchadmin', true, NOW(), NOW());
     END IF;
     
-    IF NOT EXISTS (SELECT 1 FROM users WHERE branch_id = branch4_id AND username = 'branchadmin') THEN
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin.grand@fashionstore99.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant2_id, branch4_id, 'branchadmin', 'branchadmin.grand@fashion.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Branch Admin Grand', 'branchadmin', true, NOW(), NOW());
+        VALUES (tenant2_id, branch4_id, 'admin.grand@fashionstore99.com', 'admin.grand@fashionstore99.com', '$2a$10$inqmfpKlWFe/eg2dUwUR1ubLnKtb5oKnNX01JbPhBiAalhh.63Ocq', 'Admin Grand Fashion Store 99', 'branchadmin', true, NOW(), NOW());
     END IF;
     
     -- Insert Users for Fashion Store (Password: demo123)
-    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin_fashion') THEN
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'cashier@plaza.fashionstore99.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant2_id, branch3_id, 'admin_fashion', 'admin@fashion.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Admin Fashion', 'tenantadmin', true, NOW(), NOW());
+        VALUES (tenant2_id, branch3_id, 'cashier@plaza.fashionstore99.com', 'cashier@plaza.fashionstore99.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Plaza Fashion Store 99', 'user', true, NOW(), NOW());
     END IF;
     
-    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'kasir_plaza') THEN
+    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'cashier@grand.fashionstore99.com') THEN
         INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant2_id, branch3_id, 'kasir_plaza', 'kasir.plaza@fashion.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Plaza', 'user', true, NOW(), NOW());
-    END IF;
-    
-    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'sales_plaza') THEN
-        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant2_id, branch3_id, 'sales_plaza', 'sales.plaza@fashion.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Sales Plaza', 'user', true, NOW(), NOW());
-    END IF;
-    
-    IF NOT EXISTS (SELECT 1 FROM users WHERE username = 'kasir_grand') THEN
-        INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-        VALUES (tenant2_id, branch4_id, 'kasir_grand', 'kasir.grand@fashion.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Grand', 'user', true, NOW(), NOW());
+        VALUES (tenant2_id, branch4_id, 'cashier@grand.fashionstore99.com', 'cashier@grand.fashionstore99.com', '$2a$10$N8rT5EwF8HKWqZfH5LxPPuKqKqKqKqKqKqKqKqKqKqKqKqKqKqKqK', 'Kasir Grand Fashion Store 99', 'user', true, NOW(), NOW());
     END IF;
     
     -- Insert Products for Fashion Store (35 products in 3 categories)

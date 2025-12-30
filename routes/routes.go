@@ -146,7 +146,12 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			superadmin.GET("/dashboard", superAdminHandler.Dashboard)
 			superadmin.GET("/tenants", superAdminHandler.ListTenants)
 			superadmin.POST("/tenants", superAdminHandler.CreateTenant)
+			superadmin.PUT("/tenants/:tenant_id", superAdminHandler.UpdateTenant)
+			superadmin.DELETE("/tenants/:tenant_id", superAdminHandler.DeleteTenant)
 			superadmin.GET("/tenants/:tenant_id/branches", superAdminHandler.ListBranches)
+			superadmin.POST("/branches", superAdminHandler.CreateBranch)
+			superadmin.PUT("/branches/:branch_id", superAdminHandler.UpdateBranch)
+			superadmin.DELETE("/branches/:branch_id", superAdminHandler.DeleteBranch)
 			superadmin.GET("/branches/:branch_id/users", superAdminHandler.ListUsers)
 
 			// TnC management routes (superadmin only)

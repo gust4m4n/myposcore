@@ -176,10 +176,8 @@ func TestLoginEndpoint(t *testing.T) {
 
 	// Now login
 	loginReq := dto.LoginRequest{
-		TenantCode: "TENANT001",
-		BranchCode: "BRANCH001",
-		Username:   "loginuser",
-		Password:   "password123",
+		Username: "loginuser",
+		Password: "password123",
 	}
 
 	body, _ = json.Marshal(loginReq)
@@ -206,10 +204,8 @@ func TestLoginEndpoint_InvalidCredentials(t *testing.T) {
 	setupTestServer(t)
 
 	loginReq := dto.LoginRequest{
-		TenantCode: "TENANT001",
-		BranchCode: "BRANCH001",
-		Username:   "nonexistent",
-		Password:   "wrongpassword",
+		Username: "nonexistent",
+		Password: "wrongpassword",
 	}
 
 	body, _ := json.Marshal(loginReq)

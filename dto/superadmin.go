@@ -1,28 +1,75 @@
 package dto
 
 type CreateTenantRequest struct {
-	Name   string `json:"name" binding:"required"`
-	Code   string `json:"code" binding:"required"`
-	Active bool   `json:"is_active"`
+	Name        string `json:"name" binding:"required"`
+	Code        string `json:"code" binding:"required"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	Active      bool   `json:"is_active"`
+}
+
+type UpdateTenantRequest struct {
+	Name        string `json:"name" binding:"required"`
+	Code        string `json:"code" binding:"required"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	Active      bool   `json:"is_active"`
+}
+
+type CreateBranchRequest struct {
+	TenantID    uint   `json:"tenant_id" binding:"required"`
+	Name        string `json:"name" binding:"required"`
+	Code        string `json:"code" binding:"required"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	Active      bool   `json:"is_active"`
+}
+
+type UpdateBranchRequest struct {
+	Name        string `json:"name" binding:"required"`
+	Code        string `json:"code" binding:"required"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	Active      bool   `json:"is_active"`
 }
 
 type TenantResponse struct {
-	ID        uint   `json:"id"`
-	Name      string `json:"name"`
-	Code      string `json:"code"`
-	IsActive  bool   `json:"is_active"`
-	CreatedAt string `json:"created_at"`
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	IsActive    bool   `json:"is_active"`
+	CreatedAt   string `json:"created_at"`
 }
 
 type BranchResponse struct {
-	ID        uint   `json:"id"`
-	TenantID  uint   `json:"tenant_id"`
-	Name      string `json:"name"`
-	Code      string `json:"code"`
-	Address   string `json:"address"`
-	Phone     string `json:"phone"`
-	IsActive  bool   `json:"is_active"`
-	CreatedAt string `json:"created_at"`
+	ID          uint   `json:"id"`
+	TenantID    uint   `json:"tenant_id"`
+	Name        string `json:"name"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	IsActive    bool   `json:"is_active"`
+	CreatedAt   string `json:"created_at"`
 }
 
 type UserResponse struct {

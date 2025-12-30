@@ -11,15 +11,39 @@ type RegisterRequest struct {
 }
 
 type LoginRequest struct {
-	TenantCode string `json:"tenant_code" binding:"required"`
-	BranchCode string `json:"branch_code" binding:"required"`
-	Username   string `json:"username" binding:"required"`
-	Password   string `json:"password" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 type AuthResponse struct {
-	Token string      `json:"token"`
-	User  UserProfile `json:"user"`
+	Token  string      `json:"token"`
+	User   UserProfile `json:"user"`
+	Tenant TenantInfo  `json:"tenant"`
+	Branch BranchInfo  `json:"branch"`
+}
+
+type TenantInfo struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	IsActive    bool   `json:"is_active"`
+}
+
+type BranchInfo struct {
+	ID          uint   `json:"id"`
+	Name        string `json:"name"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	Website     string `json:"website"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	IsActive    bool   `json:"is_active"`
 }
 
 type UserProfile struct {

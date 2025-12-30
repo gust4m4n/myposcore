@@ -29,7 +29,7 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	user, branch, err := h.loginService.Login(req)
+	user, tenant, branch, err := h.loginService.Login(req)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
@@ -54,6 +54,28 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 			FullName:   user.FullName,
 			Role:       user.Role,
 			IsActive:   user.IsActive,
+		},
+		Tenant: dto.TenantInfo{
+			ID:          tenant.ID,
+			Name:        tenant.Name,
+			Code:        tenant.Code,
+			Description: tenant.Description,
+			Address:     tenant.Address,
+			Website:     tenant.Website,
+			Email:       tenant.Email,
+			Phone:       tenant.Phone,
+			IsActive:    tenant.IsActive,
+		},
+		Branch: dto.BranchInfo{
+			ID:          branch.ID,
+			Name:        branch.Name,
+			Code:        branch.Code,
+			Description: branch.Description,
+			Address:     branch.Address,
+			Website:     branch.Website,
+			Email:       branch.Email,
+			Phone:       branch.Phone,
+			IsActive:    branch.IsActive,
 		},
 	}
 
