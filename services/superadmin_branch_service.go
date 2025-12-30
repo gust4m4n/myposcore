@@ -21,13 +21,13 @@ func NewSuperAdminBranchService() *SuperAdminBranchService {
 
 func (s *SuperAdminBranchService) ListBranchesByTenant(tenantID uint) ([]models.Branch, error) {
 	var branches []models.Branch
-	if err := s.db.Where("tenant_id = ?", tenantID).Order("created_at DESC").Find(&branches).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("created_at DESC").Find(&branches).Error; err != nil {
 		return nil, err
 	}
 	return branches, nil
 }
 
-func (s *SuperAdminBranchService) CreateBranch(req dto.CreateBranchRequest) (*models.Branch, error) {
+func (s *SuperAdminBranchService) CreateBranch(req dto.CreateBranchRequest, imageURL string, createdBy *uint) (*models.Branch, error) {
 	// Check if tenant exists
 	var tenant models.Tenant
 	if err := s.db.First(&tenant, req.TenantID).Error; err != nil {
@@ -56,7 +56,9 @@ func (s *SuperAdminBranchService) CreateBranch(req dto.CreateBranchRequest) (*mo
 		Website:     req.Website,
 		Email:       req.Email,
 		Phone:       req.Phone,
+		Image:       imageURL,
 		IsActive:    req.Active,
+		CreatedBy:   createdBy,
 	}
 
 	if err := s.db.Create(&branch).Error; err != nil {
@@ -66,7 +68,7 @@ func (s *SuperAdminBranchService) CreateBranch(req dto.CreateBranchRequest) (*mo
 	return &branch, nil
 }
 
-func (s *SuperAdminBranchService) UpdateBranch(id uint, req dto.UpdateBranchRequest) (*models.Branch, error) {
+func (s *SuperAdminBranchService) UpdateBranch(id uint, req dto.UpdateBranchRequest, imageURL string, updatedBy *uint) (*models.Branch, error) {
 	// Check if branch exists
 	var branch models.Branch
 	if err := s.db.First(&branch, id).Error; err != nil {
@@ -96,6 +98,12 @@ func (s *SuperAdminBranchService) UpdateBranch(id uint, req dto.UpdateBranchRequ
 	branch.Email = req.Email
 	branch.Phone = req.Phone
 	branch.IsActive = req.Active
+	branch.UpdatedBy = updatedBy
+
+	// Update image if provided
+	if imageURL != "" {
+		branch.Image = imageURL
+	}
 
 	if err := s.db.Save(&branch).Error; err != nil {
 		return nil, err
@@ -104,7 +112,18 @@ func (s *SuperAdminBranchService) UpdateBranch(id uint, req dto.UpdateBranchRequ
 	return &branch, nil
 }
 
-func (s *SuperAdminBranchService) DeleteBranch(id uint) error {
+func (s *SuperAdminBranchService) GetBranchByID(id uint) (*models.Branch, error) {
+	var branch models.Branch
+	if err := s.db.First(&branch, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("branch not found")
+		}
+		return nil, err
+	}
+	return &branch, nil
+}
+
+func (s *SuperAdminBranchService) DeleteBranch(id uint, deletedBy *uint) error {
 	// Check if branch exists
 	var branch models.Branch
 	if err := s.db.First(&branch, id).Error; err != nil {
@@ -112,6 +131,13 @@ func (s *SuperAdminBranchService) DeleteBranch(id uint) error {
 			return errors.New("branch not found")
 		}
 		return err
+	}
+
+	// Set deleted_by before soft delete
+	if deletedBy != nil {
+		if err := s.db.Model(&branch).Update("deleted_by", deletedBy).Error; err != nil {
+			return err
+		}
 	}
 
 	// Soft delete branch

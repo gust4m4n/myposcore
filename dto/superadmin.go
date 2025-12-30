@@ -46,30 +46,42 @@ type UpdateBranchRequest struct {
 }
 
 type TenantResponse struct {
-	ID          uint   `json:"id"`
-	Name        string `json:"name"`
-	Code        string `json:"code"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
-	Website     string `json:"website"`
-	Email       string `json:"email"`
-	Phone       string `json:"phone"`
-	IsActive    bool   `json:"is_active"`
-	CreatedAt   string `json:"created_at"`
+	ID            uint    `json:"id"`
+	Name          string  `json:"name"`
+	Code          string  `json:"code"`
+	Description   string  `json:"description"`
+	Address       string  `json:"address"`
+	Website       string  `json:"website"`
+	Email         string  `json:"email"`
+	Phone         string  `json:"phone"`
+	Image         string  `json:"image"`
+	IsActive      bool    `json:"is_active"`
+	CreatedAt     string  `json:"created_at"`
+	UpdatedAt     string  `json:"updated_at"`
+	CreatedBy     *uint   `json:"created_by,omitempty"`
+	CreatedByName *string `json:"created_by_name,omitempty"`
+	UpdatedBy     *uint   `json:"updated_by,omitempty"`
+	UpdatedByName *string `json:"updated_by_name,omitempty"`
 }
 
 type BranchResponse struct {
-	ID          uint   `json:"id"`
-	TenantID    uint   `json:"tenant_id"`
-	Name        string `json:"name"`
-	Code        string `json:"code"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
-	Website     string `json:"website"`
-	Email       string `json:"email"`
-	Phone       string `json:"phone"`
-	IsActive    bool   `json:"is_active"`
-	CreatedAt   string `json:"created_at"`
+	ID            uint    `json:"id"`
+	TenantID      uint    `json:"tenant_id"`
+	Name          string  `json:"name"`
+	Code          string  `json:"code"`
+	Description   string  `json:"description"`
+	Address       string  `json:"address"`
+	Website       string  `json:"website"`
+	Email         string  `json:"email"`
+	Phone         string  `json:"phone"`
+	Image         string  `json:"image"`
+	IsActive      bool    `json:"is_active"`
+	CreatedAt     string  `json:"created_at"`
+	UpdatedAt     string  `json:"updated_at"`
+	CreatedBy     *uint   `json:"created_by,omitempty"`
+	CreatedByName *string `json:"created_by_name,omitempty"`
+	UpdatedBy     *uint   `json:"updated_by,omitempty"`
+	UpdatedByName *string `json:"updated_by_name,omitempty"`
 }
 
 type UserResponse struct {

@@ -31,6 +31,7 @@ type TenantInfo struct {
 	Website     string `json:"website"`
 	Email       string `json:"email"`
 	Phone       string `json:"phone"`
+	Image       string `json:"image"`
 	IsActive    bool   `json:"is_active"`
 }
 
@@ -43,6 +44,7 @@ type BranchInfo struct {
 	Website     string `json:"website"`
 	Email       string `json:"email"`
 	Phone       string `json:"phone"`
+	Image       string `json:"image"`
 	IsActive    bool   `json:"is_active"`
 }
 

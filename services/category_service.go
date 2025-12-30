@@ -15,7 +15,7 @@ func NewCategoryService(db *gorm.DB) *CategoryService {
 	return &CategoryService{db: db}
 }
 
-func (s *CategoryService) CreateCategory(tenantID uint, name, description string, createdBy *uint) (*models.Category, error) {
+func (s *CategoryService) CreateCategory(tenantID uint, name, description string, imageURL string, createdBy *uint) (*models.Category, error) {
 	// Check if category name already exists for this tenant
 	var existing models.Category
 	if err := s.db.Where("tenant_id = ? AND name = ?", tenantID, name).First(&existing).Error; err == nil {
@@ -26,6 +26,7 @@ func (s *CategoryService) CreateCategory(tenantID uint, name, description string
 		TenantID:    tenantID,
 		Name:        name,
 		Description: description,
+		Image:       imageURL,
 		IsActive:    true,
 		CreatedBy:   createdBy,
 	}
@@ -62,7 +63,7 @@ func (s *CategoryService) ListCategories(tenantID uint, activeOnly bool) ([]mode
 	return categories, nil
 }
 
-func (s *CategoryService) UpdateCategory(categoryID, tenantID uint, name, description *string, isActive *bool, updatedBy *uint) (*models.Category, error) {
+func (s *CategoryService) UpdateCategory(categoryID, tenantID uint, name, description *string, imageURL *string, isActive *bool, updatedBy *uint) (*models.Category, error) {
 	var category models.Category
 	if err := s.db.Where("id = ? AND tenant_id = ?", categoryID, tenantID).First(&category).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -84,6 +85,10 @@ func (s *CategoryService) UpdateCategory(categoryID, tenantID uint, name, descri
 
 	if description != nil {
 		updates["description"] = *description
+	}
+
+	if imageURL != nil && *imageURL != "" {
+		updates["image"] = *imageURL
 	}
 
 	if isActive != nil {

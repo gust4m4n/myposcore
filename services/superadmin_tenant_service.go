@@ -21,13 +21,13 @@ func NewSuperAdminTenantService() *SuperAdminTenantService {
 
 func (s *SuperAdminTenantService) ListTenants() ([]models.Tenant, error) {
 	var tenants []models.Tenant
-	if err := s.db.Order("created_at DESC").Find(&tenants).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Order("created_at DESC").Find(&tenants).Error; err != nil {
 		return nil, err
 	}
 	return tenants, nil
 }
 
-func (s *SuperAdminTenantService) CreateTenant(req dto.CreateTenantRequest) (*models.Tenant, error) {
+func (s *SuperAdminTenantService) CreateTenant(req dto.CreateTenantRequest, imageURL string, createdBy *uint) (*models.Tenant, error) {
 	// Check if tenant code already exists
 	var existing models.Tenant
 	err := s.db.Where("code = ?", req.Code).First(&existing).Error
@@ -46,7 +46,9 @@ func (s *SuperAdminTenantService) CreateTenant(req dto.CreateTenantRequest) (*mo
 		Website:     req.Website,
 		Email:       req.Email,
 		Phone:       req.Phone,
+		Image:       imageURL,
 		IsActive:    req.Active,
+		CreatedBy:   createdBy,
 	}
 
 	if err := s.db.Create(&tenant).Error; err != nil {
@@ -56,7 +58,7 @@ func (s *SuperAdminTenantService) CreateTenant(req dto.CreateTenantRequest) (*mo
 	return &tenant, nil
 }
 
-func (s *SuperAdminTenantService) UpdateTenant(id uint, req dto.UpdateTenantRequest) (*models.Tenant, error) {
+func (s *SuperAdminTenantService) UpdateTenant(id uint, req dto.UpdateTenantRequest, imageURL string, updatedBy *uint) (*models.Tenant, error) {
 	// Check if tenant exists
 	var tenant models.Tenant
 	if err := s.db.First(&tenant, id).Error; err != nil {
@@ -86,6 +88,12 @@ func (s *SuperAdminTenantService) UpdateTenant(id uint, req dto.UpdateTenantRequ
 	tenant.Email = req.Email
 	tenant.Phone = req.Phone
 	tenant.IsActive = req.Active
+	tenant.UpdatedBy = updatedBy
+
+	// Update image if provided
+	if imageURL != "" {
+		tenant.Image = imageURL
+	}
 
 	if err := s.db.Save(&tenant).Error; err != nil {
 		return nil, err
@@ -94,7 +102,18 @@ func (s *SuperAdminTenantService) UpdateTenant(id uint, req dto.UpdateTenantRequ
 	return &tenant, nil
 }
 
-func (s *SuperAdminTenantService) DeleteTenant(id uint) error {
+func (s *SuperAdminTenantService) GetTenantByID(id uint) (*models.Tenant, error) {
+	var tenant models.Tenant
+	if err := s.db.First(&tenant, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("tenant not found")
+		}
+		return nil, err
+	}
+	return &tenant, nil
+}
+
+func (s *SuperAdminTenantService) DeleteTenant(id uint, deletedBy *uint) error {
 	// Check if tenant exists
 	var tenant models.Tenant
 	if err := s.db.First(&tenant, id).Error; err != nil {
@@ -102,6 +121,13 @@ func (s *SuperAdminTenantService) DeleteTenant(id uint) error {
 			return errors.New("tenant not found")
 		}
 		return err
+	}
+
+	// Set deleted_by before soft delete
+	if deletedBy != nil {
+		if err := s.db.Model(&tenant).Update("deleted_by", deletedBy).Error; err != nil {
+			return err
+		}
 	}
 
 	// Soft delete tenant

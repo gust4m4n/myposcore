@@ -1,11 +1,16 @@
 package handlers
 
 import (
+	"fmt"
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,17 +50,33 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 
 	var response []dto.TenantResponse
 	for _, tenant := range tenants {
+		var createdByName, updatedByName *string
+		if tenant.Creator != nil {
+			name := tenant.Creator.FullName
+			createdByName = &name
+		}
+		if tenant.Updater != nil {
+			name := tenant.Updater.FullName
+			updatedByName = &name
+		}
+
 		response = append(response, dto.TenantResponse{
-			ID:          tenant.ID,
-			Name:        tenant.Name,
-			Code:        tenant.Code,
-			Description: tenant.Description,
-			Address:     tenant.Address,
-			Website:     tenant.Website,
-			Email:       tenant.Email,
-			Phone:       tenant.Phone,
-			IsActive:    tenant.IsActive,
-			CreatedAt:   tenant.CreatedAt.Format("2006-01-02 15:04:05"),
+			ID:            tenant.ID,
+			Name:          tenant.Name,
+			Code:          tenant.Code,
+			Description:   tenant.Description,
+			Address:       tenant.Address,
+			Website:       tenant.Website,
+			Email:         tenant.Email,
+			Phone:         tenant.Phone,
+			Image:         tenant.Image,
+			IsActive:      tenant.IsActive,
+			CreatedAt:     tenant.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:     tenant.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     tenant.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     tenant.UpdatedBy,
+			UpdatedByName: updatedByName,
 		})
 	}
 
@@ -66,22 +87,97 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 
 // CreateTenant godoc
 // @Summary Create a new tenant
-// @Description Create a new tenant (superadmin only)
+// @Description Create a new tenant with optional image upload (superadmin only)
 // @Tags superadmin
-// @Accept json
+// @Accept multipart/form-data
 // @Produce json
-// @Param request body dto.CreateTenantRequest true "Tenant data"
+// @Param name formData string true "Tenant name"
+// @Param code formData string true "Tenant code"
+// @Param description formData string false "Description"
+// @Param address formData string false "Address"
+// @Param website formData string false "Website URL"
+// @Param email formData string false "Email"
+// @Param phone formData string false "Phone"
+// @Param is_active formData boolean true "Active status"
+// @Param image formData file false "Tenant image (jpg, jpeg, png, gif, webp, max 5MB)"
 // @Success 200 {object} dto.TenantResponse
 // @Router /superadmin/tenants [post]
 func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
-	var req dto.CreateTenantRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Parse form data
+	req := dto.CreateTenantRequest{
+		Name:        c.PostForm("name"),
+		Code:        c.PostForm("code"),
+		Description: c.PostForm("description"),
+		Address:     c.PostForm("address"),
+		Website:     c.PostForm("website"),
+		Email:       c.PostForm("email"),
+		Phone:       c.PostForm("phone"),
+		Active:      c.PostForm("is_active") == "true",
+	}
+
+	// Validate required fields
+	if req.Name == "" || req.Code == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
 		return
 	}
 
-	tenant, err := h.tenantService.CreateTenant(req)
+	// Handle image upload
+	var imageURL string
+	file, err := c.FormFile("image")
+	if err == nil {
+		// Validate file type
+		ext := strings.ToLower(filepath.Ext(file.Filename))
+		allowedExts := map[string]bool{
+			".jpg":  true,
+			".jpeg": true,
+			".png":  true,
+			".gif":  true,
+			".webp": true,
+		}
+		if !allowedExts[ext] {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			return
+		}
+
+		// Validate file size (max 5MB)
+		if file.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			return
+		}
+
+		// Create uploads directory
+		uploadDir := "uploads/tenants"
+		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			return
+		}
+
+		// Generate unique filename
+		filename := fmt.Sprintf("tenant_%s_%d%s", req.Code, time.Now().Unix(), ext)
+		filePath := filepath.Join(uploadDir, filename)
+
+		// Save file
+		if err := c.SaveUploadedFile(file, filePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			return
+		}
+
+		imageURL = fmt.Sprintf("/uploads/tenants/%s", filename)
+	}
+
+	// Get current user ID from context (superadmin)
+	var createdBy *uint
+	if userID, exists := c.Get("user_id"); exists {
+		uid := userID.(uint)
+		createdBy = &uid
+	}
+
+	tenant, err := h.tenantService.CreateTenant(req, imageURL, createdBy)
 	if err != nil {
+		// Delete uploaded image if tenant creation fails
+		if imageURL != "" {
+			os.Remove(filepath.Join("uploads/tenants", filepath.Base(imageURL)))
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -97,8 +193,11 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 			Website:     tenant.Website,
 			Email:       tenant.Email,
 			Phone:       tenant.Phone,
+			Image:       tenant.Image,
 			IsActive:    tenant.IsActive,
 			CreatedAt:   tenant.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:   tenant.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:   tenant.CreatedBy,
 		},
 	})
 }
@@ -127,18 +226,34 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 
 	var response []dto.BranchResponse
 	for _, branch := range branches {
+		var createdByName, updatedByName *string
+		if branch.Creator != nil {
+			name := branch.Creator.FullName
+			createdByName = &name
+		}
+		if branch.Updater != nil {
+			name := branch.Updater.FullName
+			updatedByName = &name
+		}
+
 		response = append(response, dto.BranchResponse{
-			ID:          branch.ID,
-			TenantID:    branch.TenantID,
-			Name:        branch.Name,
-			Code:        branch.Code,
-			Description: branch.Description,
-			Address:     branch.Address,
-			Website:     branch.Website,
-			Email:       branch.Email,
-			Phone:       branch.Phone,
-			IsActive:    branch.IsActive,
-			CreatedAt:   branch.CreatedAt.Format("2006-01-02 15:04:05"),
+			ID:            branch.ID,
+			TenantID:      branch.TenantID,
+			Name:          branch.Name,
+			Code:          branch.Code,
+			Description:   branch.Description,
+			Address:       branch.Address,
+			Website:       branch.Website,
+			Email:         branch.Email,
+			Phone:         branch.Phone,
+			Image:         branch.Image,
+			IsActive:      branch.IsActive,
+			CreatedAt:     branch.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:     branch.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:     branch.CreatedBy,
+			CreatedByName: createdByName,
+			UpdatedBy:     branch.UpdatedBy,
+			UpdatedByName: updatedByName,
 		})
 	}
 
@@ -149,12 +264,20 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 
 // UpdateTenant godoc
 // @Summary Update a tenant
-// @Description Update an existing tenant (superadmin only)
+// @Description Update an existing tenant with optional image upload (superadmin only)
 // @Tags superadmin
-// @Accept json
+// @Accept multipart/form-data
 // @Produce json
 // @Param tenant_id path int true "Tenant ID"
-// @Param request body dto.UpdateTenantRequest true "Updated tenant data"
+// @Param name formData string true "Tenant name"
+// @Param code formData string true "Tenant code"
+// @Param description formData string false "Description"
+// @Param address formData string false "Address"
+// @Param website formData string false "Website URL"
+// @Param email formData string false "Email"
+// @Param phone formData string false "Phone"
+// @Param is_active formData boolean true "Active status"
+// @Param image formData file false "Tenant image (jpg, jpeg, png, gif, webp, max 5MB)"
 // @Success 200 {object} dto.TenantResponse
 // @Router /superadmin/tenants/{tenant_id} [put]
 func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
@@ -164,14 +287,94 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 		return
 	}
 
-	var req dto.UpdateTenantRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Parse form data
+	req := dto.UpdateTenantRequest{
+		Name:        c.PostForm("name"),
+		Code:        c.PostForm("code"),
+		Description: c.PostForm("description"),
+		Address:     c.PostForm("address"),
+		Website:     c.PostForm("website"),
+		Email:       c.PostForm("email"),
+		Phone:       c.PostForm("phone"),
+		Active:      c.PostForm("is_active") == "true",
+	}
+
+	// Validate required fields
+	if req.Name == "" || req.Code == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
 		return
 	}
 
-	tenant, err := h.tenantService.UpdateTenant(uint(tenantID), req)
+	// Handle image upload
+	var imageURL string
+	file, err := c.FormFile("image")
+	if err == nil {
+		// Validate file type
+		ext := strings.ToLower(filepath.Ext(file.Filename))
+		allowedExts := map[string]bool{
+			".jpg":  true,
+			".jpeg": true,
+			".png":  true,
+			".gif":  true,
+			".webp": true,
+		}
+		if !allowedExts[ext] {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			return
+		}
+
+		// Validate file size (max 5MB)
+		if file.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			return
+		}
+
+		// Get existing tenant to delete old image
+		existingTenant, err := h.tenantService.GetTenantByID(uint(tenantID))
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Tenant not found"})
+			return
+		}
+
+		// Create uploads directory
+		uploadDir := "uploads/tenants"
+		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			return
+		}
+
+		// Delete old image if exists
+		if existingTenant.Image != "" {
+			oldPath := filepath.Join(uploadDir, filepath.Base(existingTenant.Image))
+			os.Remove(oldPath) // Ignore error if file doesn't exist
+		}
+
+		// Generate unique filename
+		filename := fmt.Sprintf("tenant_%s_%d%s", req.Code, time.Now().Unix(), ext)
+		filePath := filepath.Join(uploadDir, filename)
+
+		// Save file
+		if err := c.SaveUploadedFile(file, filePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			return
+		}
+
+		imageURL = fmt.Sprintf("/uploads/tenants/%s", filename)
+	}
+
+	// Get current user ID from context
+	var updatedBy *uint
+	if userID, exists := c.Get("user_id"); exists {
+		uid := userID.(uint)
+		updatedBy = &uid
+	}
+
+	tenant, err := h.tenantService.UpdateTenant(uint(tenantID), req, imageURL, updatedBy)
 	if err != nil {
+		// Delete uploaded image if update fails
+		if imageURL != "" {
+			os.Remove(filepath.Join("uploads/tenants", filepath.Base(imageURL)))
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -187,8 +390,11 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 			Website:     tenant.Website,
 			Email:       tenant.Email,
 			Phone:       tenant.Phone,
+			Image:       tenant.Image,
 			IsActive:    tenant.IsActive,
 			CreatedAt:   tenant.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:   tenant.UpdatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedBy:   tenant.UpdatedBy,
 		},
 	})
 }
@@ -209,9 +415,31 @@ func (h *SuperAdminHandler) DeleteTenant(c *gin.Context) {
 		return
 	}
 
-	if err := h.tenantService.DeleteTenant(uint(tenantID)); err != nil {
+	// Get existing tenant to delete image file
+	existingTenant, err := h.tenantService.GetTenantByID(uint(tenantID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Tenant not found"})
+		return
+	}
+
+	// Get current user ID from context
+	var deletedBy *uint
+	if userID, exists := c.Get("user_id"); exists {
+		uid := userID.(uint)
+		deletedBy = &uid
+	}
+
+	// Delete tenant from database
+	if err := h.tenantService.DeleteTenant(uint(tenantID), deletedBy); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	// Delete image file if exists
+	if existingTenant.Image != "" {
+		uploadDir := "uploads/tenants"
+		imagePath := filepath.Join(uploadDir, filepath.Base(existingTenant.Image))
+		os.Remove(imagePath) // Ignore error if file doesn't exist
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -223,20 +451,103 @@ func (h *SuperAdminHandler) DeleteTenant(c *gin.Context) {
 // @Summary Create a new branch
 // @Description Create a new branch for a tenant (superadmin only)
 // @Tags superadmin
-// @Accept json
+// @Accept multipart/form-data
 // @Produce json
-// @Param request body dto.CreateBranchRequest true "Branch data"
+// @Param tenant_id formData integer true "Tenant ID"
+// @Param name formData string true "Branch name"
+// @Param code formData string true "Branch code"
+// @Param description formData string false "Description"
+// @Param address formData string false "Address"
+// @Param website formData string false "Website URL"
+// @Param email formData string false "Email"
+// @Param phone formData string false "Phone"
+// @Param is_active formData boolean true "Active status"
+// @Param image formData file false "Branch image (jpg, jpeg, png, gif, webp, max 5MB)"
 // @Success 200 {object} dto.BranchResponse
 // @Router /superadmin/branches [post]
 func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
-	var req dto.CreateBranchRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Parse form data
+	tenantID, err := strconv.ParseUint(c.PostForm("tenant_id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tenant ID"})
 		return
 	}
 
-	branch, err := h.branchService.CreateBranch(req)
+	req := dto.CreateBranchRequest{
+		TenantID:    uint(tenantID),
+		Name:        c.PostForm("name"),
+		Code:        c.PostForm("code"),
+		Description: c.PostForm("description"),
+		Address:     c.PostForm("address"),
+		Website:     c.PostForm("website"),
+		Email:       c.PostForm("email"),
+		Phone:       c.PostForm("phone"),
+		Active:      c.PostForm("is_active") == "true",
+	}
+
+	// Validate required fields
+	if req.Name == "" || req.Code == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
+		return
+	}
+
+	// Handle image upload
+	var imageURL string
+	file, err := c.FormFile("image")
+	if err == nil {
+		// Validate file type
+		ext := strings.ToLower(filepath.Ext(file.Filename))
+		allowedExts := map[string]bool{
+			".jpg":  true,
+			".jpeg": true,
+			".png":  true,
+			".gif":  true,
+			".webp": true,
+		}
+		if !allowedExts[ext] {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			return
+		}
+
+		// Validate file size (max 5MB)
+		if file.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			return
+		}
+
+		// Create uploads directory
+		uploadDir := "uploads/branches"
+		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			return
+		}
+
+		// Generate unique filename
+		filename := fmt.Sprintf("branch_%s_%d%s", req.Code, time.Now().Unix(), ext)
+		filePath := filepath.Join(uploadDir, filename)
+
+		// Save file
+		if err := c.SaveUploadedFile(file, filePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			return
+		}
+
+		imageURL = fmt.Sprintf("/uploads/branches/%s", filename)
+	}
+
+	// Get current user ID from context
+	var createdBy *uint
+	if userID, exists := c.Get("user_id"); exists {
+		uid := userID.(uint)
+		createdBy = &uid
+	}
+
+	branch, err := h.branchService.CreateBranch(req, imageURL, createdBy)
 	if err != nil {
+		// Delete uploaded image if creation fails
+		if imageURL != "" {
+			os.Remove(filepath.Join("uploads/branches", filepath.Base(imageURL)))
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -253,8 +564,11 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 			Website:     branch.Website,
 			Email:       branch.Email,
 			Phone:       branch.Phone,
+			Image:       branch.Image,
 			IsActive:    branch.IsActive,
 			CreatedAt:   branch.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:   branch.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:   branch.CreatedBy,
 		},
 	})
 }
@@ -263,10 +577,18 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 // @Summary Update a branch
 // @Description Update an existing branch (superadmin only)
 // @Tags superadmin
-// @Accept json
+// @Accept multipart/form-data
 // @Produce json
 // @Param branch_id path int true "Branch ID"
-// @Param request body dto.UpdateBranchRequest true "Updated branch data"
+// @Param name formData string true "Branch name"
+// @Param code formData string true "Branch code"
+// @Param description formData string false "Description"
+// @Param address formData string false "Address"
+// @Param website formData string false "Website URL"
+// @Param email formData string false "Email"
+// @Param phone formData string false "Phone"
+// @Param is_active formData boolean true "Active status"
+// @Param image formData file false "Branch image (jpg, jpeg, png, gif, webp, max 5MB)"
 // @Success 200 {object} dto.BranchResponse
 // @Router /superadmin/branches/{branch_id} [put]
 func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
@@ -276,14 +598,94 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 		return
 	}
 
-	var req dto.UpdateBranchRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Parse form data
+	req := dto.UpdateBranchRequest{
+		Name:        c.PostForm("name"),
+		Code:        c.PostForm("code"),
+		Description: c.PostForm("description"),
+		Address:     c.PostForm("address"),
+		Website:     c.PostForm("website"),
+		Email:       c.PostForm("email"),
+		Phone:       c.PostForm("phone"),
+		Active:      c.PostForm("is_active") == "true",
+	}
+
+	// Validate required fields
+	if req.Name == "" || req.Code == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
 		return
 	}
 
-	branch, err := h.branchService.UpdateBranch(uint(branchID), req)
+	// Handle image upload
+	var imageURL string
+	file, err := c.FormFile("image")
+	if err == nil {
+		// Validate file type
+		ext := strings.ToLower(filepath.Ext(file.Filename))
+		allowedExts := map[string]bool{
+			".jpg":  true,
+			".jpeg": true,
+			".png":  true,
+			".gif":  true,
+			".webp": true,
+		}
+		if !allowedExts[ext] {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			return
+		}
+
+		// Validate file size (max 5MB)
+		if file.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			return
+		}
+
+		// Get existing branch to delete old image
+		existingBranch, err := h.branchService.GetBranchByID(uint(branchID))
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Branch not found"})
+			return
+		}
+
+		// Create uploads directory
+		uploadDir := "uploads/branches"
+		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			return
+		}
+
+		// Delete old image if exists
+		if existingBranch.Image != "" {
+			oldPath := filepath.Join(uploadDir, filepath.Base(existingBranch.Image))
+			os.Remove(oldPath) // Ignore error if file doesn't exist
+		}
+
+		// Generate unique filename
+		filename := fmt.Sprintf("branch_%s_%d%s", req.Code, time.Now().Unix(), ext)
+		filePath := filepath.Join(uploadDir, filename)
+
+		// Save file
+		if err := c.SaveUploadedFile(file, filePath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			return
+		}
+
+		imageURL = fmt.Sprintf("/uploads/branches/%s", filename)
+	}
+
+	// Get current user ID from context
+	var updatedBy *uint
+	if userID, exists := c.Get("user_id"); exists {
+		uid := userID.(uint)
+		updatedBy = &uid
+	}
+
+	branch, err := h.branchService.UpdateBranch(uint(branchID), req, imageURL, updatedBy)
 	if err != nil {
+		// Delete uploaded image if update fails
+		if imageURL != "" {
+			os.Remove(filepath.Join("uploads/branches", filepath.Base(imageURL)))
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -300,8 +702,11 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 			Website:     branch.Website,
 			Email:       branch.Email,
 			Phone:       branch.Phone,
+			Image:       branch.Image,
 			IsActive:    branch.IsActive,
 			CreatedAt:   branch.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:   branch.UpdatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedBy:   branch.UpdatedBy,
 		},
 	})
 }
@@ -322,9 +727,31 @@ func (h *SuperAdminHandler) DeleteBranch(c *gin.Context) {
 		return
 	}
 
-	if err := h.branchService.DeleteBranch(uint(branchID)); err != nil {
+	// Get existing branch to delete image file
+	existingBranch, err := h.branchService.GetBranchByID(uint(branchID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Branch not found"})
+		return
+	}
+
+	// Get current user ID from context
+	var deletedBy *uint
+	if userID, exists := c.Get("user_id"); exists {
+		uid := userID.(uint)
+		deletedBy = &uid
+	}
+
+	// Delete branch from database
+	if err := h.branchService.DeleteBranch(uint(branchID), deletedBy); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	// Delete image file if exists
+	if existingBranch.Image != "" {
+		uploadDir := "uploads/branches"
+		imagePath := filepath.Join(uploadDir, filepath.Base(existingBranch.Image))
+		os.Remove(imagePath) // Ignore error if file doesn't exist
 	}
 
 	c.JSON(http.StatusOK, gin.H{
