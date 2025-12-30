@@ -17,6 +17,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	tncService := services.NewTnCService(database.DB)
 	faqService := services.NewFAQService(database.DB)
 	categoryService := services.NewCategoryService(database.DB)
+	auditTrailService := services.NewAuditTrailService(database.DB)
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
@@ -36,6 +37,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	userHandler := handlers.NewUserHandler(cfg)
 	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
+	auditTrailHandler := handlers.NewAuditTrailHandler(auditTrailService)
 
 	// Health check
 	router.GET("/health", healthHandler.Handle)
@@ -128,6 +130,12 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.POST("/users", userHandler.CreateUser)
 			protected.PUT("/users/:id", userHandler.UpdateUser)
 			protected.DELETE("/users/:id", userHandler.DeleteUser)
+
+			// Audit trail routes
+			protected.GET("/audit-trails", auditTrailHandler.ListAuditTrails)
+			protected.GET("/audit-trails/user/:user_id", auditTrailHandler.GetUserActivityLog)
+			protected.GET("/audit-trails/entity/:entity_type/:entity_id", auditTrailHandler.GetEntityAuditHistory)
+			protected.GET("/audit-trails/:id", auditTrailHandler.GetAuditTrailByID)
 		}
 
 		// Superadmin routes

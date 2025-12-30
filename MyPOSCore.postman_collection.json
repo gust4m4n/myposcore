@@ -5494,6 +5494,447 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Audit Trails",
+			"item": [
+				{
+					"name": "List Audit Trails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-Code",
+								"value": "{{tenant_code}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Branch-Code",
+								"value": "{{branch_code}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/audit-trails?page=1&limit=20&user_id=&entity_type=&entity_id=&action=&date_from=&date_to=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"audit-trails"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Items per page"
+								},
+								{
+									"key": "user_id",
+									"value": "",
+									"description": "Filter by user ID"
+								},
+								{
+									"key": "entity_type",
+									"value": "",
+									"description": "Filter by entity type (user, product, order, payment, category, faq, tnc)"
+								},
+								{
+									"key": "entity_id",
+									"value": "",
+									"description": "Filter by entity ID"
+								},
+								{
+									"key": "action",
+									"value": "",
+									"description": "Filter by action (create, update, delete, login, logout)"
+								},
+								{
+									"key": "date_from",
+									"value": "",
+									"description": "Filter from date (YYYY-MM-DD)"
+								},
+								{
+									"key": "date_to",
+									"value": "",
+									"description": "Filter to date (YYYY-MM-DD)"
+								}
+							]
+						},
+						"description": "Get paginated list of audit trails with optional filters. All query parameters are optional."
+					},
+					"response": [
+						{
+							"name": "List Audit Trails Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Tenant-Code",
+										"value": "RESTO",
+										"type": "text"
+									},
+									{
+										"key": "X-Branch-Code",
+										"value": "RESTO-JKT",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/audit-trails?page=1&limit=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"audit-trails"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 2,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 45,\n    \"page\": 1,\n    \"limit\": 20,\n    \"total_pages\": 3\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Audit Trail by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-Code",
+								"value": "{{tenant_code}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Branch-Code",
+								"value": "{{branch_code}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/audit-trails/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"audit-trails",
+								"1"
+							]
+						},
+						"description": "Get a specific audit trail record by ID"
+					},
+					"response": [
+						{
+							"name": "Get Audit Trail Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Tenant-Code",
+										"value": "RESTO",
+										"type": "text"
+									},
+									{
+										"key": "X-Branch-Code",
+										"value": "RESTO-JKT",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/audit-trails/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"audit-trails",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": 1,\n  \"tenant_id\": 1,\n  \"branch_id\": 1,\n  \"user_id\": 2,\n  \"user_name\": \"John Doe\",\n  \"entity_type\": \"product\",\n  \"entity_id\": 5,\n  \"action\": \"update\",\n  \"changes\": {\n    \"name\": {\n      \"old\": \"Nasi Goreng\",\n      \"new\": \"Nasi Goreng Special\"\n    },\n    \"price\": {\n      \"old\": 25000,\n      \"new\": 30000\n    },\n    \"description\": {\n      \"old\": \"Nasi goreng biasa\",\n      \"new\": \"Nasi goreng dengan telur dan ayam\"\n    }\n  },\n  \"ip_address\": \"192.168.1.100\",\n  \"user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36\",\n  \"created_at\": \"2025-12-30T10:30:00+07:00\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Entity Audit History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-Code",
+								"value": "{{tenant_code}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Branch-Code",
+								"value": "{{branch_code}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/audit-trails/entity/product/5?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"audit-trails",
+								"entity",
+								"product",
+								"5"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "Get complete audit history for a specific entity. Shows all changes made to this entity over time.\n\nSupported entity types:\n- user\n- product\n- order\n- payment\n- category\n- faq\n- tnc"
+					},
+					"response": [
+						{
+							"name": "Get Entity History Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Tenant-Code",
+										"value": "RESTO",
+										"type": "text"
+									},
+									{
+										"key": "X-Branch-Code",
+										"value": "RESTO-JKT",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/audit-trails/entity/product/5?page=1&limit=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"audit-trails",
+										"entity",
+										"product",
+										"5"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 5,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 30000,\n          \"new\": 35000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T14:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"name\": {\n          \"old\": \"Nasi Goreng\",\n          \"new\": \"Nasi Goreng Special\"\n        },\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 1,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 3,\n      \"user_name\": \"Jane Smith\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"create\",\n      \"changes\": {\n        \"name\": \"Nasi Goreng\",\n        \"price\": 25000,\n        \"category_id\": 1\n      },\n      \"ip_address\": \"192.168.1.105\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-29T09:00:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 3,\n    \"page\": 1,\n    \"limit\": 20,\n    \"total_pages\": 1\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User Activity Log",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Tenant-Code",
+								"value": "{{tenant_code}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Branch-Code",
+								"value": "{{branch_code}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/audit-trails/user/2?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"audit-trails",
+								"user",
+								"2"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "Get complete activity log for a specific user. Shows all actions performed by this user across all entities."
+					},
+					"response": [
+						{
+							"name": "Get User Activity Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Tenant-Code",
+										"value": "RESTO",
+										"type": "text"
+									},
+									{
+										"key": "X-Branch-Code",
+										"value": "RESTO-JKT",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/audit-trails/user/2?page=1&limit=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"audit-trails",
+										"user",
+										"2"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": 15,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"payment\",\n      \"entity_id\": 8,\n      \"action\": \"create\",\n      \"changes\": {\n        \"order_id\": 10,\n        \"amount\": 150000,\n        \"payment_method\": \"cash\"\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T11:00:00+07:00\"\n    },\n    {\n      \"id\": 12,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"order\",\n      \"entity_id\": 10,\n      \"action\": \"create\",\n      \"changes\": {\n        \"total_amount\": 150000,\n        \"items_count\": 3\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:25:00+07:00\"\n    },\n    {\n      \"id\": 8,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"product\",\n      \"entity_id\": 5,\n      \"action\": \"update\",\n      \"changes\": {\n        \"price\": {\n          \"old\": 25000,\n          \"new\": 30000\n        }\n      },\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T10:30:00+07:00\"\n    },\n    {\n      \"id\": 3,\n      \"tenant_id\": 1,\n      \"branch_id\": 1,\n      \"user_id\": 2,\n      \"user_name\": \"John Doe\",\n      \"entity_type\": \"user\",\n      \"entity_id\": 2,\n      \"action\": \"login\",\n      \"changes\": {},\n      \"ip_address\": \"192.168.1.100\",\n      \"user_agent\": \"Mozilla/5.0\",\n      \"created_at\": \"2025-12-30T09:00:00+07:00\"\n    }\n  ],\n  \"pagination\": {\n    \"total\": 24,\n    \"page\": 1,\n    \"limit\": 20,\n    \"total_pages\": 2\n  }\n}"
+						}
+					]
+				}
+			]
 		}
 	],
 	"variable": [
