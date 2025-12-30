@@ -32,7 +32,6 @@ type User struct {
 	Deleter *User  `gorm:"foreignKey:DeletedBy" json:"deleter,omitempty"`
 }
 
-// Unique constraint on username per tenant
 func (User) TableName() string {
 	return "users"
 }

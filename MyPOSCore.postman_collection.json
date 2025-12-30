@@ -219,7 +219,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"{{tenant_code}}\",\n  \"branch_code\": \"{{branch_code}}\",\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
+							"raw": "{\n  \"tenant_code\": \"{{tenant_code}}\",\n  \"branch_code\": \"{{branch_code}}\",\n  \"email\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/register",
@@ -248,7 +248,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"TENANT001\",\n  \"branch_code\": \"BRANCH001\",\n  \"username\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
+									"raw": "{\n  \"tenant_code\": \"TENANT001\",\n  \"branch_code\": \"BRANCH001\",\n  \"email\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/register",
@@ -305,7 +305,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"john@warteg123.com\",\n  \"password\": \"password123\"\n}"
+							"raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -319,7 +319,7 @@
 								"login"
 							]
 						},
-						"description": "Endpoint untuk login user. Username bersifat unique di seluruh sistem. Mengembalikan JWT token, profile user, tenant, dan branch information."
+						"description": "Endpoint untuk login user. Email bersifat unique di seluruh sistem. Mengembalikan JWT token, profile user, tenant, dan branch information."
 					},
 					"response": [
 						{
@@ -334,7 +334,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"johndoe\",\n  \"password\": \"password123\"\n}"
+									"raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -375,7 +375,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin@mypos.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin@mypos.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -405,7 +405,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -435,7 +435,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"john@foodcorner99.com\",\n  \"password\": \"password123\"\n}"
+							"raw": "{\n  \"email\": \"john@foodcorner99.com\",\n  \"password\": \"password123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -465,7 +465,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -495,7 +495,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.pusat@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.pusat@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -525,7 +525,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.menteng@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.menteng@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -555,7 +555,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.menteng@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.menteng@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -585,7 +585,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -615,7 +615,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.gi@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.gi@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -645,7 +645,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.gi@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.gi@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -675,7 +675,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin.senayan@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"admin.senayan@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -705,7 +705,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"cashier.senayan@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"email\": \"cashier.senayan@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -899,7 +899,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
+							"raw": "{\n  \"email\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -933,7 +933,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -977,7 +977,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"password\": \"password1\",\n  \"confirm_password\": \"password2\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"password\": \"password1\",\n  \"confirm_password\": \"password2\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -1021,7 +1021,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"admin1\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
+									"raw": "{\n  \"email\": \"admin1\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-password",
@@ -3008,7 +3008,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+							"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users",
@@ -3041,7 +3041,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+									"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/users",
@@ -3383,7 +3383,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+							"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users",
@@ -3416,7 +3416,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
+									"raw": "{\n  \"email\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\",\n  \"role\": \"user\",\n  \"branch_id\": 1,\n  \"is_active\": true\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/users",
@@ -4752,7 +4752,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"{{superadmin_tenant}}\",\n  \"branch_code\": \"{{superadmin_branch}}\",\n  \"username\": \"{{superadmin_username}}\",\n  \"password\": \"{{superadmin_password}}\"\n}"
+							"raw": "{\n  \"tenant_code\": \"{{superadmin_tenant}}\",\n  \"branch_code\": \"{{superadmin_branch}}\",\n  \"email\": \"{{superadmin_username}}\",\n  \"password\": \"{{superadmin_password}}\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -4781,7 +4781,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"supertenant\",\n  \"branch_code\": \"superbranch\",\n  \"username\": \"superadmin\",\n  \"password\": \"123456\"\n}"
+									"raw": "{\n  \"tenant_code\": \"supertenant\",\n  \"branch_code\": \"superbranch\",\n  \"email\": \"superadmin\",\n  \"password\": \"123456\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -5605,7 +5605,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"username\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"email\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -5634,7 +5634,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"username\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
+									"raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"email\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -5755,7 +5755,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"username\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
+							"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"email\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login",
@@ -5784,7 +5784,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"username\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
+									"raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"email\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/auth/login",
@@ -6180,7 +6180,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"username\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+							"raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/admin/change-pin",
@@ -6214,7 +6214,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-pin",
@@ -6258,7 +6258,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"654321\"\n}"
+									"raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"654321\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-pin",
@@ -6302,7 +6302,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"username\": \"admin1\",\n  \"pin\": \"888999\",\n  \"confirm_pin\": \"888999\"\n}"
+									"raw": "{\n  \"email\": \"admin1\",\n  \"pin\": \"888999\",\n  \"confirm_pin\": \"888999\"\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/v1/admin/change-pin",

@@ -20,54 +20,54 @@ ON CONFLICT (tenant_id, code) DO NOTHING;
 
 -- Create users untuk Warung Makan (password semua: 123456)
 -- Tenant Admin
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'tenantadmin', 'tenantadmin@resto.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'tenantadmin@resto.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Tenant Admin Resto', 'tenantadmin', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'resto01' AND b.code = 'resto01-pusat'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Branch Admin Pusat
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'branchadmin_pusat', 'branchadmin.pusat@resto.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'branchadmin.pusat@resto.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Branch Admin Pusat', 'branchadmin', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'resto01' AND b.code = 'resto01-pusat'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Branch Admin Menteng
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'branchadmin_menteng', 'branchadmin.menteng@resto.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'branchadmin.menteng@resto.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Branch Admin Menteng', 'branchadmin', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'resto01' AND b.code = 'resto01-menteng'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Kasir Pusat
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'kasir_pusat', 'kasir.pusat@resto.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'kasir.pusat@resto.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Kasir Pusat', 'user', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'resto01' AND b.code = 'resto01-pusat'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Kasir Menteng
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'kasir_menteng', 'kasir.menteng@resto.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'kasir.menteng@resto.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Kasir Menteng', 'user', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'resto01' AND b.code = 'resto01-menteng'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- ========================================
 -- TENANT 2: FASHION STORE
@@ -91,58 +91,58 @@ ON CONFLICT (tenant_id, code) DO NOTHING;
 
 -- Create users untuk Fashion Store (password semua: 123456)
 -- Tenant Admin
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'tenantadmin', 'tenantadmin@fashion.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'tenantadmin@fashion.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Tenant Admin Fashion', 'tenantadmin', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'fashion01' AND b.code = 'fashion01-plaza'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Branch Admin Plaza
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'branchadmin_plaza', 'branchadmin.plaza@fashion.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'branchadmin.plaza@fashion.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Branch Admin Plaza', 'branchadmin', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'fashion01' AND b.code = 'fashion01-plaza'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Branch Admin Grand
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'branchadmin_grand', 'branchadmin.grand@fashion.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'branchadmin.grand@fashion.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Branch Admin Grand', 'branchadmin', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'fashion01' AND b.code = 'fashion01-grand'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Kasir Plaza
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'kasir_plaza', 'kasir.plaza@fashion.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'kasir.plaza@fashion.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Kasir Plaza', 'user', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'fashion01' AND b.code = 'fashion01-plaza'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Sales Plaza
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'sales_plaza', 'sales.plaza@fashion.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'sales.plaza@fashion.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Sales Plaza', 'user', true, NOW(), NOW()
 FROM tenants t
 JOIN branches b ON b.tenant_id = t.id
 WHERE t.code = 'fashion01' AND b.code = 'fashion01-plaza'
-ON CONFLICT (tenant_id, username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Kasir Grand
-INSERT INTO users (tenant_id, branch_id, username, email, password, full_name, role, is_active, created_at, updated_at)
-SELECT t.id, b.id, 'kasir_grand', 'kasir.grand@fashion.com',
+INSERT INTO users (tenant_id, branch_id, email, password, full_name, role, is_active, created_at, updated_at)
+SELECT t.id, b.id, 'kasir.grand@fashion.com',
        '$2a$14$7dg5D./t2Un8.SFREKpxsu/nDt8v8oLWb.BKFQXUD0r2bdknIllF6',
        'Kasir Grand', 'user', true, NOW(), NOW()
 FROM tenants t
