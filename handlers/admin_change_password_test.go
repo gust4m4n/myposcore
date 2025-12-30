@@ -38,7 +38,6 @@ func createTestUsers(db *gorm.DB) (superadmin, owner, admin, user models.User) {
 
 	tenant := models.Tenant{
 		Name:     "Test Tenant",
-		Code:     "TEST001",
 		IsActive: true,
 	}
 	db.Create(&tenant)
@@ -46,7 +45,6 @@ func createTestUsers(db *gorm.DB) (superadmin, owner, admin, user models.User) {
 	branch := models.Branch{
 		TenantID: tenant.ID,
 		Name:     "Test Branch",
-		Code:     "BR001",
 		IsActive: true,
 	}
 	db.Create(&branch)
@@ -54,7 +52,6 @@ func createTestUsers(db *gorm.DB) (superadmin, owner, admin, user models.User) {
 	superadmin = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "superadmin",
 		Email:    "superadmin@test.com",
 		Password: hashedPassword,
 		FullName: "Super Admin",
@@ -66,7 +63,6 @@ func createTestUsers(db *gorm.DB) (superadmin, owner, admin, user models.User) {
 	owner = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "owner",
 		Email:    "owner@test.com",
 		Password: hashedPassword,
 		FullName: "Owner",
@@ -78,7 +74,6 @@ func createTestUsers(db *gorm.DB) (superadmin, owner, admin, user models.User) {
 	admin = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "admin",
 		Email:    "admin@test.com",
 		Password: hashedPassword,
 		FullName: "Admin",
@@ -90,7 +85,6 @@ func createTestUsers(db *gorm.DB) (superadmin, owner, admin, user models.User) {
 	user = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "user",
 		Email:    "user@test.com",
 		Password: hashedPassword,
 		FullName: "User",
@@ -115,7 +109,7 @@ func TestAdminChangePassword_Success(t *testing.T) {
 	// Test Case 1: Superadmin changes owner password
 	t.Run("Superadmin changes admin password", func(t *testing.T) {
 		reqBody := dto.AdminChangePasswordRequest{
-			Username:        admin.Username,
+			Email:           admin.Email,
 			Password:        "newpassword123",
 			ConfirmPassword: "newpassword123",
 		}
@@ -139,7 +133,7 @@ func TestAdminChangePassword_Success(t *testing.T) {
 	// Test Case 2: Admin changes user password
 	t.Run("Admin changes user password", func(t *testing.T) {
 		reqBody := dto.AdminChangePasswordRequest{
-			Username:        user.Username,
+			Email:           user.Email,
 			Password:        "newuserpass123",
 			ConfirmPassword: "newuserpass123",
 		}
@@ -168,7 +162,7 @@ func TestAdminChangePassword_PasswordMismatch(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	reqBody := dto.AdminChangePasswordRequest{
-		Username:        user.Username,
+		Email:           user.Email,
 		Password:        "password1",
 		ConfirmPassword: "password2",
 	}
@@ -201,7 +195,7 @@ func TestAdminChangePassword_InsufficientPermission(t *testing.T) {
 
 	// User tries to change admin password (should fail)
 	reqBody := dto.AdminChangePasswordRequest{
-		Username:        admin.Username,
+		Email:           admin.Email,
 		Password:        "newpassword123",
 		ConfirmPassword: "newpassword123",
 	}
@@ -233,7 +227,7 @@ func TestAdminChangePassword_UserNotFound(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	reqBody := dto.AdminChangePasswordRequest{
-		Username:        "nonexistent",
+		Email:           "nonexistent@test.com",
 		Password:        "newpassword123",
 		ConfirmPassword: "newpassword123",
 	}

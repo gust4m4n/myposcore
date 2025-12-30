@@ -36,7 +36,7 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 	}
 
 	// Generate token
-	token, err := utils.GenerateToken(user.ID, user.TenantID, user.Username, h.config.JWTSecret)
+	token, err := utils.GenerateToken(user.ID, user.TenantID, user.Email, h.config.JWTSecret)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
 		return
@@ -49,7 +49,6 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 			TenantID:   user.TenantID,
 			BranchID:   user.BranchID,
 			BranchName: branch.Name,
-			Username:   user.Username,
 			Email:      user.Email,
 			FullName:   user.FullName,
 			Role:       user.Role,
@@ -58,7 +57,6 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 		Tenant: dto.TenantInfo{
 			ID:          tenant.ID,
 			Name:        tenant.Name,
-			Code:        tenant.Code,
 			Description: tenant.Description,
 			Address:     tenant.Address,
 			Website:     tenant.Website,
@@ -70,7 +68,6 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 		Branch: dto.BranchInfo{
 			ID:          branch.ID,
 			Name:        branch.Name,
-			Code:        branch.Code,
 			Description: branch.Description,
 			Address:     branch.Address,
 			Website:     branch.Website,

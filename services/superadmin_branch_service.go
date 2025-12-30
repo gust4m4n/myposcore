@@ -37,20 +37,10 @@ func (s *SuperAdminBranchService) CreateBranch(req dto.CreateBranchRequest, imag
 		return nil, err
 	}
 
-	// Check if branch code already exists in this tenant
-	var existing models.Branch
-	err := s.db.Where("tenant_id = ? AND code = ?", req.TenantID, req.Code).First(&existing).Error
-	if err == nil {
-		return nil, errors.New("branch code already exists in this tenant")
-	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, err
-	}
-
 	// Create branch
 	branch := models.Branch{
 		TenantID:    req.TenantID,
 		Name:        req.Name,
-		Code:        req.Code,
 		Description: req.Description,
 		Address:     req.Address,
 		Website:     req.Website,
@@ -78,20 +68,8 @@ func (s *SuperAdminBranchService) UpdateBranch(id uint, req dto.UpdateBranchRequ
 		return nil, err
 	}
 
-	// Check if code is being changed and if new code already exists in this tenant
-	if branch.Code != req.Code {
-		var existing models.Branch
-		err := s.db.Where("tenant_id = ? AND code = ? AND id != ?", branch.TenantID, req.Code, id).First(&existing).Error
-		if err == nil {
-			return nil, errors.New("branch code already exists in this tenant")
-		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, err
-		}
-	}
-
 	// Update branch
 	branch.Name = req.Name
-	branch.Code = req.Code
 	branch.Description = req.Description
 	branch.Address = req.Address
 	branch.Website = req.Website

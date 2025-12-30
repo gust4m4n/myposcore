@@ -61,7 +61,6 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 			ID:            user.ID,
 			TenantID:      user.TenantID,
 			BranchID:      user.BranchID,
-			Username:      user.Username,
 			Email:         user.Email,
 			FullName:      user.FullName,
 			Role:          user.Role,
@@ -121,7 +120,6 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 			ID:            user.ID,
 			TenantID:      user.TenantID,
 			BranchID:      user.BranchID,
-			Username:      user.Username,
 			Email:         user.Email,
 			FullName:      user.FullName,
 			Role:          user.Role,
@@ -143,7 +141,6 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 // @Accept multipart/form-data
 // @Produce json
 // @Param request body dto.CreateUserRequest true "User data (JSON)" (when using application/json)
-// @Param username formData string true "Username" (when using multipart/form-data)
 // @Param email formData string true "Email" (when using multipart/form-data)
 // @Param password formData string true "Password" (when using multipart/form-data)
 // @Param full_name formData string true "Full name" (when using multipart/form-data)
@@ -162,7 +159,6 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	// Check if request is multipart form-data
 	if strings.Contains(contentType, "multipart/form-data") {
 		// Parse form data
-		req.Username = c.PostForm("username")
 		req.Email = c.PostForm("email")
 		req.Password = c.PostForm("password")
 		req.FullName = c.PostForm("full_name")
@@ -185,10 +181,6 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		}
 
 		// Validate required fields
-		if req.Username == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Username is required"})
-			return
-		}
 		if req.Email == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Email is required"})
 			return
@@ -249,7 +241,6 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 			ID:        user.ID,
 			TenantID:  user.TenantID,
 			BranchID:  user.BranchID,
-			Username:  user.Username,
 			Email:     user.Email,
 			FullName:  user.FullName,
 			Role:      user.Role,
@@ -269,7 +260,6 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 // @Produce json
 // @Param id path int true "User ID"
 // @Param request body dto.UpdateUserRequest true "User data to update (JSON)" (when using application/json)
-// @Param username formData string false "Username" (when using multipart/form-data)
 // @Param email formData string false "Email" (when using multipart/form-data)
 // @Param password formData string false "Password" (when using multipart/form-data)
 // @Param full_name formData string false "Full name" (when using multipart/form-data)
@@ -293,9 +283,6 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 	// Check if request is multipart form-data
 	if strings.Contains(contentType, "multipart/form-data") {
 		// Parse form data
-		if username := c.PostForm("username"); username != "" {
-			req.Username = &username
-		}
 		if email := c.PostForm("email"); email != "" {
 			req.Email = &email
 		}
@@ -376,7 +363,6 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 			ID:        user.ID,
 			TenantID:  user.TenantID,
 			BranchID:  user.BranchID,
-			Username:  user.Username,
 			Email:     user.Email,
 			FullName:  user.FullName,
 			Role:      user.Role,

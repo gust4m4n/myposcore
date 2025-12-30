@@ -21,7 +21,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
-	registerHandler := handlers.NewRegisterHandler(cfg)
 	loginHandler := handlers.NewLoginHandler(cfg)
 	profileHandler := handlers.NewProfileHandler(cfg)
 	changePasswordHandler := handlers.NewChangePasswordHandler(cfg)
@@ -55,7 +54,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		// Auth routes (public)
 		auth := v1.Group("/auth")
 		{
-			auth.POST("/register", registerHandler.Handle)
 			auth.POST("/login", loginHandler.Handle)
 		}
 

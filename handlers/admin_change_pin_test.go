@@ -38,7 +38,6 @@ func createTestUsersForPIN(db *gorm.DB) (superadmin, owner, admin, user models.U
 
 	tenant := models.Tenant{
 		Name:     "Test Tenant",
-		Code:     "TEST001",
 		IsActive: true,
 	}
 	db.Create(&tenant)
@@ -46,7 +45,6 @@ func createTestUsersForPIN(db *gorm.DB) (superadmin, owner, admin, user models.U
 	branch := models.Branch{
 		TenantID: tenant.ID,
 		Name:     "Test Branch",
-		Code:     "BR001",
 		IsActive: true,
 	}
 	db.Create(&branch)
@@ -54,7 +52,6 @@ func createTestUsersForPIN(db *gorm.DB) (superadmin, owner, admin, user models.U
 	superadmin = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "superadmin",
 		Email:    "superadmin@test.com",
 		Password: hashedPassword,
 		FullName: "Super Admin",
@@ -66,7 +63,6 @@ func createTestUsersForPIN(db *gorm.DB) (superadmin, owner, admin, user models.U
 	owner = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "owner",
 		Email:    "owner@test.com",
 		Password: hashedPassword,
 		FullName: "Owner",
@@ -78,7 +74,6 @@ func createTestUsersForPIN(db *gorm.DB) (superadmin, owner, admin, user models.U
 	admin = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "admin",
 		Email:    "admin@test.com",
 		Password: hashedPassword,
 		FullName: "Admin",
@@ -90,7 +85,6 @@ func createTestUsersForPIN(db *gorm.DB) (superadmin, owner, admin, user models.U
 	user = models.User{
 		TenantID: tenant.ID,
 		BranchID: branch.ID,
-		Username: "user",
 		Email:    "user@test.com",
 		Password: hashedPassword,
 		FullName: "User",
@@ -115,7 +109,7 @@ func TestAdminChangePIN_Success(t *testing.T) {
 	// Test Case 1: Superadmin changes admin PIN
 	t.Run("Superadmin changes admin PIN", func(t *testing.T) {
 		reqBody := dto.AdminChangePINRequest{
-			Username:   admin.Username,
+			Email:      admin.Email,
 			PIN:        "654321",
 			ConfirmPIN: "654321",
 		}
@@ -139,7 +133,7 @@ func TestAdminChangePIN_Success(t *testing.T) {
 	// Test Case 2: Admin changes user PIN
 	t.Run("Admin changes user PIN", func(t *testing.T) {
 		reqBody := dto.AdminChangePINRequest{
-			Username:   user.Username,
+			Email:      user.Email,
 			PIN:        "111111",
 			ConfirmPIN: "111111",
 		}
@@ -168,7 +162,7 @@ func TestAdminChangePIN_PINMismatch(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	reqBody := dto.AdminChangePINRequest{
-		Username:   user.Username,
+		Email:      user.Email,
 		PIN:        "123456",
 		ConfirmPIN: "654321",
 	}
@@ -201,7 +195,7 @@ func TestAdminChangePIN_InsufficientPermission(t *testing.T) {
 
 	// User tries to change admin PIN (should fail)
 	reqBody := dto.AdminChangePINRequest{
-		Username:   admin.Username,
+		Email:      admin.Email,
 		PIN:        "888999",
 		ConfirmPIN: "888999",
 	}
@@ -233,7 +227,7 @@ func TestAdminChangePIN_UserNotFound(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	reqBody := dto.AdminChangePINRequest{
-		Username:   "nonexistent",
+		Email:      "nonexistent@test.com",
 		PIN:        "123456",
 		ConfirmPIN: "123456",
 	}

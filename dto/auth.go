@@ -1,17 +1,7 @@
 package dto
 
-type RegisterRequest struct {
-	TenantCode string `json:"tenant_code" binding:"required"`
-	BranchCode string `json:"branch_code" binding:"required"`
-	Username   string `json:"username" binding:"required"`
-	Email      string `json:"email" binding:"required,email"`
-	Password   string `json:"password" binding:"required,min=6"`
-	FullName   string `json:"full_name"`
-	Role       string `json:"role"`
-}
-
 type LoginRequest struct {
-	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -25,7 +15,6 @@ type AuthResponse struct {
 type TenantInfo struct {
 	ID          uint   `json:"id"`
 	Name        string `json:"name"`
-	Code        string `json:"code"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
 	Website     string `json:"website"`
@@ -38,7 +27,6 @@ type TenantInfo struct {
 type BranchInfo struct {
 	ID          uint   `json:"id"`
 	Name        string `json:"name"`
-	Code        string `json:"code"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
 	Website     string `json:"website"`
@@ -53,7 +41,6 @@ type UserProfile struct {
 	TenantID   uint   `json:"tenant_id"`
 	BranchID   uint   `json:"branch_id"`
 	BranchName string `json:"branch_name"`
-	Username   string `json:"username"`
 	Email      string `json:"email"`
 	FullName   string `json:"full_name"`
 	Role       string `json:"role"`
@@ -66,7 +53,7 @@ type ChangePasswordRequest struct {
 }
 
 type AdminChangePasswordRequest struct {
-	Username        string `json:"username" binding:"required"`
+	Email           string `json:"email" binding:"required,email"`
 	Password        string `json:"password" binding:"required,min=6"`
 	ConfirmPassword string `json:"confirm_password" binding:"required,min=6"`
 }
@@ -85,7 +72,6 @@ type ProfileResponse struct {
 
 type UserDetailProfile struct {
 	ID       uint   `json:"id"`
-	Username string `json:"username"`
 	Email    string `json:"email"`
 	FullName string `json:"full_name"`
 	Image    string `json:"image"`
@@ -96,14 +82,12 @@ type UserDetailProfile struct {
 type TenantDetailProfile struct {
 	ID       uint   `json:"id"`
 	Name     string `json:"name"`
-	Code     string `json:"code"`
 	IsActive bool   `json:"is_active"`
 }
 
 type BranchDetailProfile struct {
 	ID       uint   `json:"id"`
 	Name     string `json:"name"`
-	Code     string `json:"code"`
 	Address  string `json:"address"`
 	Phone    string `json:"phone"`
 	IsActive bool   `json:"is_active"`

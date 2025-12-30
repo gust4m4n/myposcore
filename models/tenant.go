@@ -9,7 +9,6 @@ import (
 type Tenant struct {
 	ID          uint           `gorm:"primarykey" json:"id"`
 	Name        string         `gorm:"size:255;not null" json:"name"`
-	Code        string         `gorm:"size:50;uniqueIndex:idx_tenant_code;not null" json:"code"`
 	Description string         `gorm:"type:text" json:"description"`
 	Address     string         `gorm:"type:text" json:"address"`
 	Website     string         `gorm:"size:255" json:"website"`

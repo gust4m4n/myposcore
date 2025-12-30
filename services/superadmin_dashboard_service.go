@@ -86,7 +86,6 @@ func (s *SuperAdminDashboardService) GetDashboard() (*dto.DashboardResponse, err
 		tenantResponses = append(tenantResponses, dto.TenantResponse{
 			ID:        tenant.ID,
 			Name:      tenant.Name,
-			Code:      tenant.Code,
 			IsActive:  tenant.IsActive,
 			CreatedAt: tenant.CreatedAt.Format("2006-01-02 15:04:05"),
 		})

@@ -12,7 +12,7 @@ type ChangePINRequest struct {
 }
 
 type AdminChangePINRequest struct {
-	Username   string `json:"username" binding:"required"`
+	Email      string `json:"email" binding:"required,email"`
 	PIN        string `json:"pin" binding:"required,len=6,numeric"`
 	ConfirmPIN string `json:"confirm_pin" binding:"required,len=6,numeric"`
 }

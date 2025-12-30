@@ -41,9 +41,9 @@ func (s *AdminChangePINService) AdminChangePIN(adminID uint, req dto.AdminChange
 		return err
 	}
 
-	// Get target user by username
+	// Get target user by email
 	var targetUser models.User
-	if err := s.db.Where("username = ?", req.Username).First(&targetUser).Error; err != nil {
+	if err := s.db.Where("email = ?", req.Email).First(&targetUser).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("target user not found")
 		}

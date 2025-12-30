@@ -28,19 +28,9 @@ func (s *SuperAdminTenantService) ListTenants() ([]models.Tenant, error) {
 }
 
 func (s *SuperAdminTenantService) CreateTenant(req dto.CreateTenantRequest, imageURL string, createdBy *uint) (*models.Tenant, error) {
-	// Check if tenant code already exists
-	var existing models.Tenant
-	err := s.db.Where("code = ?", req.Code).First(&existing).Error
-	if err == nil {
-		return nil, errors.New("tenant code already exists")
-	} else if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, err
-	}
-
 	// Create tenant
 	tenant := models.Tenant{
 		Name:        req.Name,
-		Code:        req.Code,
 		Description: req.Description,
 		Address:     req.Address,
 		Website:     req.Website,
@@ -68,20 +58,8 @@ func (s *SuperAdminTenantService) UpdateTenant(id uint, req dto.UpdateTenantRequ
 		return nil, err
 	}
 
-	// Check if code is being changed and if new code already exists
-	if tenant.Code != req.Code {
-		var existing models.Tenant
-		err := s.db.Where("code = ? AND id != ?", req.Code, id).First(&existing).Error
-		if err == nil {
-			return nil, errors.New("tenant code already exists")
-		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, err
-		}
-	}
-
 	// Update tenant
 	tenant.Name = req.Name
-	tenant.Code = req.Code
 	tenant.Description = req.Description
 	tenant.Address = req.Address
 	tenant.Website = req.Website

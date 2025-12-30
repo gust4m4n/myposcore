@@ -40,13 +40,8 @@ func (s *UserService) GetUser(tenantID, userID uint) (*models.User, error) {
 }
 
 func (s *UserService) CreateUser(tenantID uint, req dto.CreateUserRequest) (*models.User, error) {
-	// Check if username already exists for this tenant
-	var existingUser models.User
-	if err := s.db.Where("username = ? AND tenant_id = ?", req.Username, tenantID).First(&existingUser).Error; err == nil {
-		return nil, errors.New("username already exists for this tenant")
-	}
-
 	// Check if email already exists
+	var existingUser models.User
 	if err := s.db.Where("email = ?", req.Email).First(&existingUser).Error; err == nil {
 		return nil, errors.New("email already exists")
 	}
@@ -74,7 +69,6 @@ func (s *UserService) CreateUser(tenantID uint, req dto.CreateUserRequest) (*mod
 	user := models.User{
 		TenantID:  tenantID,
 		BranchID:  req.BranchID,
-		Username:  req.Username,
 		Email:     req.Email,
 		Password:  hashedPassword,
 		FullName:  req.FullName,
@@ -99,15 +93,6 @@ func (s *UserService) UpdateUser(tenantID, userID uint, req dto.UpdateUserReques
 
 	// Prepare update map
 	updates := make(map[string]interface{})
-
-	if req.Username != nil {
-		// Check username uniqueness for this tenant
-		var existingUser models.User
-		if err := s.db.Where("username = ? AND tenant_id = ? AND id != ?", *req.Username, tenantID, userID).First(&existingUser).Error; err == nil {
-			return nil, errors.New("username already exists for this tenant")
-		}
-		updates["username"] = *req.Username
-	}
 
 	if req.Email != nil {
 		// Check email uniqueness

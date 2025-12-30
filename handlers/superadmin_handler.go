@@ -63,7 +63,6 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 		response = append(response, dto.TenantResponse{
 			ID:            tenant.ID,
 			Name:          tenant.Name,
-			Code:          tenant.Code,
 			Description:   tenant.Description,
 			Address:       tenant.Address,
 			Website:       tenant.Website,
@@ -106,7 +105,6 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 	// Parse form data
 	req := dto.CreateTenantRequest{
 		Name:        c.PostForm("name"),
-		Code:        c.PostForm("code"),
 		Description: c.PostForm("description"),
 		Address:     c.PostForm("address"),
 		Website:     c.PostForm("website"),
@@ -116,8 +114,8 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 	}
 
 	// Validate required fields
-	if req.Name == "" || req.Code == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
+	if req.Name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
 		return
 	}
 
@@ -153,15 +151,7 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 		}
 
 		// Generate unique filename
-		filename := fmt.Sprintf("tenant_%s_%d%s", req.Code, time.Now().Unix(), ext)
-		filePath := filepath.Join(uploadDir, filename)
-
-		// Save file
-		if err := c.SaveUploadedFile(file, filePath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
-			return
-		}
-
+		filename := fmt.Sprintf("tenant_%d_%d%s", time.Now().Unix(), time.Now().UnixNano(), ext)
 		imageURL = fmt.Sprintf("/uploads/tenants/%s", filename)
 	}
 
@@ -187,7 +177,6 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 		"data": dto.TenantResponse{
 			ID:          tenant.ID,
 			Name:        tenant.Name,
-			Code:        tenant.Code,
 			Description: tenant.Description,
 			Address:     tenant.Address,
 			Website:     tenant.Website,
@@ -240,7 +229,6 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 			ID:            branch.ID,
 			TenantID:      branch.TenantID,
 			Name:          branch.Name,
-			Code:          branch.Code,
 			Description:   branch.Description,
 			Address:       branch.Address,
 			Website:       branch.Website,
@@ -290,7 +278,6 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 	// Parse form data
 	req := dto.UpdateTenantRequest{
 		Name:        c.PostForm("name"),
-		Code:        c.PostForm("code"),
 		Description: c.PostForm("description"),
 		Address:     c.PostForm("address"),
 		Website:     c.PostForm("website"),
@@ -300,8 +287,8 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 	}
 
 	// Validate required fields
-	if req.Name == "" || req.Code == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
+	if req.Name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
 		return
 	}
 
@@ -350,7 +337,7 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 		}
 
 		// Generate unique filename
-		filename := fmt.Sprintf("tenant_%s_%d%s", req.Code, time.Now().Unix(), ext)
+		filename := fmt.Sprintf("tenant_%d_%d%s", tenantID, time.Now().Unix(), ext)
 		filePath := filepath.Join(uploadDir, filename)
 
 		// Save file
@@ -384,7 +371,6 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 		"data": dto.TenantResponse{
 			ID:          tenant.ID,
 			Name:        tenant.Name,
-			Code:        tenant.Code,
 			Description: tenant.Description,
 			Address:     tenant.Address,
 			Website:     tenant.Website,
@@ -476,7 +462,6 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 	req := dto.CreateBranchRequest{
 		TenantID:    uint(tenantID),
 		Name:        c.PostForm("name"),
-		Code:        c.PostForm("code"),
 		Description: c.PostForm("description"),
 		Address:     c.PostForm("address"),
 		Website:     c.PostForm("website"),
@@ -486,8 +471,8 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 	}
 
 	// Validate required fields
-	if req.Name == "" || req.Code == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
+	if req.Name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
 		return
 	}
 
@@ -523,7 +508,7 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 		}
 
 		// Generate unique filename
-		filename := fmt.Sprintf("branch_%s_%d%s", req.Code, time.Now().Unix(), ext)
+		filename := fmt.Sprintf("branch_%d_%d%s", time.Now().Unix(), time.Now().UnixNano(), ext)
 		filePath := filepath.Join(uploadDir, filename)
 
 		// Save file
@@ -558,7 +543,6 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 			ID:          branch.ID,
 			TenantID:    branch.TenantID,
 			Name:        branch.Name,
-			Code:        branch.Code,
 			Description: branch.Description,
 			Address:     branch.Address,
 			Website:     branch.Website,
@@ -601,7 +585,6 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 	// Parse form data
 	req := dto.UpdateBranchRequest{
 		Name:        c.PostForm("name"),
-		Code:        c.PostForm("code"),
 		Description: c.PostForm("description"),
 		Address:     c.PostForm("address"),
 		Website:     c.PostForm("website"),
@@ -611,8 +594,8 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 	}
 
 	// Validate required fields
-	if req.Name == "" || req.Code == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name and code are required"})
+	if req.Name == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
 		return
 	}
 
@@ -661,7 +644,7 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 		}
 
 		// Generate unique filename
-		filename := fmt.Sprintf("branch_%s_%d%s", req.Code, time.Now().Unix(), ext)
+		filename := fmt.Sprintf("branch_%d_%d%s", branchID, time.Now().Unix(), ext)
 		filePath := filepath.Join(uploadDir, filename)
 
 		// Save file
@@ -696,7 +679,6 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 			ID:          branch.ID,
 			TenantID:    branch.TenantID,
 			Name:        branch.Name,
-			Code:        branch.Code,
 			Description: branch.Description,
 			Address:     branch.Address,
 			Website:     branch.Website,
@@ -787,7 +769,6 @@ func (h *SuperAdminHandler) ListUsers(c *gin.Context) {
 			ID:        user.ID,
 			TenantID:  user.TenantID,
 			BranchID:  user.BranchID,
-			Username:  user.Username,
 			Email:     user.Email,
 			FullName:  user.FullName,
 			Role:      user.Role,

@@ -21,9 +21,9 @@ func NewLoginService() *LoginService {
 }
 
 func (s *LoginService) Login(req dto.LoginRequest) (*models.User, *models.Tenant, *models.Branch, error) {
-	// Get user by username (username is unique across all tenants)
+	// Get user by email (email is unique across all tenants)
 	var user models.User
-	if err := s.db.Where("username = ? AND is_active = ?", req.Username, true).First(&user).Error; err != nil {
+	if err := s.db.Where("email = ? AND is_active = ?", req.Email, true).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil, nil, errors.New("invalid credentials")
 		}

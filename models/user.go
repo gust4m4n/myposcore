@@ -10,11 +10,10 @@ type User struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
 	TenantID  uint           `gorm:"not null;index" json:"tenant_id"`
 	BranchID  uint           `gorm:"not null;index" json:"branch_id"`
-	Username  string         `gorm:"size:100;not null" json:"username"`
-	Email     string         `gorm:"size:255;not null" json:"email"`
+	Email     string         `gorm:"size:255;not null;uniqueIndex" json:"email"`
 	Password  string         `gorm:"size:255;not null" json:"-"`
 	PIN       string         `gorm:"size:255" json:"-"`
-	FullName  string         `gorm:"size:255" json:"full_name"`
+	FullName  string         `gorm:"size:255;index" json:"full_name"`
 	Image     string         `gorm:"type:varchar(500)" json:"image"`
 	Role      string         `gorm:"size:50;default:'user'" json:"role"`
 	IsActive  bool           `gorm:"default:true" json:"is_active"`

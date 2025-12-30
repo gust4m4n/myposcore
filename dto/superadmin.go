@@ -2,7 +2,6 @@ package dto
 
 type CreateTenantRequest struct {
 	Name        string `json:"name" binding:"required"`
-	Code        string `json:"code" binding:"required"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
 	Website     string `json:"website"`
@@ -13,7 +12,6 @@ type CreateTenantRequest struct {
 
 type UpdateTenantRequest struct {
 	Name        string `json:"name" binding:"required"`
-	Code        string `json:"code" binding:"required"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
 	Website     string `json:"website"`
@@ -25,7 +23,6 @@ type UpdateTenantRequest struct {
 type CreateBranchRequest struct {
 	TenantID    uint   `json:"tenant_id" binding:"required"`
 	Name        string `json:"name" binding:"required"`
-	Code        string `json:"code" binding:"required"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
 	Website     string `json:"website"`
@@ -36,7 +33,6 @@ type CreateBranchRequest struct {
 
 type UpdateBranchRequest struct {
 	Name        string `json:"name" binding:"required"`
-	Code        string `json:"code" binding:"required"`
 	Description string `json:"description"`
 	Address     string `json:"address"`
 	Website     string `json:"website"`
@@ -48,7 +44,6 @@ type UpdateBranchRequest struct {
 type TenantResponse struct {
 	ID            uint    `json:"id"`
 	Name          string  `json:"name"`
-	Code          string  `json:"code"`
 	Description   string  `json:"description"`
 	Address       string  `json:"address"`
 	Website       string  `json:"website"`
@@ -68,7 +63,6 @@ type BranchResponse struct {
 	ID            uint    `json:"id"`
 	TenantID      uint    `json:"tenant_id"`
 	Name          string  `json:"name"`
-	Code          string  `json:"code"`
 	Description   string  `json:"description"`
 	Address       string  `json:"address"`
 	Website       string  `json:"website"`
@@ -88,7 +82,6 @@ type UserResponse struct {
 	ID            uint    `json:"id"`
 	TenantID      uint    `json:"tenant_id"`
 	BranchID      uint    `json:"branch_id"`
-	Username      string  `json:"username"`
 	Email         string  `json:"email"`
 	FullName      string  `json:"full_name"`
 	Role          string  `json:"role"`
