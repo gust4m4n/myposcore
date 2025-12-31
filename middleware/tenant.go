@@ -6,18 +6,8 @@ import (
 
 func TenantMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Get tenant from header or from JWT token
-		tenantCode := c.GetHeader("X-Tenant-Code")
-
-		if tenantCode != "" {
-			c.Set("tenant_code", tenantCode)
-		}
-
-		// If tenant_id is already set by auth middleware, use that
-		if tenantID, exists := c.Get("tenant_id"); exists {
-			c.Set("tenant_id", tenantID)
-		}
-
+		// Tenant ID is set by auth middleware from JWT token
+		// This middleware is kept for future extensions if needed
 		c.Next()
 	}
 }

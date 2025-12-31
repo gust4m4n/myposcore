@@ -136,10 +136,9 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.GET("/audit-trails/:id", auditTrailHandler.GetAuditTrailByID)
 		}
 
-		// Superadmin routes
+		// Superadmin routes - now accessible by all roles
 		superadmin := v1.Group("/superadmin")
 		superadmin.Use(middleware.AuthMiddleware(cfg))
-		superadmin.Use(middleware.SuperAdminMiddleware(cfg))
 		{
 			superadmin.GET("/dashboard", superAdminHandler.Dashboard)
 			superadmin.GET("/tenants", superAdminHandler.ListTenants)

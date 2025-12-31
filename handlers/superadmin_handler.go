@@ -91,7 +91,6 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 // @Accept multipart/form-data
 // @Produce json
 // @Param name formData string true "Tenant name"
-// @Param code formData string true "Tenant code"
 // @Param description formData string false "Description"
 // @Param address formData string false "Address"
 // @Param website formData string false "Website URL"
@@ -258,7 +257,7 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 // @Produce json
 // @Param tenant_id path int true "Tenant ID"
 // @Param name formData string true "Tenant name"
-// @Param code formData string true "Tenant code"
+
 // @Param description formData string false "Description"
 // @Param address formData string false "Address"
 // @Param website formData string false "Website URL"
@@ -441,7 +440,7 @@ func (h *SuperAdminHandler) DeleteTenant(c *gin.Context) {
 // @Produce json
 // @Param tenant_id formData integer true "Tenant ID"
 // @Param name formData string true "Branch name"
-// @Param code formData string true "Branch code"
+
 // @Param description formData string false "Description"
 // @Param address formData string false "Address"
 // @Param website formData string false "Website URL"
@@ -565,7 +564,7 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 // @Produce json
 // @Param branch_id path int true "Branch ID"
 // @Param name formData string true "Branch name"
-// @Param code formData string true "Branch code"
+
 // @Param description formData string false "Description"
 // @Param address formData string false "Address"
 // @Param website formData string false "Website URL"
