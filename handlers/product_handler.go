@@ -21,10 +21,10 @@ type ProductHandler struct {
 	service *services.ProductService
 }
 
-func NewProductHandler(cfg *config.Config) *ProductHandler {
+func NewProductHandler(cfg *config.Config, productService *services.ProductService) *ProductHandler {
 	return &ProductHandler{
 		BaseHandler: NewBaseHandler(cfg),
-		service:     services.NewProductService(),
+		service:     productService,
 	}
 }
 

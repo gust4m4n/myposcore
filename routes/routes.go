@@ -11,13 +11,17 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine, cfg *config.Config) {
-	// Initialize services
-	orderService := services.NewOrderService(database.DB)
-	paymentService := services.NewPaymentService(database.DB)
-	tncService := services.NewTnCService(database.DB)
-	faqService := services.NewFAQService(database.DB)
-	categoryService := services.NewCategoryService(database.DB)
+	// Initialize audit trail service first (no dependencies)
 	auditTrailService := services.NewAuditTrailService(database.DB)
+
+	// Initialize services with audit trail dependency
+	orderService := services.NewOrderService(database.DB, auditTrailService)
+	paymentService := services.NewPaymentService(database.DB, auditTrailService)
+	tncService := services.NewTnCService(database.DB, auditTrailService)
+	faqService := services.NewFAQService(database.DB, auditTrailService)
+	categoryService := services.NewCategoryService(database.DB, auditTrailService)
+	userService := services.NewUserService(auditTrailService)
+	productService := services.NewProductService(auditTrailService)
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
@@ -27,13 +31,13 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	adminChangePasswordHandler := handlers.NewAdminChangePasswordHandler(cfg)
 	adminChangePINHandler := handlers.NewAdminChangePINHandler(cfg)
 	pinHandler := handlers.NewPINHandler(cfg)
-	productHandler := handlers.NewProductHandler(cfg)
+	productHandler := handlers.NewProductHandler(cfg, productService)
 	orderHandler := handlers.NewOrderHandler(cfg, orderService)
 	paymentHandler := handlers.NewPaymentHandler(cfg, paymentService)
 	tncHandler := handlers.NewTnCHandler(tncService)
 	faqHandler := handlers.NewFAQHandler(faqService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
-	userHandler := handlers.NewUserHandler(cfg)
+	userHandler := handlers.NewUserHandler(cfg, userService)
 	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 	auditTrailHandler := handlers.NewAuditTrailHandler(auditTrailService)

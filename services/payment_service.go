@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"myposcore/models"
 
@@ -8,11 +9,15 @@ import (
 )
 
 type PaymentService struct {
-	db *gorm.DB
+	db                *gorm.DB
+	auditTrailService *AuditTrailService
 }
 
-func NewPaymentService(db *gorm.DB) *PaymentService {
-	return &PaymentService{db: db}
+func NewPaymentService(db *gorm.DB, auditTrailService *AuditTrailService) *PaymentService {
+	return &PaymentService{
+		db:                db,
+		auditTrailService: auditTrailService,
+	}
 }
 
 func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMethod, notes string, tenantID uint, createdBy *uint) (*models.Payment, error) {
@@ -75,6 +80,23 @@ func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMeth
 	if err := tx.Commit().Error; err != nil {
 		return nil, err
 	}
+
+	// Create audit trail
+	changes := map[string]interface{}{
+		"order_id":       payment.OrderID,
+		"amount":         payment.Amount,
+		"payment_method": payment.PaymentMethod,
+		"status":         payment.Status,
+		"notes":          payment.Notes,
+	}
+	changesJSON, _ := json.Marshal(changes)
+	var changesMap map[string]interface{}
+	_ = json.Unmarshal(changesJSON, &changesMap)
+	var userID uint
+	if createdBy != nil {
+		userID = *createdBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &order.BranchID, userID, "payment", payment.ID, "create", changesMap, "", "")
 
 	return payment, nil
 }

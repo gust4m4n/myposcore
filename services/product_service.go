@@ -10,12 +10,14 @@ import (
 )
 
 type ProductService struct {
-	db *gorm.DB
+	db                *gorm.DB
+	auditTrailService *AuditTrailService
 }
 
-func NewProductService() *ProductService {
+func NewProductService(auditTrailService *AuditTrailService) *ProductService {
 	return &ProductService{
-		db: database.GetDB(),
+		db:                database.GetDB(),
+		auditTrailService: auditTrailService,
 	}
 }
 
@@ -97,6 +99,22 @@ func (s *ProductService) CreateProduct(tenantID uint, req dto.CreateProductReque
 		return nil, err
 	}
 
+	// Create audit trail
+	changes := map[string]interface{}{
+		"name":        product.Name,
+		"description": product.Description,
+		"category":    product.Category,
+		"sku":         product.SKU,
+		"price":       product.Price,
+		"stock":       product.Stock,
+		"is_active":   product.IsActive,
+	}
+	var auditUserID uint
+	if req.CreatedBy != nil {
+		auditUserID = *req.CreatedBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, nil, auditUserID, "product", product.ID, "create", changes, "", "")
+
 	return &product, nil
 }
 
@@ -135,8 +153,44 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 		updates["updated_by"] = *req.UpdatedBy
 	}
 
+	// Save old values for audit
+	oldValues := map[string]interface{}{
+		"name":        product.Name,
+		"description": product.Description,
+		"category":    product.Category,
+		"sku":         product.SKU,
+		"price":       product.Price,
+		"stock":       product.Stock,
+		"is_active":   product.IsActive,
+	}
+
 	if err := s.db.Model(product).Updates(updates).Error; err != nil {
 		return nil, err
+	}
+
+	// Reload to get updated values
+	if err := s.db.First(product, id).Error; err != nil {
+		return nil, err
+	}
+
+	// Create audit trail with changes
+	if len(updates) > 0 {
+		changes := make(map[string]interface{})
+		for key, newVal := range updates {
+			if key != "updated_by" {
+				if oldVal, exists := oldValues[key]; exists {
+					changes[key] = map[string]interface{}{
+						"old": oldVal,
+						"new": newVal,
+					}
+				}
+			}
+		}
+		auditorID := product.ID
+		if req.UpdatedBy != nil {
+			auditorID = *req.UpdatedBy
+		}
+		_ = s.auditTrailService.CreateAuditTrail(&tenantID, nil, auditorID, "product", product.ID, "update", changes, "", "")
 	}
 
 	return product, nil
@@ -159,6 +213,18 @@ func (s *ProductService) DeleteProduct(id, tenantID uint, deletedBy *uint) error
 	if err := s.db.Delete(product).Error; err != nil {
 		return err
 	}
+
+	// Create audit trail
+	auditorID := product.ID
+	if deletedBy != nil {
+		auditorID = *deletedBy
+	}
+	changes := map[string]interface{}{
+		"name":     product.Name,
+		"sku":      product.SKU,
+		"category": product.Category,
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, nil, auditorID, "product", product.ID, "delete", changes, "", "")
 
 	return nil
 }

@@ -20,10 +20,10 @@ type AuditTrail struct {
 	CreatedAt  time.Time      `json:"created_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 
-	// Relations
-	User   *User   `gorm:"foreignKey:UserID;references:ID" json:"-"`
-	Tenant *Tenant `gorm:"foreignKey:TenantID;references:ID" json:"-"`
-	Branch *Branch `gorm:"foreignKey:BranchID;references:ID" json:"-"`
+	// Relations (constraint:- prevents GORM auto-FK creation, we manage FK via SQL migrations)
+	User   *User   `gorm:"foreignKey:UserID;references:ID;constraint:-" json:"-"`
+	Tenant *Tenant `gorm:"foreignKey:TenantID;references:ID;constraint:-" json:"-"`
+	Branch *Branch `gorm:"foreignKey:BranchID;references:ID;constraint:-" json:"-"`
 }
 
 func (AuditTrail) TableName() string {

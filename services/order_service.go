@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"myposcore/models"
@@ -10,11 +11,15 @@ import (
 )
 
 type OrderService struct {
-	db *gorm.DB
+	db                *gorm.DB
+	auditTrailService *AuditTrailService
 }
 
-func NewOrderService(db *gorm.DB) *OrderService {
-	return &OrderService{db: db}
+func NewOrderService(db *gorm.DB, auditTrailService *AuditTrailService) *OrderService {
+	return &OrderService{
+		db:                db,
+		auditTrailService: auditTrailService,
+	}
 }
 
 func (s *OrderService) CreateOrder(tenantID, branchID, userID uint, createdBy *uint, items []struct {
@@ -125,6 +130,31 @@ func (s *OrderService) CreateOrder(tenantID, branchID, userID uint, createdBy *u
 	// Load order items with products
 	s.db.Preload("OrderItems.Product").First(order, order.ID)
 
+	// Create audit trail
+	orderItemsData := make([]map[string]interface{}, len(orderItems))
+	for i, item := range orderItems {
+		orderItemsData[i] = map[string]interface{}{
+			"product_id": item.ProductID,
+			"quantity":   item.Quantity,
+			"price":      item.Price,
+			"subtotal":   item.Subtotal,
+		}
+	}
+	changes := map[string]interface{}{
+		"order_number": order.OrderNumber,
+		"total_amount": order.TotalAmount,
+		"status":       order.Status,
+		"items":        orderItemsData,
+	}
+	changesJSON, _ := json.Marshal(changes)
+	var changesMap map[string]interface{}
+	_ = json.Unmarshal(changesJSON, &changesMap)
+	var auditUserID uint
+	if createdBy != nil {
+		auditUserID = *createdBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &branchID, auditUserID, "order", order.ID, "create", changesMap, "", "")
+
 	return order, nil
 }
 
@@ -166,7 +196,30 @@ func (s *OrderService) ListOrders(tenantID, branchID uint, page, perPage int) ([
 }
 
 func (s *OrderService) UpdateOrderStatus(orderID, tenantID uint, status string) error {
-	return s.db.Model(&models.Order{}).
+	// Get old order for audit trail
+	var order models.Order
+	if err := s.db.Where("id = ? AND tenant_id = ?", orderID, tenantID).First(&order).Error; err != nil {
+		return err
+	}
+	oldStatus := order.Status
+
+	if err := s.db.Model(&models.Order{}).
 		Where("id = ? AND tenant_id = ?", orderID, tenantID).
-		Update("status", status).Error
+		Update("status", status).Error; err != nil {
+		return err
+	}
+
+	// Create audit trail
+	changes := map[string]interface{}{
+		"status": map[string]interface{}{
+			"old": oldStatus,
+			"new": status,
+		},
+	}
+	changesJSON, _ := json.Marshal(changes)
+	var changesMap map[string]interface{}
+	_ = json.Unmarshal(changesJSON, &changesMap)
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &order.BranchID, 0, "order", orderID, "update", changesMap, "", "")
+
+	return nil
 }

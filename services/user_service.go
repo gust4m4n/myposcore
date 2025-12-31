@@ -11,12 +11,14 @@ import (
 )
 
 type UserService struct {
-	db *gorm.DB
+	db                *gorm.DB
+	auditTrailService *AuditTrailService
 }
 
-func NewUserService() *UserService {
+func NewUserService(auditTrailService *AuditTrailService) *UserService {
 	return &UserService{
-		db: database.GetDB(),
+		db:                database.GetDB(),
+		auditTrailService: auditTrailService,
 	}
 }
 
@@ -89,6 +91,20 @@ func (s *UserService) CreateUser(tenantID uint, req dto.CreateUserRequest) (*mod
 		return nil, err
 	}
 
+	// Create audit trail
+	changes := map[string]interface{}{
+		"email":     user.Email,
+		"full_name": user.FullName,
+		"role":      user.Role,
+		"branch_id": user.BranchID,
+		"is_active": user.IsActive,
+	}
+	var auditUserID uint
+	if req.CreatedBy != nil {
+		auditUserID = *req.CreatedBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &user.BranchID, auditUserID, "user", user.ID, "create", changes, "", "")
+
 	return &user, nil
 }
 
@@ -152,6 +168,24 @@ func (s *UserService) UpdateUser(tenantID, userID uint, req dto.UpdateUserReques
 		return user, nil
 	}
 
+	// Save old values for audit
+	oldValues := make(map[string]interface{})
+	if req.Email != nil {
+		oldValues["email"] = user.Email
+	}
+	if req.FullName != nil {
+		oldValues["full_name"] = user.FullName
+	}
+	if req.Role != nil {
+		oldValues["role"] = user.Role
+	}
+	if req.BranchID != nil {
+		oldValues["branch_id"] = user.BranchID
+	}
+	if req.IsActive != nil {
+		oldValues["is_active"] = user.IsActive
+	}
+
 	if err := s.db.Model(user).Updates(updates).Error; err != nil {
 		return nil, err
 	}
@@ -159,6 +193,22 @@ func (s *UserService) UpdateUser(tenantID, userID uint, req dto.UpdateUserReques
 	// Reload user
 	if err := s.db.First(user, userID).Error; err != nil {
 		return nil, err
+	}
+
+	// Create audit trail with changes
+	if len(oldValues) > 0 {
+		changes := make(map[string]interface{})
+		for key := range oldValues {
+			changes[key] = map[string]interface{}{
+				"old": oldValues[key],
+				"new": updates[key],
+			}
+		}
+		auditorID := user.ID
+		if req.UpdatedBy != nil {
+			auditorID = *req.UpdatedBy
+		}
+		_ = s.auditTrailService.CreateAuditTrail(&tenantID, &user.BranchID, auditorID, "user", user.ID, "update", changes, "", "")
 	}
 
 	return user, nil
@@ -181,6 +231,18 @@ func (s *UserService) DeleteUser(tenantID, userID uint, deletedBy *uint) error {
 	if err := s.db.Delete(user).Error; err != nil {
 		return err
 	}
+
+	// Create audit trail
+	auditorID := userID
+	if deletedBy != nil {
+		auditorID = *deletedBy
+	}
+	changes := map[string]interface{}{
+		"email":     user.Email,
+		"full_name": user.FullName,
+		"role":      user.Role,
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &user.BranchID, auditorID, "user", user.ID, "delete", changes, "", "")
 
 	return nil
 }

@@ -21,10 +21,10 @@ type UserHandler struct {
 	userService *services.UserService
 }
 
-func NewUserHandler(cfg *config.Config) *UserHandler {
+func NewUserHandler(cfg *config.Config, userService *services.UserService) *UserHandler {
 	return &UserHandler{
 		BaseHandler: NewBaseHandler(cfg),
-		userService: services.NewUserService(),
+		userService: userService,
 	}
 }
 

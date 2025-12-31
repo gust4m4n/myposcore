@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"myposcore/models"
 
@@ -8,11 +9,15 @@ import (
 )
 
 type CategoryService struct {
-	db *gorm.DB
+	db                *gorm.DB
+	auditTrailService *AuditTrailService
 }
 
-func NewCategoryService(db *gorm.DB) *CategoryService {
-	return &CategoryService{db: db}
+func NewCategoryService(db *gorm.DB, auditTrailService *AuditTrailService) *CategoryService {
+	return &CategoryService{
+		db:                db,
+		auditTrailService: auditTrailService,
+	}
 }
 
 func (s *CategoryService) CreateCategory(tenantID uint, name, description string, imageURL string, createdBy *uint) (*models.Category, error) {
@@ -34,6 +39,22 @@ func (s *CategoryService) CreateCategory(tenantID uint, name, description string
 	if err := s.db.Create(category).Error; err != nil {
 		return nil, err
 	}
+
+	// Create audit trail
+	changes := map[string]interface{}{
+		"name":        category.Name,
+		"description": category.Description,
+		"image":       category.Image,
+		"is_active":   category.IsActive,
+	}
+	changesJSON, _ := json.Marshal(changes)
+	var changesMap map[string]interface{}
+	_ = json.Unmarshal(changesJSON, &changesMap)
+	var userID uint
+	if createdBy != nil {
+		userID = *createdBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, nil, userID, "category", category.ID, "create", changesMap, "", "")
 
 	return category, nil
 }
@@ -83,6 +104,14 @@ func (s *CategoryService) UpdateCategory(categoryID, tenantID uint, name, descri
 		return nil, err
 	}
 
+	// Save old values for audit trail
+	oldValues := map[string]interface{}{
+		"name":        category.Name,
+		"description": category.Description,
+		"image":       category.Image,
+		"is_active":   category.IsActive,
+	}
+
 	updates := make(map[string]interface{})
 
 	if name != nil {
@@ -114,6 +143,27 @@ func (s *CategoryService) UpdateCategory(categoryID, tenantID uint, name, descri
 		if err := s.db.Model(&category).Updates(updates).Error; err != nil {
 			return nil, err
 		}
+
+		// Create audit trail with old/new values
+		changes := make(map[string]interface{})
+		for key, newVal := range updates {
+			if key != "updated_by" {
+				if oldVal, exists := oldValues[key]; exists {
+					changes[key] = map[string]interface{}{
+						"old": oldVal,
+						"new": newVal,
+					}
+				}
+			}
+		}
+		changesJSON, _ := json.Marshal(changes)
+		var changesMap map[string]interface{}
+		_ = json.Unmarshal(changesJSON, &changesMap)
+		var userID uint
+		if updatedBy != nil {
+			userID = *updatedBy
+		}
+		_ = s.auditTrailService.CreateAuditTrail(&tenantID, nil, userID, "category", categoryID, "update", changesMap, "", "")
 	}
 
 	// Reload to get updated values
@@ -149,5 +199,24 @@ func (s *CategoryService) DeleteCategory(categoryID, tenantID uint, deletedBy *u
 		}
 	}
 
-	return s.db.Delete(&category).Error
+	if err := s.db.Delete(&category).Error; err != nil {
+		return err
+	}
+
+	// Create audit trail
+	changes := map[string]interface{}{
+		"name":        category.Name,
+		"description": category.Description,
+		"image":       category.Image,
+	}
+	changesJSON, _ := json.Marshal(changes)
+	var changesMap map[string]interface{}
+	_ = json.Unmarshal(changesJSON, &changesMap)
+	var userID uint
+	if deletedBy != nil {
+		userID = *deletedBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, nil, userID, "category", categoryID, "delete", changesMap, "", "")
+
+	return nil
 }

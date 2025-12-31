@@ -1,17 +1,22 @@
 package services
 
 import (
+	"encoding/json"
 	"myposcore/models"
 
 	"gorm.io/gorm"
 )
 
 type FAQService struct {
-	db *gorm.DB
+	db                *gorm.DB
+	auditTrailService *AuditTrailService
 }
 
-func NewFAQService(db *gorm.DB) *FAQService {
-	return &FAQService{db: db}
+func NewFAQService(db *gorm.DB, auditTrailService *AuditTrailService) *FAQService {
+	return &FAQService{
+		db:                db,
+		auditTrailService: auditTrailService,
+	}
 }
 
 func (s *FAQService) CreateFAQ(question, answer, category string, order int, createdBy *uint) (*models.FAQ, error) {
@@ -27,6 +32,23 @@ func (s *FAQService) CreateFAQ(question, answer, category string, order int, cre
 	if err := s.db.Create(faq).Error; err != nil {
 		return nil, err
 	}
+
+	// Create audit trail
+	changes := map[string]interface{}{
+		"question":  faq.Question,
+		"answer":    faq.Answer,
+		"category":  faq.Category,
+		"order":     faq.Order,
+		"is_active": faq.IsActive,
+	}
+	changesJSON, _ := json.Marshal(changes)
+	var changesMap map[string]interface{}
+	_ = json.Unmarshal(changesJSON, &changesMap)
+	var userID uint
+	if createdBy != nil {
+		userID = *createdBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(nil, nil, userID, "faq", faq.ID, "create", changesMap, "", "")
 
 	return faq, nil
 }
@@ -64,6 +86,15 @@ func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, orde
 		return nil, err
 	}
 
+	// Save old values for audit trail
+	oldValues := map[string]interface{}{
+		"question":  faq.Question,
+		"answer":    faq.Answer,
+		"category":  faq.Category,
+		"order":     faq.Order,
+		"is_active": faq.IsActive,
+	}
+
 	updates := make(map[string]interface{})
 	if question != nil {
 		updates["question"] = *question
@@ -88,14 +119,62 @@ func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, orde
 		return nil, err
 	}
 
+	// Create audit trail with old/new values
+	if len(updates) > 0 {
+		changes := make(map[string]interface{})
+		for key, newVal := range updates {
+			if key != "updated_by" {
+				if oldVal, exists := oldValues[key]; exists {
+					changes[key] = map[string]interface{}{
+						"old": oldVal,
+						"new": newVal,
+					}
+				}
+			}
+		}
+		changesJSON, _ := json.Marshal(changes)
+		var changesMap map[string]interface{}
+		_ = json.Unmarshal(changesJSON, &changesMap)
+		var userID uint
+		if updatedBy != nil {
+			userID = *updatedBy
+		}
+		_ = s.auditTrailService.CreateAuditTrail(nil, nil, userID, "faq", id, "update", changesMap, "", "")
+	}
+
 	return &faq, nil
 }
 
 func (s *FAQService) DeleteFAQ(id uint, deletedBy *uint) error {
+	// Get FAQ for audit trail
+	var faq models.FAQ
+	if err := s.db.First(&faq, id).Error; err != nil {
+		return err
+	}
+
 	if deletedBy != nil {
 		if err := s.db.Model(&models.FAQ{}).Where("id = ?", id).Update("deleted_by", deletedBy).Error; err != nil {
 			return err
 		}
 	}
-	return s.db.Delete(&models.FAQ{}, id).Error
+
+	if err := s.db.Delete(&models.FAQ{}, id).Error; err != nil {
+		return err
+	}
+
+	// Create audit trail
+	changes := map[string]interface{}{
+		"question": faq.Question,
+		"category": faq.Category,
+	}
+	changesJSON, _ := json.Marshal(changes)
+	var changesMap map[string]interface{}
+	_ = json.Unmarshal(changesJSON, &changesMap)
+	var userID uint
+	if deletedBy != nil {
+		userID = *deletedBy
+	}
+	_ = s.auditTrailService.CreateAuditTrail(nil, nil, userID, "faq", id, "delete", changesMap, "", "")
+
+	return nil
 }
