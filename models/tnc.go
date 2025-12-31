@@ -22,7 +22,7 @@ type TermsAndConditions struct {
 	DeletedBy *uint `gorm:"index" json:"deleted_by,omitempty"`
 
 	// Relations for audit tracking
-	Creator *User `gorm:"foreignKey:CreatedBy;references:ID" json:"-"`
-	Updater *User `gorm:"foreignKey:UpdatedBy;references:ID" json:"-"`
-	Deleter *User `gorm:"foreignKey:DeletedBy;references:ID" json:"-"`
+	Creator *User `gorm:"foreignKey:CreatedBy;references:ID;constraint:-" json:"-"`
+	Updater *User `gorm:"foreignKey:UpdatedBy;references:ID;constraint:-" json:"-"`
+	Deleter *User `gorm:"foreignKey:DeletedBy;references:ID;constraint:-" json:"-"`
 }

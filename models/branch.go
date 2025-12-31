@@ -24,7 +24,7 @@ type Branch struct {
 	// Relations
 	Tenant  *Tenant `gorm:"foreignKey:TenantID" json:"tenant,omitempty"`
 	Users   []User  `gorm:"foreignKey:BranchID" json:"users,omitempty"`
-	Creator *User   `gorm:"foreignKey:CreatedBy;references:ID" json:"-"`
-	Updater *User   `gorm:"foreignKey:UpdatedBy;references:ID" json:"-"`
-	Deleter *User   `gorm:"foreignKey:DeletedBy;references:ID" json:"-"`
+	Creator *User   `gorm:"foreignKey:CreatedBy;references:ID;constraint:-" json:"-"`
+	Updater *User   `gorm:"foreignKey:UpdatedBy;references:ID;constraint:-" json:"-"`
+	Deleter *User   `gorm:"foreignKey:DeletedBy;references:ID;constraint:-" json:"-"`
 }

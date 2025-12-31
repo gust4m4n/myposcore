@@ -770,6 +770,7 @@ func (h *SuperAdminHandler) ListUsers(c *gin.Context) {
 			BranchID:  user.BranchID,
 			Email:     user.Email,
 			FullName:  user.FullName,
+			Image:     user.Image,
 			Role:      user.Role,
 			IsActive:  user.IsActive,
 			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),

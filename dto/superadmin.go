@@ -84,6 +84,7 @@ type UserResponse struct {
 	BranchID      uint    `json:"branch_id"`
 	Email         string  `json:"email"`
 	FullName      string  `json:"full_name"`
+	Image         string  `json:"image"`
 	Role          string  `json:"role"`
 	IsActive      bool    `json:"is_active"`
 	CreatedAt     string  `json:"created_at"`

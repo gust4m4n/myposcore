@@ -26,9 +26,9 @@ type Order struct {
 	Tenant     Tenant      `gorm:"foreignKey:TenantID" json:"-"`
 	Branch     Branch      `gorm:"foreignKey:BranchID" json:"-"`
 	User       User        `gorm:"foreignKey:UserID" json:"-"`
-	Creator    *User       `gorm:"foreignKey:CreatedBy" json:"creator,omitempty"`
-	Updater    *User       `gorm:"foreignKey:UpdatedBy" json:"updater,omitempty"`
-	Deleter    *User       `gorm:"foreignKey:DeletedBy" json:"deleter,omitempty"`
+	Creator    *User       `gorm:"foreignKey:CreatedBy;constraint:-" json:"creator,omitempty"`
+	Updater    *User       `gorm:"foreignKey:UpdatedBy;constraint:-" json:"updater,omitempty"`
+	Deleter    *User       `gorm:"foreignKey:DeletedBy;constraint:-" json:"deleter,omitempty"`
 	OrderItems []OrderItem `gorm:"foreignKey:OrderID" json:"order_items,omitempty"`
 	Payments   []Payment   `gorm:"foreignKey:OrderID" json:"payments,omitempty"`
 }
