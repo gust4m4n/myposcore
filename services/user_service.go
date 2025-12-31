@@ -20,12 +20,20 @@ func NewUserService() *UserService {
 	}
 }
 
-func (s *UserService) ListUsers(tenantID uint) ([]models.User, error) {
+func (s *UserService) ListUsers(tenantID uint, page, pageSize int) ([]models.User, int64, error) {
 	var users []models.User
-	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("full_name ASC").Find(&users).Error; err != nil {
-		return nil, err
+	var total int64
+
+	query := s.db.Model(&models.User{}).Where("tenant_id = ?", tenantID)
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
-	return users, nil
+
+	offset := (page - 1) * pageSize
+	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("full_name ASC").Limit(pageSize).Offset(offset).Find(&users).Error; err != nil {
+		return nil, 0, err
+	}
+	return users, total, nil
 }
 
 func (s *UserService) GetUser(tenantID, userID uint) (*models.User, error) {

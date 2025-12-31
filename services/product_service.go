@@ -19,9 +19,11 @@ func NewProductService() *ProductService {
 	}
 }
 
-func (s *ProductService) ListProducts(tenantID uint, category, search string) ([]models.Product, error) {
+func (s *ProductService) ListProducts(tenantID uint, category, search string, page, pageSize int) ([]models.Product, int64, error) {
 	var products []models.Product
-	query := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
+	var total int64
+
+	query := s.db.Model(&models.Product{}).Where("tenant_id = ?", tenantID)
 
 	// Filter by category if provided
 	if category != "" {
@@ -34,10 +36,25 @@ func (s *ProductService) ListProducts(tenantID uint, category, search string) ([
 		query = query.Where("name ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern)
 	}
 
-	if err := query.Order("name ASC").Find(&products).Error; err != nil {
-		return nil, err
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
-	return products, nil
+
+	offset := (page - 1) * pageSize
+	query2 := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
+
+	if category != "" {
+		query2 = query2.Where("category = ?", category)
+	}
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query2 = query2.Where("name ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern)
+	}
+
+	if err := query2.Order("name ASC").Limit(pageSize).Offset(offset).Find(&products).Error; err != nil {
+		return nil, 0, err
+	}
+	return products, total, nil
 }
 
 // GetCategories returns list of unique categories for a tenant

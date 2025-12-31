@@ -19,12 +19,19 @@ func NewSuperAdminTenantService() *SuperAdminTenantService {
 	}
 }
 
-func (s *SuperAdminTenantService) ListTenants() ([]models.Tenant, error) {
+func (s *SuperAdminTenantService) ListTenants(page, pageSize int) ([]models.Tenant, int64, error) {
 	var tenants []models.Tenant
-	if err := s.db.Preload("Creator").Preload("Updater").Order("name ASC").Find(&tenants).Error; err != nil {
-		return nil, err
+	var total int64
+
+	if err := s.db.Model(&models.Tenant{}).Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
-	return tenants, nil
+
+	offset := (page - 1) * pageSize
+	if err := s.db.Preload("Creator").Preload("Updater").Order("name ASC").Limit(pageSize).Offset(offset).Find(&tenants).Error; err != nil {
+		return nil, 0, err
+	}
+	return tenants, total, nil
 }
 
 func (s *SuperAdminTenantService) CreateTenant(req dto.CreateTenantRequest, imageURL string, createdBy *uint) (*models.Tenant, error) {

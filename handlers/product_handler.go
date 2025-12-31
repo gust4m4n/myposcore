@@ -36,7 +36,9 @@ func NewProductHandler(cfg *config.Config) *ProductHandler {
 // @Produce json
 // @Param category query string false "Filter by category"
 // @Param search query string false "Search by name, description, or SKU"
-// @Success 200 {object} []dto.ProductResponse
+// @Param page query int false "Page number" default(1)
+// @Param page_size query int false "Items per page" default(10)
+// @Success 200 {object} dto.PaginationResponse
 // @Router /api/v1/products [get]
 func (h *ProductHandler) ListProducts(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
@@ -49,7 +51,15 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 	category := c.Query("category")
 	search := c.Query("search")
 
-	products, err := h.service.ListProducts(tenantID.(uint), category, search)
+	// Parse pagination parameters
+	var pagination dto.PaginationRequest
+	if err := c.ShouldBindQuery(&pagination); err != nil {
+		pagination = *dto.NewPaginationRequest(1, 10)
+	} else {
+		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
+	}
+
+	products, total, err := h.service.ListProducts(tenantID.(uint), category, search, pagination.Page, pagination.PageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -87,9 +97,8 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": response,
-	})
+	paginatedResponse := dto.NewPaginationResponse(pagination.Page, pagination.PageSize, total, response)
+	c.JSON(http.StatusOK, paginatedResponse)
 }
 
 // GetProduct godoc

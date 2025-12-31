@@ -34,12 +34,22 @@ func NewUserHandler(cfg *config.Config) *UserHandler {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Success 200 {object} map[string]interface{}
+// @Param page query int false "Page number" default(1)
+// @Param page_size query int false "Items per page" default(10)
+// @Success 200 {object} dto.PaginationResponse
 // @Router /api/v1/users [get]
 func (h *UserHandler) ListUsers(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 
-	users, err := h.userService.ListUsers(tenantID)
+	// Parse pagination parameters
+	var pagination dto.PaginationRequest
+	if err := c.ShouldBindQuery(&pagination); err != nil {
+		pagination = *dto.NewPaginationRequest(1, 10)
+	} else {
+		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
+	}
+
+	users, total, err := h.userService.ListUsers(tenantID, pagination.Page, pagination.PageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -74,9 +84,8 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": response,
-	})
+	paginatedResponse := dto.NewPaginationResponse(pagination.Page, pagination.PageSize, total, response)
+	c.JSON(http.StatusOK, paginatedResponse)
 }
 
 // GetUser godoc

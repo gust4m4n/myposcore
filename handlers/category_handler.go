@@ -208,7 +208,9 @@ func (h *CategoryHandler) GetCategory(c *gin.Context) {
 // @Tags categories
 // @Produce json
 // @Param active_only query bool false "Show only active categories"
-// @Success 200 {array} dto.CategoryResponse
+// @Param page query int false "Page number" default(1)
+// @Param page_size query int false "Items per page" default(10)
+// @Success 200 {object} dto.PaginationResponse
 // @Router /api/v1/categories [get]
 func (h *CategoryHandler) ListCategories(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
@@ -219,7 +221,15 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 
 	activeOnly := c.Query("active_only") == "true"
 
-	categories, err := h.categoryService.ListCategories(tenantID.(uint), activeOnly)
+	// Parse pagination parameters
+	var pagination dto.PaginationRequest
+	if err := c.ShouldBindQuery(&pagination); err != nil {
+		pagination = *dto.NewPaginationRequest(1, 10)
+	} else {
+		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
+	}
+
+	categories, total, err := h.categoryService.ListCategories(tenantID.(uint), activeOnly, pagination.Page, pagination.PageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -253,7 +263,8 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": responses})
+	paginatedResponse := dto.NewPaginationResponse(pagination.Page, pagination.PageSize, total, responses)
+	c.JSON(http.StatusOK, paginatedResponse)
 }
 
 // UpdateCategory godoc

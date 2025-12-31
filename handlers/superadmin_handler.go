@@ -39,10 +39,20 @@ func NewSuperAdminHandler(cfg *config.Config) *SuperAdminHandler {
 // @Tags superadmin
 // @Accept json
 // @Produce json
-// @Success 200 {object} []dto.TenantResponse
+// @Param page query int false "Page number" default(1)
+// @Param page_size query int false "Items per page" default(10)
+// @Success 200 {object} dto.PaginationResponse
 // @Router /superadmin/tenants [get]
 func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
-	tenants, err := h.tenantService.ListTenants()
+	// Parse pagination parameters
+	var pagination dto.PaginationRequest
+	if err := c.ShouldBindQuery(&pagination); err != nil {
+		pagination = *dto.NewPaginationRequest(1, 10)
+	} else {
+		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
+	}
+
+	tenants, total, err := h.tenantService.ListTenants(pagination.Page, pagination.PageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -79,9 +89,8 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": response,
-	})
+	paginatedResponse := dto.NewPaginationResponse(pagination.Page, pagination.PageSize, total, response)
+	c.JSON(http.StatusOK, paginatedResponse)
 }
 
 // CreateTenant godoc
@@ -197,7 +206,9 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param tenant_id path int true "Tenant ID"
-// @Success 200 {object} []dto.BranchResponse
+// @Param page query int false "Page number" default(1)
+// @Param page_size query int false "Items per page" default(10)
+// @Success 200 {object} dto.PaginationResponse
 // @Router /superadmin/tenants/{tenant_id}/branches [get]
 func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 	tenantID, err := strconv.ParseUint(c.Param("tenant_id"), 10, 32)
@@ -206,7 +217,15 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 		return
 	}
 
-	branches, err := h.branchService.ListBranchesByTenant(uint(tenantID))
+	// Parse pagination parameters
+	var pagination dto.PaginationRequest
+	if err := c.ShouldBindQuery(&pagination); err != nil {
+		pagination = *dto.NewPaginationRequest(1, 10)
+	} else {
+		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
+	}
+
+	branches, total, err := h.branchService.ListBranches(uint(tenantID), pagination.Page, pagination.PageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -244,9 +263,8 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": response,
-	})
+	paginatedResponse := dto.NewPaginationResponse(pagination.Page, pagination.PageSize, total, response)
+	c.JSON(http.StatusOK, paginatedResponse)
 }
 
 // UpdateTenant godoc

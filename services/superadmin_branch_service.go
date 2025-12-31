@@ -19,12 +19,20 @@ func NewSuperAdminBranchService() *SuperAdminBranchService {
 	}
 }
 
-func (s *SuperAdminBranchService) ListBranchesByTenant(tenantID uint) ([]models.Branch, error) {
+func (s *SuperAdminBranchService) ListBranches(tenantID uint, page, pageSize int) ([]models.Branch, int64, error) {
 	var branches []models.Branch
-	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("name ASC").Find(&branches).Error; err != nil {
-		return nil, err
+	var total int64
+
+	query := s.db.Model(&models.Branch{}).Where("tenant_id = ?", tenantID)
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
-	return branches, nil
+
+	offset := (page - 1) * pageSize
+	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("name ASC").Limit(pageSize).Offset(offset).Find(&branches).Error; err != nil {
+		return nil, 0, err
+	}
+	return branches, total, nil
 }
 
 func (s *SuperAdminBranchService) CreateBranch(req dto.CreateBranchRequest, imageURL string, createdBy *uint) (*models.Branch, error) {

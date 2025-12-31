@@ -49,18 +49,29 @@ func (s *CategoryService) GetCategory(categoryID, tenantID uint) (*models.Catego
 	return &category, nil
 }
 
-func (s *CategoryService) ListCategories(tenantID uint, activeOnly bool) ([]models.Category, error) {
+func (s *CategoryService) ListCategories(tenantID uint, activeOnly bool, page, pageSize int) ([]models.Category, int64, error) {
 	var categories []models.Category
-	query := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
+	var total int64
+
+	query := s.db.Model(&models.Category{}).Where("tenant_id = ?", tenantID)
 
 	if activeOnly {
 		query = query.Where("is_active = ?", true)
 	}
 
-	if err := query.Order("name ASC").Find(&categories).Error; err != nil {
-		return nil, err
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
-	return categories, nil
+
+	offset := (page - 1) * pageSize
+	query2 := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
+	if activeOnly {
+		query2 = query2.Where("is_active = ?", true)
+	}
+	if err := query2.Order("name ASC").Limit(pageSize).Offset(offset).Find(&categories).Error; err != nil {
+		return nil, 0, err
+	}
+	return categories, total, nil
 }
 
 func (s *CategoryService) UpdateCategory(categoryID, tenantID uint, name, description *string, imageURL *string, isActive *bool, updatedBy *uint) (*models.Category, error) {

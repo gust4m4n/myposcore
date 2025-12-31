@@ -351,6 +351,23 @@ curl -X GET http://localhost:8080/api/v1/products \
 
 ## Development
 
+### API Documentation
+
+Untuk dokumentasi lengkap API endpoints, lihat:
+- **[USER_API_GUIDE.md](USER_API_GUIDE.md)** - User CRUD operations
+- **[PRODUCT_API_GUIDE.md](PRODUCT_API_GUIDE.md)** - Product management
+- **[CATEGORY_GUIDE.md](CATEGORY_GUIDE.md)** - Category management
+- **[PAGINATION_GUIDE.md](PAGINATION_GUIDE.md)** - Pagination for list APIs
+- **[MULTIPART_USER_GUIDE.md](MULTIPART_USER_GUIDE.md)** - 🆕 Multipart/form-data support for user image uploads
+
+### Multipart/Form-Data Support
+
+API **Create User** dan **Update User** mendukung 2 mode:
+1. **JSON Mode** - Simple REST API tanpa image upload
+2. **Multipart Mode** - Form-data dengan support upload profile image
+
+Lihat [MULTIPART_USER_GUIDE.md](MULTIPART_USER_GUIDE.md) untuk contoh lengkap!
+
 ### Build
 ```bash
 go build -o myposcore
