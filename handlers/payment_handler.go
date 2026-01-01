@@ -223,3 +223,30 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 		},
 	})
 }
+
+// GetPaymentPerformance godoc
+// @Summary Get payment performance statistics
+// @Description Get daily payment statistics for the last N days (qty and total amount)
+// @Tags payments
+// @Produce json
+// @Param days query int false "Number of days to look back" default(7)
+// @Success 200 {object} map[string]interface{}
+// @Router /api/v1/payments/performance [get]
+func (h *PaymentHandler) GetPaymentPerformance(c *gin.Context) {
+	tenantID := c.GetUint("tenant_id")
+	branchID := c.GetUint("branch_id")
+
+	// Parse days parameter, default to 7
+	days, _ := strconv.Atoi(c.DefaultQuery("days", "7"))
+	if days < 1 {
+		days = 7
+	}
+
+	performance, err := h.paymentService.GetPaymentPerformance(tenantID, branchID, days)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get payment performance"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": performance})
+}

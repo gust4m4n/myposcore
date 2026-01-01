@@ -125,6 +125,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.POST("/payments", paymentHandler.CreatePayment)
 			protected.GET("/payments", paymentHandler.ListPayments)
 			protected.GET("/payments/:id", paymentHandler.GetPayment)
+			protected.GET("/payments/performance", paymentHandler.GetPaymentPerformance)
 
 			// User routes
 			protected.GET("/users", userHandler.ListUsers)

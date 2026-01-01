@@ -17,8 +17,8 @@ func NewPaginationRequest(page, pageSize int) *PaginationRequest {
 	if page < 1 {
 		page = 1
 	}
-	if pageSize < 1 || pageSize > 100 {
-		pageSize = 10 // default
+	if pageSize < 1 {
+		pageSize = 32 // default
 	}
 	return &PaginationRequest{
 		Page:     page,

@@ -35,7 +35,7 @@ func NewUserHandler(cfg *config.Config, userService *services.UserService) *User
 // @Accept json
 // @Produce json
 // @Param page query int false "Page number" default(1)
-// @Param page_size query int false "Items per page" default(10)
+// @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
 // @Router /api/v1/users [get]
 func (h *UserHandler) ListUsers(c *gin.Context) {
@@ -44,7 +44,7 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
 	if err := c.ShouldBindQuery(&pagination); err != nil {
-		pagination = *dto.NewPaginationRequest(1, 10)
+		pagination = *dto.NewPaginationRequest(1, 32)
 	} else {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}

@@ -209,7 +209,7 @@ func (h *CategoryHandler) GetCategory(c *gin.Context) {
 // @Produce json
 // @Param active_only query bool false "Show only active categories"
 // @Param page query int false "Page number" default(1)
-// @Param page_size query int false "Items per page" default(10)
+// @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
 // @Router /api/v1/categories [get]
 func (h *CategoryHandler) ListCategories(c *gin.Context) {
@@ -224,7 +224,7 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
 	if err := c.ShouldBindQuery(&pagination); err != nil {
-		pagination = *dto.NewPaginationRequest(1, 10)
+		pagination = *dto.NewPaginationRequest(1, 32)
 	} else {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}

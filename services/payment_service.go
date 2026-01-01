@@ -169,3 +169,41 @@ func (s *PaymentService) ListPayments(tenantID, branchID uint, page, perPage int
 	}
 	return payments, total, nil
 }
+
+// GetPaymentPerformance returns daily payment statistics for the last N days
+func (s *PaymentService) GetPaymentPerformance(tenantID, branchID uint, days int) ([]map[string]interface{}, error) {
+	type DailyStats struct {
+		Date        string  `json:"date"`
+		Qty         int     `json:"qty"`
+		TotalAmount float64 `json:"total_amount"`
+	}
+
+	var results []DailyStats
+
+	query := s.db.Table("payments").
+		Select("DATE(payments.created_at) as date, COUNT(*) as qty, SUM(payments.amount) as total_amount").
+		Joins("JOIN orders ON orders.id = payments.order_id").
+		Where("orders.tenant_id = ? AND payments.status = 'completed' AND payments.created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)", tenantID, days).
+		Group("DATE(payments.created_at)").
+		Order("date ASC")
+
+	if branchID > 0 {
+		query = query.Where("orders.branch_id = ?", branchID)
+	}
+
+	if err := query.Scan(&results).Error; err != nil {
+		return nil, err
+	}
+
+	// Convert to map array for flexible JSON response
+	performance := make([]map[string]interface{}, len(results))
+	for i, result := range results {
+		performance[i] = map[string]interface{}{
+			"date":         result.Date,
+			"qty":          result.Qty,
+			"total_amount": result.TotalAmount,
+		}
+	}
+
+	return performance, nil
+}

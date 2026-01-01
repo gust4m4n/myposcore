@@ -27,7 +27,7 @@ func NewAuditTrailHandler(auditTrailService *services.AuditTrailService) *AuditT
 // @Tags audit-trails
 // @Produce json
 // @Param page query int false "Page number" default(1)
-// @Param limit query int false "Items per page" default(20)
+// @Param limit query int false "Items per page" default(32)
 // @Param user_id query int false "Filter by user ID"
 // @Param entity_type query string false "Filter by entity type (user, product, order, payment, category, faq, tnc)"
 // @Param entity_id query int false "Filter by entity ID"
@@ -46,13 +46,13 @@ func (h *AuditTrailHandler) ListAuditTrails(c *gin.Context) {
 
 	// Parse query parameters
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "32"))
 
 	if page < 1 {
 		page = 1
 	}
-	if limit < 1 || limit > 100 {
-		limit = 20
+	if limit < 1 {
+		limit = 32
 	}
 
 	var userID, entityID *uint
@@ -226,7 +226,7 @@ func (h *AuditTrailHandler) GetAuditTrailByID(c *gin.Context) {
 // @Param entity_type path string true "Entity type (user, product, order, payment, category, faq, tnc)"
 // @Param entity_id path int true "Entity ID"
 // @Param page query int false "Page number" default(1)
-// @Param limit query int false "Items per page" default(20)
+// @Param limit query int false "Items per page" default(32)
 // @Success 200 {object} map[string]interface{}
 // @Router /api/v1/audit-trails/entity/{entity_type}/{entity_id} [get]
 func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
@@ -247,13 +247,13 @@ func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
 	}
 
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "32"))
 
 	if page < 1 {
 		page = 1
 	}
-	if limit < 1 || limit > 100 {
-		limit = 20
+	if limit < 1 {
+		limit = 32
 	}
 
 	auditTrails, total, err := h.auditTrailService.GetEntityAuditHistory(
@@ -319,7 +319,7 @@ func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
 // @Produce json
 // @Param user_id path int true "User ID"
 // @Param page query int false "Page number" default(1)
-// @Param limit query int false "Items per page" default(20)
+// @Param limit query int false "Items per page" default(32)
 // @Success 200 {object} map[string]interface{}
 // @Router /api/v1/audit-trails/user/{user_id} [get]
 func (h *AuditTrailHandler) GetUserActivityLog(c *gin.Context) {

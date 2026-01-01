@@ -37,7 +37,7 @@ func NewProductHandler(cfg *config.Config, productService *services.ProductServi
 // @Param category query string false "Filter by category"
 // @Param search query string false "Search by name, description, or SKU"
 // @Param page query int false "Page number" default(1)
-// @Param page_size query int false "Items per page" default(10)
+// @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
 // @Router /api/v1/products [get]
 func (h *ProductHandler) ListProducts(c *gin.Context) {
@@ -54,7 +54,7 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
 	if err := c.ShouldBindQuery(&pagination); err != nil {
-		pagination = *dto.NewPaginationRequest(1, 10)
+		pagination = *dto.NewPaginationRequest(1, 32)
 	} else {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}

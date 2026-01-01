@@ -40,14 +40,14 @@ func NewSuperAdminHandler(cfg *config.Config) *SuperAdminHandler {
 // @Accept json
 // @Produce json
 // @Param page query int false "Page number" default(1)
-// @Param page_size query int false "Items per page" default(10)
+// @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
 // @Router /superadmin/tenants [get]
 func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
 	if err := c.ShouldBindQuery(&pagination); err != nil {
-		pagination = *dto.NewPaginationRequest(1, 10)
+		pagination = *dto.NewPaginationRequest(1, 32)
 	} else {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}
@@ -207,7 +207,7 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 // @Produce json
 // @Param tenant_id path int true "Tenant ID"
 // @Param page query int false "Page number" default(1)
-// @Param page_size query int false "Items per page" default(10)
+// @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
 // @Router /superadmin/tenants/{tenant_id}/branches [get]
 func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
@@ -220,7 +220,7 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
 	if err := c.ShouldBindQuery(&pagination); err != nil {
-		pagination = *dto.NewPaginationRequest(1, 10)
+		pagination = *dto.NewPaginationRequest(1, 32)
 	} else {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}
