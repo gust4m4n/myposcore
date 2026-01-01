@@ -21,7 +21,7 @@
 						"health"
 					]
 				},
-				"description": "Endpoint untuk mengecek status server"
+				"description": "Endpoint untuk mengecek status server, versi aplikasi, koneksi database, uptime, dan resource usage"
 			},
 			"response": [
 				{
@@ -49,7 +49,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n  \"status\": \"healthy\",\n  \"message\": \"Server is running\",\n  \"timestamp\": \"2025-12-26T10:00:00+07:00\"\n}"
+					"body": "{\n  \"status\": \"ok\",\n  \"version\": \"1.0.0\",\n  \"startup_time\": \"2026-01-01 10:30:45\",\n  \"uptime\": \"5 days, 3 hours, 25 minutes, 42 seconds\",\n  \"uptime_details\": {\n    \"days\": 5,\n    \"hours\": 3,\n    \"minutes\": 25,\n    \"seconds\": 42\n  },\n  \"system\": {\n    \"hostname\": \"server-01\",\n    \"os\": \"darwin\",\n    \"architecture\": \"arm64\",\n    \"go_version\": \"go1.21.0\",\n    \"cpu_cores\": 8\n  },\n  \"resources\": {\n    \"goroutines\": 12,\n    \"memory\": {\n      \"allocated_mb\": \"45.23\",\n      \"total_alloc_mb\": \"128.45\",\n      \"system_mb\": \"72.56\",\n      \"gc_cycles\": 15\n    }\n  },\n  \"database\": {\n    \"status\": \"connected\",\n    \"version\": \"PostgreSQL 15.3 on aarch64-apple-darwin21.6.0, compiled by Apple clang version 14.0.0 (clang-1400.0.29.102), 64-bit\",\n    \"pool\": {\n      \"max_open_connections\": 0,\n      \"open_connections\": 2,\n      \"in_use\": 0,\n      \"idle\": 2,\n      \"wait_count\": 0,\n      \"wait_duration\": \"0s\"\n    }\n  },\n  \"server\": {\n    \"port\": \"8080\",\n    \"environment\": \"development\"\n  }\n}"
 				}
 			]
 		},
@@ -3419,7 +3419,7 @@
 								"dashboard"
 							]
 						},
-						"description": "Get comprehensive dashboard statistics including:\n- Total tenants and their list\n- Total branches\n- Total users\n- Total products\n- Total orders (all time, today, this week, this month)\n\nRequires superadmin role."
+						"description": "Get comprehensive dashboard statistics including:\n- Total counts: tenants, branches, users, products, categories\n- Orders statistics (all time, today, last 7/30/90/180/360 days) - for chart\n- Payments statistics (total amount in all time, today, last 7/30/90/180/360 days) - for chart\n- Transactions statistics (total amount in all time, today, last 7/30/90/180/360 days) - for chart\n- List of all tenants\n\nRequires superadmin role."
 					},
 					"response": [
 						{
@@ -3456,7 +3456,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": {\n    \"total_tenants\": 5,\n    \"total_branches\": 12,\n    \"total_users\": 45,\n    \"total_products\": 234,\n    \"total_orders\": 1523,\n    \"total_orders_today\": 23,\n    \"total_orders_this_week\": 156,\n    \"total_orders_this_month\": 678,\n    \"tenants\": [\n      {\n        \"id\": 1,\n        \"name\": \"Warung Makan Sederhana\",\n        \"code\": \"WMS001\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-15 10:30:00\"\n      },\n      {\n        \"id\": 2,\n        \"name\": \"Kopi Kita\",\n        \"code\": \"KK002\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-16 14:20:00\"\n      },\n      {\n        \"id\": 3,\n        \"name\": \"Toko Kelontong Jaya\",\n        \"code\": \"TKJ003\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-18 09:15:00\"\n      },\n      {\n        \"id\": 4,\n        \"name\": \"Resto Seafood\",\n        \"code\": \"RS004\",\n        \"is_active\": false,\n        \"created_at\": \"2025-01-20 16:45:00\"\n      },\n      {\n        \"id\": 5,\n        \"name\": \"Bakery Fresh\",\n        \"code\": \"BF005\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-22 11:00:00\"\n      }\n    ]\n  }\n}"
+							"body": "{\n  \"data\": {\n    \"total_tenants\": 10,\n    \"total_branches\": 25,\n    \"total_users\": 150,\n    \"total_products\": 500,\n    \"total_categories\": 50,\n    \"orders\": {\n      \"all_time\": 1000,\n      \"today\": 5,\n      \"last_7_days\": 45,\n      \"last_30_days\": 200,\n      \"last_90_days\": 550,\n      \"last_180_days\": 800,\n      \"last_360_days\": 950\n    },\n    \"payments\": {\n      \"all_time\": 50000000.00,\n      \"today\": 250000.00,\n      \"last_7_days\": 2250000.00,\n      \"last_30_days\": 10000000.00,\n      \"last_90_days\": 27500000.00,\n      \"last_180_days\": 40000000.00,\n      \"last_360_days\": 47500000.00\n    },\n    \"transactions\": {\n      \"all_time\": 50000000.00,\n      \"today\": 250000.00,\n      \"last_7_days\": 2250000.00,\n      \"last_30_days\": 10000000.00,\n      \"last_90_days\": 27500000.00,\n      \"last_180_days\": 40000000.00,\n      \"last_360_days\": 47500000.00\n    },\n    \"tenants\": [\n      {\n        \"id\": 1,\n        \"name\": \"Warung Makan Sederhana\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-15 10:30:00\"\n      },\n      {\n        \"id\": 2,\n        \"name\": \"Kopi Kita\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-16 14:20:00\"\n      },\n      {\n        \"id\": 3,\n        \"name\": \"Toko Kelontong Jaya\",\n        \"is_active\": true,\n        \"created_at\": \"2025-01-18 09:15:00\"\n      }\n    ]\n  }\n}"
 						}
 					]
 				},

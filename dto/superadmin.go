@@ -95,13 +95,43 @@ type UserResponse struct {
 }
 
 type DashboardResponse struct {
-	TotalTenants         int64            `json:"total_tenants"`
-	TotalBranches        int64            `json:"total_branches"`
-	TotalUsers           int64            `json:"total_users"`
-	TotalProducts        int64            `json:"total_products"`
-	TotalOrders          int64            `json:"total_orders"`
-	TotalOrdersToday     int64            `json:"total_orders_today"`
-	TotalOrdersThisWeek  int64            `json:"total_orders_this_week"`
-	TotalOrdersThisMonth int64            `json:"total_orders_this_month"`
-	Tenants              []TenantResponse `json:"tenants"`
+	TotalTenants    int64            `json:"total_tenants"`
+	TotalBranches   int64            `json:"total_branches"`
+	TotalUsers      int64            `json:"total_users"`
+	TotalProducts   int64            `json:"total_products"`
+	TotalCategories int64            `json:"total_categories"`
+	Orders          OrderStats       `json:"orders"`
+	Payments        PaymentStats     `json:"payments"`
+	Transactions    TransactionStats `json:"transactions"`
+	Tenants         []TenantResponse `json:"tenants"`
+}
+
+type OrderStats struct {
+	AllTime     int64 `json:"all_time"`
+	Today       int64 `json:"today"`
+	Last7Days   int64 `json:"last_7_days"`
+	Last30Days  int64 `json:"last_30_days"`
+	Last90Days  int64 `json:"last_90_days"`
+	Last180Days int64 `json:"last_180_days"`
+	Last360Days int64 `json:"last_360_days"`
+}
+
+type PaymentStats struct {
+	AllTime     float64 `json:"all_time"`
+	Today       float64 `json:"today"`
+	Last7Days   float64 `json:"last_7_days"`
+	Last30Days  float64 `json:"last_30_days"`
+	Last90Days  float64 `json:"last_90_days"`
+	Last180Days float64 `json:"last_180_days"`
+	Last360Days float64 `json:"last_360_days"`
+}
+
+type TransactionStats struct {
+	AllTime     float64 `json:"all_time"`
+	Today       float64 `json:"today"`
+	Last7Days   float64 `json:"last_7_days"`
+	Last30Days  float64 `json:"last_30_days"`
+	Last90Days  float64 `json:"last_90_days"`
+	Last180Days float64 `json:"last_180_days"`
+	Last360Days float64 `json:"last_360_days"`
 }
