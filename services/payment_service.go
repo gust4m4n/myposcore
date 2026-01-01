@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"myposcore/models"
 
 	"gorm.io/gorm"
@@ -180,10 +181,13 @@ func (s *PaymentService) GetPaymentPerformance(tenantID, branchID uint, days int
 
 	var results []DailyStats
 
+	// Use PostgreSQL interval syntax
+	intervalCondition := fmt.Sprintf("payments.created_at >= CURRENT_DATE - INTERVAL '%d days'", days)
+
 	query := s.db.Table("payments").
 		Select("DATE(payments.created_at) as date, COUNT(*) as qty, SUM(payments.amount) as total_amount").
 		Joins("JOIN orders ON orders.id = payments.order_id").
-		Where("orders.tenant_id = ? AND payments.status = 'completed' AND payments.created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)", tenantID, days).
+		Where("orders.tenant_id = ? AND payments.status = 'completed' AND "+intervalCondition, tenantID).
 		Group("DATE(payments.created_at)").
 		Order("date ASC")
 
