@@ -4,20 +4,22 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
-	"net/http"
+	"myposcore/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 type PINHandler struct {
 	*BaseHandler
-	pinService *services.PINService
+	service           *services.PINService
+	auditTrailService *services.AuditTrailService
 }
 
-func NewPINHandler(cfg *config.Config) *PINHandler {
+func NewPINHandler(cfg *config.Config, auditTrailService *services.AuditTrailService) *PINHandler {
 	return &PINHandler{
-		BaseHandler: NewBaseHandler(cfg),
-		pinService:  services.NewPINService(),
+		BaseHandler:       NewBaseHandler(cfg),
+		service:           services.NewPINService(),
+		auditTrailService: auditTrailService,
 	}
 }
 
@@ -35,18 +37,16 @@ func (h *PINHandler) CreatePIN(c *gin.Context) {
 
 	var req dto.CreatePINRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	if err := h.pinService.CreatePIN(userID, req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := h.service.CreatePIN(userID, req); err != nil {
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "PIN created successfully",
-	})
+	utils.SuccessWithoutData(c, "PIN created successfully")
 }
 
 // ChangePIN godoc
@@ -63,18 +63,16 @@ func (h *PINHandler) ChangePIN(c *gin.Context) {
 
 	var req dto.ChangePINRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	if err := h.pinService.ChangePIN(userID, req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := h.service.ChangePIN(userID, req); err != nil {
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "PIN changed successfully",
-	})
+	utils.SuccessWithoutData(c, "PIN created successfully")
 }
 
 // CheckPIN godoc
@@ -88,13 +86,11 @@ func (h *PINHandler) ChangePIN(c *gin.Context) {
 func (h *PINHandler) CheckPIN(c *gin.Context) {
 	userID := c.GetUint("user_id")
 
-	hasPIN, err := h.pinService.HasPIN(userID)
+	hasPIN, err := h.service.HasPIN(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"has_pin": hasPIN,
-	})
+	utils.Success(c, "PIN check completed", gin.H{"has_pin": hasPIN})
 }

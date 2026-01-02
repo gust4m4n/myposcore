@@ -84,12 +84,12 @@ func (s *AdminChangePINService) AdminChangePIN(adminID uint, req dto.AdminChange
 
 // validateRoleHierarchy checks if admin role has permission to change target user's PIN
 func (s *AdminChangePINService) validateRoleHierarchy(adminRole, targetRole string) error {
-	// Role hierarchy: superadmin > owner > admin > user
+	// Role hierarchy: superadmin > owner > admin > staff
 	roleHierarchy := map[string]int{
 		"superadmin": 4,
 		"owner":      3,
 		"admin":      2,
-		"user":       1,
+		"staff":      1,
 	}
 
 	adminLevel, adminExists := roleHierarchy[adminRole]

@@ -5,6 +5,7 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
+	"myposcore/utils"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -29,13 +30,13 @@ func NewProfileHandler(cfg *config.Config) *ProfileHandler {
 func (h *ProfileHandler) Handle(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		utils.Unauthorized(c, "User not authenticated")
 		return
 	}
 
 	profile, err := h.authService.GetProfile(userID.(uint))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -54,26 +55,23 @@ func (h *ProfileHandler) Handle(c *gin.Context) {
 func (h *ProfileHandler) UpdateProfile(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		utils.Unauthorized(c, "User not authenticated")
 		return
 	}
 
 	var req dto.UpdateProfileRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
 	profile, err := h.authService.UpdateProfile(userID.(uint), req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Profile updated successfully",
-		"data":    profile,
-	})
+	utils.Success(c, "Profile updated successfully", profile)
 }
 
 // UploadProfileImage godoc
@@ -88,21 +86,21 @@ func (h *ProfileHandler) UpdateProfile(c *gin.Context) {
 func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		utils.Unauthorized(c, "User not authenticated")
 		return
 	}
 
 	// Get current user profile
 	profile, err := h.authService.GetProfile(userID.(uint))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
+		utils.InternalError(c, "User not found")
 		return
 	}
 
 	// Get uploaded file
 	file, err := c.FormFile("image")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
+		utils.BadRequest(c, "Image file is required")
 		return
 	}
 
@@ -116,20 +114,20 @@ func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 		".webp": true,
 	}
 	if !allowedExts[ext] {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+		utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 		return
 	}
 
 	// Validate file size (max 5MB)
 	if file.Size > 5*1024*1024 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+		utils.BadRequest(c, "File size too large. Maximum 5MB")
 		return
 	}
 
 	// Create uploads directory if not exists
 	uploadDir := "uploads/profiles"
 	if err := os.MkdirAll(uploadDir, 0755); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+		utils.InternalError(c, "Failed to create upload directory")
 		return
 	}
 
@@ -145,7 +143,7 @@ func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 
 	// Save file
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save photo"})
+		utils.InternalError(c, "Failed to save photo")
 		return
 	}
 
@@ -155,14 +153,11 @@ func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 	if err != nil {
 		// Delete uploaded file if database update fails
 		os.Remove(filePath)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Image uploaded successfully",
-		"data":    updatedProfile,
-	})
+	utils.Success(c, "Image uploaded successfully", updatedProfile)
 }
 
 // DeleteProfileImage godoc
@@ -176,14 +171,14 @@ func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 func (h *ProfileHandler) DeleteProfileImage(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		utils.Unauthorized(c, "User not authenticated")
 		return
 	}
 
 	// Get current user profile
 	profile, err := h.authService.GetProfile(userID.(uint))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
+		utils.InternalError(c, "User not found")
 		return
 	}
 
@@ -197,11 +192,9 @@ func (h *ProfileHandler) DeleteProfileImage(c *gin.Context) {
 	// Update database
 	_, err = h.authService.UpdateProfileImage(userID.(uint), "")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Image deleted successfully",
-	})
+	utils.SuccessWithoutData(c, "Image deleted successfully")
 }

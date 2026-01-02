@@ -4,7 +4,7 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
-	"net/http"
+	"myposcore/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func NewPaymentHandler(cfg *config.Config, paymentService *services.PaymentServi
 func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 	var req dto.CreatePaymentRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -37,14 +37,14 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 
 	payment, err := h.paymentService.CreatePayment(req.OrderID, req.Amount, req.PaymentMethod, req.Notes, tenantID, req.CreatedBy)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
 	// Get payment with full details for receipt
 	payment, order, err := h.paymentService.GetPaymentWithDetails(payment.ID, tenantID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get payment details"})
+		utils.InternalError(c, "Failed to get payment details")
 		return
 	}
 
@@ -85,13 +85,13 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 		},
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": response})
+	utils.Success(c, "Success", response)
 }
 
 func (h *PaymentHandler) GetPayment(c *gin.Context) {
 	paymentID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid payment ID"})
+		utils.BadRequest(c, "Invalid payment ID")
 		return
 	}
 
@@ -99,7 +99,7 @@ func (h *PaymentHandler) GetPayment(c *gin.Context) {
 
 	payment, err := h.paymentService.GetPayment(uint(paymentID), tenantID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Payment not found"})
+		utils.NotFound(c, "Payment not found")
 		return
 	}
 
@@ -128,13 +128,13 @@ func (h *PaymentHandler) GetPayment(c *gin.Context) {
 		UpdatedByName: updatedByName,
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": response})
+	utils.Success(c, "Success", response)
 }
 
 func (h *PaymentHandler) GetPaymentsByOrder(c *gin.Context) {
 	orderID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
+		utils.BadRequest(c, "Invalid order ID")
 		return
 	}
 
@@ -142,7 +142,7 @@ func (h *PaymentHandler) GetPaymentsByOrder(c *gin.Context) {
 
 	payments, err := h.paymentService.GetPaymentsByOrder(uint(orderID), tenantID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -160,7 +160,7 @@ func (h *PaymentHandler) GetPaymentsByOrder(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": responses})
+	utils.Success(c, "Success", responses)
 }
 
 func (h *PaymentHandler) ListPayments(c *gin.Context) {
@@ -180,7 +180,7 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 
 	payments, total, err := h.paymentService.ListPayments(tenantID, branchID, page, perPage)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -213,8 +213,8 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 	}
 
 	totalPages := (int(total) + perPage - 1) / perPage
-	c.JSON(http.StatusOK, gin.H{
-		"data": responses,
+	utils.Success(c, "Payments retrieved successfully", gin.H{
+		"items": responses,
 		"pagination": gin.H{
 			"page":        page,
 			"per_page":    perPage,
@@ -244,9 +244,9 @@ func (h *PaymentHandler) GetPaymentPerformance(c *gin.Context) {
 
 	performance, err := h.paymentService.GetPaymentPerformance(tenantID, branchID, days)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get payment performance"})
+		utils.InternalError(c, "Failed to get payment performance")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": performance})
+	utils.Success(c, "Success", performance)
 }

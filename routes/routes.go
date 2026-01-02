@@ -25,12 +25,13 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
-	loginHandler := handlers.NewLoginHandler(cfg)
+	loginHandler := handlers.NewLoginHandler(cfg, auditTrailService)
+	logoutHandler := handlers.NewLogoutHandler(cfg, auditTrailService)
 	profileHandler := handlers.NewProfileHandler(cfg)
-	changePasswordHandler := handlers.NewChangePasswordHandler(cfg)
-	adminChangePasswordHandler := handlers.NewAdminChangePasswordHandler(cfg)
-	adminChangePINHandler := handlers.NewAdminChangePINHandler(cfg)
-	pinHandler := handlers.NewPINHandler(cfg)
+	changePasswordHandler := handlers.NewChangePasswordHandler(cfg, auditTrailService)
+	adminChangePasswordHandler := handlers.NewAdminChangePasswordHandler(cfg, auditTrailService)
+	adminChangePINHandler := handlers.NewAdminChangePINHandler(cfg, auditTrailService)
+	pinHandler := handlers.NewPINHandler(cfg, auditTrailService)
 	productHandler := handlers.NewProductHandler(cfg, productService)
 	orderHandler := handlers.NewOrderHandler(cfg, orderService)
 	paymentHandler := handlers.NewPaymentHandler(cfg, paymentService)
@@ -79,6 +80,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		protected.Use(middleware.AuthMiddleware(cfg))
 		protected.Use(middleware.TenantMiddleware())
 		{
+			// Auth routes
+			protected.POST("/logout", logoutHandler.Handle)
 			protected.GET("/profile", profileHandler.Handle)
 			protected.PUT("/profile", profileHandler.UpdateProfile)
 			protected.PUT("/change-password", changePasswordHandler.Handle)

@@ -4,20 +4,22 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
-	"net/http"
+	"myposcore/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 type ChangePasswordHandler struct {
 	*BaseHandler
-	service *services.ChangePasswordService
+	service           *services.ChangePasswordService
+	auditTrailService *services.AuditTrailService
 }
 
-func NewChangePasswordHandler(cfg *config.Config) *ChangePasswordHandler {
+func NewChangePasswordHandler(cfg *config.Config, auditTrailService *services.AuditTrailService) *ChangePasswordHandler {
 	return &ChangePasswordHandler{
-		BaseHandler: NewBaseHandler(cfg),
-		service:     services.NewChangePasswordService(),
+		BaseHandler:       NewBaseHandler(cfg),
+		service:           services.NewChangePasswordService(),
+		auditTrailService: auditTrailService,
 	}
 }
 
@@ -34,22 +36,20 @@ func (h *ChangePasswordHandler) Handle(c *gin.Context) {
 	// Get user ID from context (set by auth middleware)
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		utils.Unauthorized(c, "User not authenticated")
 		return
 	}
 
 	var req dto.ChangePasswordRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
 	if err := h.service.ChangePassword(userID.(uint), req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Password changed successfully",
-	})
+	utils.SuccessWithoutData(c, "Password changed successfully")
 }

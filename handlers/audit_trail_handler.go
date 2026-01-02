@@ -3,7 +3,7 @@ package handlers
 import (
 	"myposcore/dto"
 	"myposcore/services"
-	"net/http"
+	"myposcore/utils"
 	"strconv"
 	"time"
 
@@ -104,7 +104,7 @@ func (h *AuditTrailHandler) ListAuditTrails(c *gin.Context) {
 		tenantID, userID, entityID, entityType, action, dateFrom, dateTo, page, limit,
 	)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve audit trails"})
+		utils.InternalError(c, "Failed to retrieve audit trails")
 		return
 	}
 
@@ -145,8 +145,8 @@ func (h *AuditTrailHandler) ListAuditTrails(c *gin.Context) {
 
 	totalPages := (int(total) + limit - 1) / limit
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": responses,
+	utils.Success(c, "Audit trails retrieved successfully", gin.H{
+		"items": responses,
 		"pagination": gin.H{
 			"page":        page,
 			"limit":       limit,
@@ -167,7 +167,7 @@ func (h *AuditTrailHandler) ListAuditTrails(c *gin.Context) {
 func (h *AuditTrailHandler) GetAuditTrailByID(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid audit trail ID"})
+		utils.BadRequest(c, "Invalid audit trail ID")
 		return
 	}
 
@@ -180,7 +180,7 @@ func (h *AuditTrailHandler) GetAuditTrailByID(c *gin.Context) {
 
 	auditTrail, err := h.auditTrailService.GetAuditTrailByID(uint(id), tenantID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		utils.NotFound(c, err.Error())
 		return
 	}
 
@@ -215,7 +215,7 @@ func (h *AuditTrailHandler) GetAuditTrailByID(c *gin.Context) {
 		CreatedAt:  auditTrail.CreatedAt.Format("2006-01-02 15:04:05"),
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": response})
+	utils.Success(c, "Success", response)
 }
 
 // GetEntityAuditHistory godoc
@@ -235,7 +235,7 @@ func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
 
 	entityID, err := strconv.ParseUint(entityIDStr, 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid entity ID"})
+		utils.BadRequest(c, "Invalid entity ID")
 		return
 	}
 
@@ -260,7 +260,7 @@ func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
 		tenantID, entityType, uint(entityID), page, limit,
 	)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve audit history"})
+		utils.InternalError(c, "Failed to retrieve audit history")
 		return
 	}
 
@@ -301,8 +301,8 @@ func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
 
 	totalPages := (int(total) + limit - 1) / limit
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": responses,
+	utils.Success(c, "User audit trails retrieved successfully", gin.H{
+		"items": responses,
 		"pagination": gin.H{
 			"page":        page,
 			"limit":       limit,
@@ -326,7 +326,7 @@ func (h *AuditTrailHandler) GetUserActivityLog(c *gin.Context) {
 	userIDStr := c.Param("user_id")
 	userID, err := strconv.ParseUint(userIDStr, 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		utils.BadRequest(c, "Invalid user ID")
 		return
 	}
 
@@ -351,7 +351,7 @@ func (h *AuditTrailHandler) GetUserActivityLog(c *gin.Context) {
 		tenantID, uint(userID), page, limit,
 	)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve user activity log"})
+		utils.InternalError(c, "Failed to retrieve user activity log")
 		return
 	}
 
@@ -392,8 +392,8 @@ func (h *AuditTrailHandler) GetUserActivityLog(c *gin.Context) {
 
 	totalPages := (int(total) + limit - 1) / limit
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": responses,
+	utils.Success(c, "Current user audit trails retrieved successfully", gin.H{
+		"items": responses,
 		"pagination": gin.H{
 			"page":        page,
 			"limit":       limit,

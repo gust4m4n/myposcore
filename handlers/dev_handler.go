@@ -3,7 +3,7 @@ package handlers
 import (
 	"myposcore/config"
 	"myposcore/services"
-	"net/http"
+	"myposcore/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -24,38 +24,26 @@ func NewDevHandler(cfg *config.Config) *DevHandler {
 func (h *DevHandler) ListTenants(c *gin.Context) {
 	tenants, err := h.service.ListTenants()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to fetch tenants",
-		})
+		utils.InternalError(c, "Failed to fetch tenants")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Tenants retrieved successfully",
-		"data":    tenants,
-	})
+	utils.Success(c, "Tenants retrieved successfully", tenants)
 }
 
 func (h *DevHandler) ListBranchesByTenant(c *gin.Context) {
 	tenantIDStr := c.Param("tenant_id")
 	tenantID, err := strconv.ParseUint(tenantIDStr, 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid tenant ID",
-		})
+		utils.BadRequest(c, "Invalid tenant ID")
 		return
 	}
 
 	branches, err := h.service.ListBranchesByTenant(uint(tenantID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to fetch branches",
-		})
+		utils.InternalError(c, "Failed to fetch branches")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Branches retrieved successfully",
-		"data":    branches,
-	})
+	utils.Success(c, "Branches retrieved successfully", branches)
 }

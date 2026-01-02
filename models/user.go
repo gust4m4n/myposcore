@@ -15,7 +15,7 @@ type User struct {
 	PIN       string         `gorm:"size:255" json:"-"`
 	FullName  string         `gorm:"size:255;index" json:"full_name"`
 	Image     string         `gorm:"type:varchar(500)" json:"image"`
-	Role      string         `gorm:"size:50;default:'user'" json:"role"`
+	Role      string         `gorm:"size:50;default:'staff'" json:"role"`
 	IsActive  bool           `gorm:"default:true" json:"is_active"`
 	CreatedBy *uint          `gorm:"index" json:"created_by"`
 	UpdatedBy *uint          `gorm:"index" json:"updated_by"`

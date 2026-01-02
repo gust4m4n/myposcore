@@ -5,40 +5,41 @@ import (
 	"myposcore/dto"
 	"myposcore/services"
 	"myposcore/utils"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type LoginHandler struct {
 	*BaseHandler
-	loginService *services.LoginService
+	loginService      *services.LoginService
+	auditTrailService *services.AuditTrailService
 }
 
-func NewLoginHandler(cfg *config.Config) *LoginHandler {
+func NewLoginHandler(cfg *config.Config, auditTrailService *services.AuditTrailService) *LoginHandler {
 	return &LoginHandler{
-		BaseHandler:  NewBaseHandler(cfg),
-		loginService: services.NewLoginService(),
+		BaseHandler:       NewBaseHandler(cfg),
+		loginService:      services.NewLoginService(),
+		auditTrailService: auditTrailService,
 	}
 }
 
 func (h *LoginHandler) Handle(c *gin.Context) {
 	var req dto.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
 	user, tenant, branch, err := h.loginService.Login(req)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		utils.Unauthorized(c, err.Error())
 		return
 	}
 
 	// Generate token
 	token, err := utils.GenerateToken(user.ID, user.TenantID, user.Email, h.config.JWTSecret)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		utils.InternalError(c, "Failed to generate token")
 		return
 	}
 
@@ -78,8 +79,5 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 		},
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Login successful",
-		"data":    response,
-	})
+	utils.Success(c, "Login successful", response)
 }

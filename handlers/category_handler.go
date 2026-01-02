@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"myposcore/dto"
 	"myposcore/services"
+	"myposcore/utils"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -38,7 +39,7 @@ func NewCategoryHandler(categoryService *services.CategoryService) *CategoryHand
 func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
@@ -51,12 +52,12 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		req.Description = c.PostForm("description")
 
 		if req.Name == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Name is required"})
+			utils.BadRequest(c, "Name is required")
 			return
 		}
 	} else {
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			utils.BadRequest(c, err.Error())
 			return
 		}
 	}
@@ -80,20 +81,20 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 				".webp": true,
 			}
 			if !allowedExts[ext] {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+				utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 				return
 			}
 
 			// Validate file size (max 5MB)
 			if file.Size > 5*1024*1024 {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+				utils.BadRequest(c, "File size too large. Maximum 5MB")
 				return
 			}
 
 			// Create uploads directory
 			uploadDir := "uploads/categories"
 			if err := os.MkdirAll(uploadDir, 0755); err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+				utils.InternalError(c, "Failed to create upload directory")
 				return
 			}
 
@@ -103,7 +104,7 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 
 			// Save file
 			if err := c.SaveUploadedFile(file, filePath); err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+				utils.InternalError(c, "Failed to save image")
 				return
 			}
 
@@ -117,7 +118,7 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		if imageURL != "" {
 			os.Remove(filepath.Join("uploads/categories", filepath.Base(imageURL)))
 		}
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -130,20 +131,17 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		createdByName = &name
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Category created successfully",
-		"data": dto.CategoryResponse{
-			ID:            category.ID,
-			TenantID:      category.TenantID,
-			Name:          category.Name,
-			Description:   category.Description,
-			Image:         category.Image,
-			IsActive:      category.IsActive,
-			CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:     category.CreatedBy,
-			CreatedByName: createdByName,
-		},
+	utils.Success(c, "Category created successfully", dto.CategoryResponse{
+		ID:            category.ID,
+		TenantID:      category.TenantID,
+		Name:          category.Name,
+		Description:   category.Description,
+		Image:         category.Image,
+		IsActive:      category.IsActive,
+		CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:     category.CreatedBy,
+		CreatedByName: createdByName,
 	})
 }
 
@@ -158,19 +156,19 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 func (h *CategoryHandler) GetCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
+		utils.BadRequest(c, "Invalid category ID")
 		return
 	}
 
 	category, err := h.categoryService.GetCategory(uint(categoryID), tenantID.(uint))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		utils.NotFound(c, err.Error())
 		return
 	}
 
@@ -184,21 +182,19 @@ func (h *CategoryHandler) GetCategory(c *gin.Context) {
 		updatedByName = &name
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": dto.CategoryResponse{
-			ID:            category.ID,
-			TenantID:      category.TenantID,
-			Name:          category.Name,
-			Description:   category.Description,
-			Image:         category.Image,
-			IsActive:      category.IsActive,
-			CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:     category.CreatedBy,
-			CreatedByName: createdByName,
-			UpdatedBy:     category.UpdatedBy,
-			UpdatedByName: updatedByName,
-		},
+	utils.Success(c, "Category retrieved successfully", dto.CategoryResponse{
+		ID:            category.ID,
+		TenantID:      category.TenantID,
+		Name:          category.Name,
+		Description:   category.Description,
+		Image:         category.Image,
+		IsActive:      category.IsActive,
+		CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:     category.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     category.UpdatedBy,
+		UpdatedByName: updatedByName,
 	})
 }
 
@@ -215,7 +211,7 @@ func (h *CategoryHandler) GetCategory(c *gin.Context) {
 func (h *CategoryHandler) ListCategories(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
@@ -231,7 +227,7 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 
 	categories, total, err := h.categoryService.ListCategories(tenantID.(uint), activeOnly, pagination.Page, pagination.PageSize)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -284,13 +280,13 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
+		utils.BadRequest(c, "Invalid category ID")
 		return
 	}
 
@@ -328,27 +324,27 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 			}
 			ext := strings.ToLower(filepath.Ext(file.Filename))
 			if !allowedExtensions[ext] {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+				utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 				return
 			}
 
 			// Validate file size (max 5MB)
 			if file.Size > 5*1024*1024 {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "File size exceeds 5MB limit"})
+				utils.BadRequest(c, "File size exceeds 5MB limit")
 				return
 			}
 
 			// Get existing category to retrieve old image path
 			existingCategory, err := h.categoryService.GetCategory(uint(categoryID), tenantID.(uint))
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				utils.BadRequest(c, err.Error())
 				return
 			}
 
 			// Create upload directory
 			uploadDir := "uploads/categories"
 			if err := os.MkdirAll(uploadDir, 0755); err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+				utils.InternalError(c, "Failed to create upload directory")
 				return
 			}
 
@@ -363,7 +359,7 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 
 			// Save the file
 			if err := c.SaveUploadedFile(file, filepath); err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+				utils.InternalError(c, "Failed to save image")
 				return
 			}
 
@@ -381,7 +377,7 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 		// Handle JSON request (backward compatibility)
 		var req dto.UpdateCategoryRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			utils.BadRequest(c, err.Error())
 			return
 		}
 
@@ -400,7 +396,7 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 		if imageURL != nil && *imageURL != "" {
 			os.Remove(*imageURL)
 		}
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -414,22 +410,19 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 		updatedByName = &name
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Category updated successfully",
-		"data": dto.CategoryResponse{
-			ID:            category.ID,
-			TenantID:      category.TenantID,
-			Name:          category.Name,
-			Description:   category.Description,
-			Image:         category.Image,
-			IsActive:      category.IsActive,
-			CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:     category.CreatedBy,
-			CreatedByName: createdByName,
-			UpdatedBy:     category.UpdatedBy,
-			UpdatedByName: updatedByName,
-		},
+	utils.Success(c, "Category updated successfully", dto.CategoryResponse{
+		ID:            category.ID,
+		TenantID:      category.TenantID,
+		Name:          category.Name,
+		Description:   category.Description,
+		Image:         category.Image,
+		IsActive:      category.IsActive,
+		CreatedAt:     category.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:     category.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:     category.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     category.UpdatedBy,
+		UpdatedByName: updatedByName,
 	})
 }
 
@@ -444,13 +437,13 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	categoryID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid category ID"})
+		utils.BadRequest(c, "Invalid category ID")
 		return
 	}
 
@@ -460,13 +453,13 @@ func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 	// Get category to retrieve image path before deletion
 	category, err := h.categoryService.GetCategory(uint(categoryID), tenantID.(uint))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
 	// Delete category from database
 	if err := h.categoryService.DeleteCategory(uint(categoryID), tenantID.(uint), &currentUserID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -478,5 +471,5 @@ func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Category deleted successfully"})
+	utils.SuccessWithoutData(c, "Category deleted successfully")
 }

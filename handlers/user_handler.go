@@ -6,6 +6,7 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
+	"myposcore/utils"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -51,7 +52,7 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 
 	users, total, err := h.userService.ListUsers(tenantID, pagination.Page, pagination.PageSize)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -101,17 +102,17 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		utils.BadRequest(c, "Invalid user ID")
 		return
 	}
 
 	user, err := h.userService.GetUser(tenantID, uint(userID))
 	if err != nil {
 		if err.Error() == "user not found" {
-			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			utils.NotFound(c, err.Error())
 			return
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -125,22 +126,20 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 		updatedByName = &name
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": dto.UserResponse{
-			ID:            user.ID,
-			TenantID:      user.TenantID,
-			BranchID:      user.BranchID,
-			Email:         user.Email,
-			FullName:      user.FullName,
-			Image:         user.Image,
-			Role:          user.Role,
-			IsActive:      user.IsActive,
-			CreatedAt:     user.CreatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:     user.CreatedBy,
-			CreatedByName: createdByName,
-			UpdatedBy:     user.UpdatedBy,
-			UpdatedByName: updatedByName,
-		},
+	utils.Success(c, "User retrieved successfully", dto.UserResponse{
+		ID:            user.ID,
+		TenantID:      user.TenantID,
+		BranchID:      user.BranchID,
+		Email:         user.Email,
+		FullName:      user.FullName,
+		Image:         user.Image,
+		Role:          user.Role,
+		IsActive:      user.IsActive,
+		CreatedAt:     user.CreatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:     user.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     user.UpdatedBy,
+		UpdatedByName: updatedByName,
 	})
 }
 
@@ -179,7 +178,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		if branchIDStr := c.PostForm("branch_id"); branchIDStr != "" {
 			branchID, err := strconv.ParseUint(branchIDStr, 10, 32)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid branch_id format"})
+				utils.BadRequest(c, "Invalid branch_id format")
 				return
 			}
 			req.BranchID = uint(branchID)
@@ -193,29 +192,29 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 
 		// Validate required fields
 		if req.Email == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Email is required"})
+			utils.BadRequest(c, "Email is required")
 			return
 		}
 		if req.Password == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Password is required"})
+			utils.BadRequest(c, "Password is required")
 			return
 		}
 		if req.FullName == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Full name is required"})
+			utils.BadRequest(c, "Full name is required")
 			return
 		}
 		if req.Role == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Role is required"})
+			utils.BadRequest(c, "Role is required")
 			return
 		}
 		if req.BranchID == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Branch ID is required"})
+			utils.BadRequest(c, "Branch ID is required")
 			return
 		}
 	} else {
 		// Parse JSON
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			utils.BadRequest(c, err.Error())
 			return
 		}
 	}
@@ -226,7 +225,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 
 	user, err := h.userService.CreateUser(tenantID, req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -235,10 +234,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		if file, err := c.FormFile("image"); err == nil {
 			imageURL, uploadErr := h.handleUserImageUpload(file, user.ID)
 			if uploadErr != nil {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"error":   uploadErr.Error(),
-					"message": "User created but image upload failed",
-				})
+				utils.BadRequest(c, fmt.Sprintf("User created but image upload failed: %s", uploadErr.Error()))
 				return
 			}
 			// Update user with image URL
@@ -246,20 +242,17 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "User created successfully",
-		"data": dto.UserResponse{
-			ID:        user.ID,
-			TenantID:  user.TenantID,
-			BranchID:  user.BranchID,
-			Email:     user.Email,
-			FullName:  user.FullName,
-			Image:     user.Image,
-			Role:      user.Role,
-			IsActive:  user.IsActive,
-			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy: user.CreatedBy,
-		},
+	utils.Success(c, "User created successfully", dto.UserResponse{
+		ID:        user.ID,
+		TenantID:  user.TenantID,
+		BranchID:  user.BranchID,
+		Email:     user.Email,
+		FullName:  user.FullName,
+		Image:     user.Image,
+		Role:      user.Role,
+		IsActive:  user.IsActive,
+		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy: user.CreatedBy,
 	})
 }
 
@@ -285,7 +278,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		utils.BadRequest(c, "Invalid user ID")
 		return
 	}
 
@@ -312,7 +305,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		if branchIDStr := c.PostForm("branch_id"); branchIDStr != "" {
 			branchID, err := strconv.ParseUint(branchIDStr, 10, 32)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid branch_id format"})
+				utils.BadRequest(c, "Invalid branch_id format")
 				return
 			}
 			branchIDUint := uint(branchID)
@@ -327,7 +320,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 	} else {
 		// Parse JSON
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			utils.BadRequest(c, err.Error())
 			return
 		}
 	}
@@ -339,10 +332,10 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 	user, err := h.userService.UpdateUser(tenantID, uint(userID), req)
 	if err != nil {
 		if err.Error() == "user not found" {
-			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			utils.NotFound(c, err.Error())
 			return
 		}
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -358,10 +351,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 
 			imageURL, uploadErr := h.handleUserImageUpload(file, user.ID)
 			if uploadErr != nil {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"error":   uploadErr.Error(),
-					"message": "User updated but image upload failed",
-				})
+				utils.BadRequest(c, fmt.Sprintf("User updated but image upload failed: %s", uploadErr.Error()))
 				return
 			}
 			// Update user with image URL
@@ -369,21 +359,18 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "User updated successfully",
-		"data": dto.UserResponse{
-			ID:        user.ID,
-			TenantID:  user.TenantID,
-			BranchID:  user.BranchID,
-			Email:     user.Email,
-			FullName:  user.FullName,
-			Image:     user.Image,
-			Role:      user.Role,
-			IsActive:  user.IsActive,
-			CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy: user.CreatedBy,
-			UpdatedBy: user.UpdatedBy,
-		},
+	utils.Success(c, "User updated successfully", dto.UserResponse{
+		ID:        user.ID,
+		TenantID:  user.TenantID,
+		BranchID:  user.BranchID,
+		Email:     user.Email,
+		FullName:  user.FullName,
+		Image:     user.Image,
+		Role:      user.Role,
+		IsActive:  user.IsActive,
+		CreatedAt: user.CreatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy: user.CreatedBy,
+		UpdatedBy: user.UpdatedBy,
 	})
 }
 
@@ -454,7 +441,7 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		utils.BadRequest(c, "Invalid user ID")
 		return
 	}
 
@@ -463,14 +450,12 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 
 	if err := h.userService.DeleteUser(tenantID, uint(userID), &currentUserID); err != nil {
 		if err.Error() == "user not found" {
-			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			utils.NotFound(c, err.Error())
 			return
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "User deleted successfully",
-	})
+	utils.SuccessWithoutData(c, "User deleted successfully")
 }

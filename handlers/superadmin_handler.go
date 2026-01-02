@@ -5,6 +5,7 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
+	"myposcore/utils"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -54,7 +55,7 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 
 	tenants, total, err := h.tenantService.ListTenants(pagination.Page, pagination.PageSize)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -123,7 +124,7 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 
 	// Validate required fields
 	if req.Name == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
+		utils.BadRequest(c, "name is required")
 		return
 	}
 
@@ -141,20 +142,20 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 			".webp": true,
 		}
 		if !allowedExts[ext] {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 			return
 		}
 
 		// Validate file size (max 5MB)
 		if file.Size > 5*1024*1024 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			utils.BadRequest(c, "File size too large. Maximum 5MB")
 			return
 		}
 
 		// Create uploads directory
 		uploadDir := "uploads/tenants"
 		if err := os.MkdirAll(uploadDir, 0755); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			utils.InternalError(c, "Failed to create upload directory")
 			return
 		}
 
@@ -176,26 +177,23 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 		if imageURL != "" {
 			os.Remove(filepath.Join("uploads/tenants", filepath.Base(imageURL)))
 		}
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Tenant created successfully",
-		"data": dto.TenantResponse{
-			ID:          tenant.ID,
-			Name:        tenant.Name,
-			Description: tenant.Description,
-			Address:     tenant.Address,
-			Website:     tenant.Website,
-			Email:       tenant.Email,
-			Phone:       tenant.Phone,
-			Image:       tenant.Image,
-			IsActive:    tenant.IsActive,
-			CreatedAt:   tenant.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   tenant.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:   tenant.CreatedBy,
-		},
+	utils.Success(c, "Tenant created successfully", dto.TenantResponse{
+		ID:          tenant.ID,
+		Name:        tenant.Name,
+		Description: tenant.Description,
+		Address:     tenant.Address,
+		Website:     tenant.Website,
+		Email:       tenant.Email,
+		Phone:       tenant.Phone,
+		Image:       tenant.Image,
+		IsActive:    tenant.IsActive,
+		CreatedAt:   tenant.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   tenant.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:   tenant.CreatedBy,
 	})
 }
 
@@ -213,7 +211,7 @@ func (h *SuperAdminHandler) CreateTenant(c *gin.Context) {
 func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 	tenantID, err := strconv.ParseUint(c.Param("tenant_id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tenant ID"})
+		utils.BadRequest(c, "Invalid tenant ID")
 		return
 	}
 
@@ -227,7 +225,7 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 
 	branches, total, err := h.branchService.ListBranches(uint(tenantID), pagination.Page, pagination.PageSize)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -288,7 +286,7 @@ func (h *SuperAdminHandler) ListBranches(c *gin.Context) {
 func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 	tenantID, err := strconv.ParseUint(c.Param("tenant_id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tenant ID"})
+		utils.BadRequest(c, "Invalid tenant ID")
 		return
 	}
 
@@ -305,7 +303,7 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 
 	// Validate required fields
 	if req.Name == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
+		utils.BadRequest(c, "name is required")
 		return
 	}
 
@@ -323,27 +321,27 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 			".webp": true,
 		}
 		if !allowedExts[ext] {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 			return
 		}
 
 		// Validate file size (max 5MB)
 		if file.Size > 5*1024*1024 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			utils.BadRequest(c, "File size too large. Maximum 5MB")
 			return
 		}
 
 		// Get existing tenant to delete old image
 		existingTenant, err := h.tenantService.GetTenantByID(uint(tenantID))
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Tenant not found"})
+			utils.NotFound(c, "Tenant not found")
 			return
 		}
 
 		// Create uploads directory
 		uploadDir := "uploads/tenants"
 		if err := os.MkdirAll(uploadDir, 0755); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			utils.InternalError(c, "Failed to create upload directory")
 			return
 		}
 
@@ -359,7 +357,7 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 
 		// Save file
 		if err := c.SaveUploadedFile(file, filePath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			utils.InternalError(c, "Failed to save image")
 			return
 		}
 
@@ -379,26 +377,23 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 		if imageURL != "" {
 			os.Remove(filepath.Join("uploads/tenants", filepath.Base(imageURL)))
 		}
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Tenant updated successfully",
-		"data": dto.TenantResponse{
-			ID:          tenant.ID,
-			Name:        tenant.Name,
-			Description: tenant.Description,
-			Address:     tenant.Address,
-			Website:     tenant.Website,
-			Email:       tenant.Email,
-			Phone:       tenant.Phone,
-			Image:       tenant.Image,
-			IsActive:    tenant.IsActive,
-			CreatedAt:   tenant.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   tenant.UpdatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedBy:   tenant.UpdatedBy,
-		},
+	utils.Success(c, "Tenant updated successfully", dto.TenantResponse{
+		ID:          tenant.ID,
+		Name:        tenant.Name,
+		Description: tenant.Description,
+		Address:     tenant.Address,
+		Website:     tenant.Website,
+		Email:       tenant.Email,
+		Phone:       tenant.Phone,
+		Image:       tenant.Image,
+		IsActive:    tenant.IsActive,
+		CreatedAt:   tenant.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   tenant.UpdatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedBy:   tenant.UpdatedBy,
 	})
 }
 
@@ -414,14 +409,14 @@ func (h *SuperAdminHandler) UpdateTenant(c *gin.Context) {
 func (h *SuperAdminHandler) DeleteTenant(c *gin.Context) {
 	tenantID, err := strconv.ParseUint(c.Param("tenant_id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tenant ID"})
+		utils.BadRequest(c, "Invalid tenant ID")
 		return
 	}
 
 	// Get existing tenant to delete image file
 	existingTenant, err := h.tenantService.GetTenantByID(uint(tenantID))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Tenant not found"})
+		utils.NotFound(c, "Tenant not found")
 		return
 	}
 
@@ -434,7 +429,7 @@ func (h *SuperAdminHandler) DeleteTenant(c *gin.Context) {
 
 	// Delete tenant from database
 	if err := h.tenantService.DeleteTenant(uint(tenantID), deletedBy); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -445,9 +440,7 @@ func (h *SuperAdminHandler) DeleteTenant(c *gin.Context) {
 		os.Remove(imagePath) // Ignore error if file doesn't exist
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Tenant deleted successfully",
-	})
+	utils.SuccessWithoutData(c, "Tenant deleted successfully")
 }
 
 // CreateBranch godoc
@@ -472,7 +465,7 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 	// Parse form data
 	tenantID, err := strconv.ParseUint(c.PostForm("tenant_id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tenant ID"})
+		utils.BadRequest(c, "Invalid tenant ID")
 		return
 	}
 
@@ -489,7 +482,7 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 
 	// Validate required fields
 	if req.Name == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
+		utils.BadRequest(c, "name is required")
 		return
 	}
 
@@ -507,20 +500,20 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 			".webp": true,
 		}
 		if !allowedExts[ext] {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 			return
 		}
 
 		// Validate file size (max 5MB)
 		if file.Size > 5*1024*1024 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			utils.BadRequest(c, "File size too large. Maximum 5MB")
 			return
 		}
 
 		// Create uploads directory
 		uploadDir := "uploads/branches"
 		if err := os.MkdirAll(uploadDir, 0755); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			utils.InternalError(c, "Failed to create upload directory")
 			return
 		}
 
@@ -530,7 +523,7 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 
 		// Save file
 		if err := c.SaveUploadedFile(file, filePath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			utils.InternalError(c, "Failed to save image")
 			return
 		}
 
@@ -550,27 +543,24 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 		if imageURL != "" {
 			os.Remove(filepath.Join("uploads/branches", filepath.Base(imageURL)))
 		}
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Branch created successfully",
-		"data": dto.BranchResponse{
-			ID:          branch.ID,
-			TenantID:    branch.TenantID,
-			Name:        branch.Name,
-			Description: branch.Description,
-			Address:     branch.Address,
-			Website:     branch.Website,
-			Email:       branch.Email,
-			Phone:       branch.Phone,
-			Image:       branch.Image,
-			IsActive:    branch.IsActive,
-			CreatedAt:   branch.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   branch.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:   branch.CreatedBy,
-		},
+	utils.Success(c, "Branch created successfully", dto.BranchResponse{
+		ID:          branch.ID,
+		TenantID:    branch.TenantID,
+		Name:        branch.Name,
+		Description: branch.Description,
+		Address:     branch.Address,
+		Website:     branch.Website,
+		Email:       branch.Email,
+		Phone:       branch.Phone,
+		Image:       branch.Image,
+		IsActive:    branch.IsActive,
+		CreatedAt:   branch.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   branch.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:   branch.CreatedBy,
 	})
 }
 
@@ -595,7 +585,7 @@ func (h *SuperAdminHandler) CreateBranch(c *gin.Context) {
 func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 	branchID, err := strconv.ParseUint(c.Param("branch_id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid branch ID"})
+		utils.BadRequest(c, "Invalid branch ID")
 		return
 	}
 
@@ -612,7 +602,7 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 
 	// Validate required fields
 	if req.Name == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "name is required"})
+		utils.BadRequest(c, "name is required")
 		return
 	}
 
@@ -630,27 +620,27 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 			".webp": true,
 		}
 		if !allowedExts[ext] {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+			utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 			return
 		}
 
 		// Validate file size (max 5MB)
 		if file.Size > 5*1024*1024 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+			utils.BadRequest(c, "File size too large. Maximum 5MB")
 			return
 		}
 
 		// Get existing branch to delete old image
 		existingBranch, err := h.branchService.GetBranchByID(uint(branchID))
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Branch not found"})
+			utils.NotFound(c, "Branch not found")
 			return
 		}
 
 		// Create uploads directory
 		uploadDir := "uploads/branches"
 		if err := os.MkdirAll(uploadDir, 0755); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+			utils.InternalError(c, "Failed to create upload directory")
 			return
 		}
 
@@ -666,7 +656,7 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 
 		// Save file
 		if err := c.SaveUploadedFile(file, filePath); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			utils.InternalError(c, "Failed to save image")
 			return
 		}
 
@@ -686,27 +676,24 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 		if imageURL != "" {
 			os.Remove(filepath.Join("uploads/branches", filepath.Base(imageURL)))
 		}
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Branch updated successfully",
-		"data": dto.BranchResponse{
-			ID:          branch.ID,
-			TenantID:    branch.TenantID,
-			Name:        branch.Name,
-			Description: branch.Description,
-			Address:     branch.Address,
-			Website:     branch.Website,
-			Email:       branch.Email,
-			Phone:       branch.Phone,
-			Image:       branch.Image,
-			IsActive:    branch.IsActive,
-			CreatedAt:   branch.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   branch.UpdatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedBy:   branch.UpdatedBy,
-		},
+	utils.Success(c, "Branch updated successfully", dto.BranchResponse{
+		ID:          branch.ID,
+		TenantID:    branch.TenantID,
+		Name:        branch.Name,
+		Description: branch.Description,
+		Address:     branch.Address,
+		Website:     branch.Website,
+		Email:       branch.Email,
+		Phone:       branch.Phone,
+		Image:       branch.Image,
+		IsActive:    branch.IsActive,
+		CreatedAt:   branch.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   branch.UpdatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedBy:   branch.UpdatedBy,
 	})
 }
 
@@ -722,14 +709,14 @@ func (h *SuperAdminHandler) UpdateBranch(c *gin.Context) {
 func (h *SuperAdminHandler) DeleteBranch(c *gin.Context) {
 	branchID, err := strconv.ParseUint(c.Param("branch_id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid branch ID"})
+		utils.BadRequest(c, "Invalid branch ID")
 		return
 	}
 
 	// Get existing branch to delete image file
 	existingBranch, err := h.branchService.GetBranchByID(uint(branchID))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Branch not found"})
+		utils.NotFound(c, "Branch not found")
 		return
 	}
 
@@ -742,7 +729,7 @@ func (h *SuperAdminHandler) DeleteBranch(c *gin.Context) {
 
 	// Delete branch from database
 	if err := h.branchService.DeleteBranch(uint(branchID), deletedBy); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -753,9 +740,7 @@ func (h *SuperAdminHandler) DeleteBranch(c *gin.Context) {
 		os.Remove(imagePath) // Ignore error if file doesn't exist
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Branch deleted successfully",
-	})
+	utils.SuccessWithoutData(c, "Branch deleted successfully")
 }
 
 // ListUsers godoc
@@ -770,13 +755,13 @@ func (h *SuperAdminHandler) DeleteBranch(c *gin.Context) {
 func (h *SuperAdminHandler) ListUsers(c *gin.Context) {
 	branchID, err := strconv.ParseUint(c.Param("branch_id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid branch ID"})
+		utils.BadRequest(c, "Invalid branch ID")
 		return
 	}
 
 	users, err := h.userService.ListUsersByBranch(uint(branchID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -795,9 +780,7 @@ func (h *SuperAdminHandler) ListUsers(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": response,
-	})
+	utils.Success(c, "Users retrieved successfully", response)
 }
 
 // Dashboard godoc
@@ -812,11 +795,9 @@ func (h *SuperAdminHandler) ListUsers(c *gin.Context) {
 func (h *SuperAdminHandler) Dashboard(c *gin.Context) {
 	dashboard, err := h.dashboardService.GetDashboard()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": dashboard,
-	})
+	utils.Success(c, "Dashboard data retrieved successfully", dashboard)
 }

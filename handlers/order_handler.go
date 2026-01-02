@@ -4,7 +4,7 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
-	"net/http"
+	"myposcore/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func NewOrderHandler(cfg *config.Config, orderService *services.OrderService) *O
 func (h *OrderHandler) CreateOrder(c *gin.Context) {
 	var req dto.CreateOrderRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -50,7 +50,7 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
 
 	order, err := h.orderService.CreateOrder(tenantID, branchID, userID, req.CreatedBy, items)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -83,13 +83,13 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
 	}
 	response.OrderItems = orderItems
 
-	c.JSON(http.StatusOK, gin.H{"data": response})
+	utils.Success(c, "Success", response)
 }
 
 func (h *OrderHandler) GetOrder(c *gin.Context) {
 	orderID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
+		utils.BadRequest(c, "Invalid order ID")
 		return
 	}
 
@@ -97,7 +97,7 @@ func (h *OrderHandler) GetOrder(c *gin.Context) {
 
 	order, err := h.orderService.GetOrder(uint(orderID), tenantID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Order not found"})
+		utils.NotFound(c, "Order not found")
 		return
 	}
 
@@ -144,7 +144,7 @@ func (h *OrderHandler) GetOrder(c *gin.Context) {
 	}
 	response.OrderItems = orderItems
 
-	c.JSON(http.StatusOK, gin.H{"data": response})
+	utils.Success(c, "Success", response)
 }
 
 func (h *OrderHandler) ListOrders(c *gin.Context) {
@@ -164,7 +164,7 @@ func (h *OrderHandler) ListOrders(c *gin.Context) {
 
 	orders, total, err := h.orderService.ListOrders(tenantID, branchID, page, perPage)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -215,8 +215,8 @@ func (h *OrderHandler) ListOrders(c *gin.Context) {
 	}
 
 	totalPages := (int(total) + perPage - 1) / perPage
-	c.JSON(http.StatusOK, gin.H{
-		"data": responses,
+	utils.Success(c, "Orders retrieved successfully", gin.H{
+		"items": responses,
 		"pagination": gin.H{
 			"page":        page,
 			"per_page":    perPage,

@@ -6,6 +6,7 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
+	"myposcore/utils"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -43,7 +44,7 @@ func NewProductHandler(cfg *config.Config, productService *services.ProductServi
 func (h *ProductHandler) ListProducts(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
@@ -61,7 +62,7 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 
 	products, total, err := h.service.ListProducts(tenantID.(uint), category, search, pagination.Page, pagination.PageSize)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
@@ -113,19 +114,19 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 func (h *ProductHandler) GetProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		utils.BadRequest(c, "Invalid product ID")
 		return
 	}
 
 	product, err := h.service.GetProduct(uint(id), tenantID.(uint))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		utils.NotFound(c, err.Error())
 		return
 	}
 
@@ -139,25 +140,23 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 		updatedByName = &name
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": dto.ProductResponse{
-			ID:            product.ID,
-			TenantID:      product.TenantID,
-			Name:          product.Name,
-			Description:   product.Description,
-			Category:      product.Category,
-			SKU:           product.SKU,
-			Price:         product.Price,
-			Stock:         product.Stock,
-			Image:         product.Image,
-			IsActive:      product.IsActive,
-			CreatedAt:     product.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:     product.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:     product.CreatedBy,
-			CreatedByName: createdByName,
-			UpdatedBy:     product.UpdatedBy,
-			UpdatedByName: updatedByName,
-		},
+	utils.Success(c, "Product retrieved successfully", dto.ProductResponse{
+		ID:            product.ID,
+		TenantID:      product.TenantID,
+		Name:          product.Name,
+		Description:   product.Description,
+		Category:      product.Category,
+		SKU:           product.SKU,
+		Price:         product.Price,
+		Stock:         product.Stock,
+		Image:         product.Image,
+		IsActive:      product.IsActive,
+		CreatedAt:     product.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:     product.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:     product.CreatedBy,
+		CreatedByName: createdByName,
+		UpdatedBy:     product.UpdatedBy,
+		UpdatedByName: updatedByName,
 	})
 }
 
@@ -182,7 +181,7 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 func (h *ProductHandler) CreateProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
@@ -201,7 +200,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		if priceStr := c.PostForm("price"); priceStr != "" {
 			price, err := strconv.ParseFloat(priceStr, 64)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid price format"})
+				utils.BadRequest(c, "Invalid price format")
 				return
 			}
 			req.Price = price
@@ -211,7 +210,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		if stockStr := c.PostForm("stock"); stockStr != "" {
 			stock, err := strconv.Atoi(stockStr)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid stock format"})
+				utils.BadRequest(c, "Invalid stock format")
 				return
 			}
 			req.Stock = stock
@@ -224,17 +223,17 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 
 		// Validate required fields
 		if req.Name == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Name is required"})
+			utils.BadRequest(c, "Name is required")
 			return
 		}
 		if req.Price <= 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Price must be greater than 0"})
+			utils.BadRequest(c, "Price must be greater than 0")
 			return
 		}
 	} else {
 		// Parse JSON
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			utils.BadRequest(c, err.Error())
 			return
 		}
 	}
@@ -245,7 +244,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 
 	product, err := h.service.CreateProduct(tenantID.(uint), req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -254,10 +253,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		if file, err := c.FormFile("image"); err == nil {
 			imageURL, uploadErr := h.handleImageUpload(file, product.ID)
 			if uploadErr != nil {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"error":   uploadErr.Error(),
-					"message": "Product created but image upload failed",
-				})
+				utils.BadRequest(c, fmt.Sprintf("Product created but image upload failed: %s", uploadErr.Error()))
 				return
 			}
 			// Update product with image URL
@@ -265,23 +261,20 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Product created successfully",
-		"data": dto.ProductResponse{
-			ID:          product.ID,
-			TenantID:    product.TenantID,
-			Name:        product.Name,
-			Description: product.Description,
-			Category:    product.Category,
-			SKU:         product.SKU,
-			Price:       product.Price,
-			Stock:       product.Stock,
-			Image:       product.Image,
-			IsActive:    product.IsActive,
-			CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:   product.CreatedBy,
-		},
+	utils.Success(c, "Product created successfully", dto.ProductResponse{
+		ID:          product.ID,
+		TenantID:    product.TenantID,
+		Name:        product.Name,
+		Description: product.Description,
+		Category:    product.Category,
+		SKU:         product.SKU,
+		Price:       product.Price,
+		Stock:       product.Stock,
+		Image:       product.Image,
+		IsActive:    product.IsActive,
+		CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:   product.CreatedBy,
 	})
 }
 
@@ -307,13 +300,13 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		utils.BadRequest(c, "Invalid product ID")
 		return
 	}
 
@@ -340,7 +333,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		if priceStr := c.PostForm("price"); priceStr != "" {
 			price, err := strconv.ParseFloat(priceStr, 64)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid price format"})
+				utils.BadRequest(c, "Invalid price format")
 				return
 			}
 			req.Price = price
@@ -350,7 +343,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		if stockStr := c.PostForm("stock"); stockStr != "" {
 			stock, err := strconv.Atoi(stockStr)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid stock format"})
+				utils.BadRequest(c, "Invalid stock format")
 				return
 			}
 			req.Stock = stock
@@ -364,7 +357,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 	} else {
 		// Parse JSON
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			utils.BadRequest(c, err.Error())
 			return
 		}
 	}
@@ -375,7 +368,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 
 	product, err := h.service.UpdateProduct(uint(id), tenantID.(uint), req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
@@ -391,10 +384,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 
 			imageURL, uploadErr := h.handleImageUpload(file, product.ID)
 			if uploadErr != nil {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"error":   uploadErr.Error(),
-					"message": "Product updated but image upload failed",
-				})
+				utils.BadRequest(c, fmt.Sprintf("Product updated but image upload failed: %s", uploadErr.Error()))
 				return
 			}
 			// Update product with image URL
@@ -402,24 +392,21 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Product updated successfully",
-		"data": dto.ProductResponse{
-			ID:          product.ID,
-			TenantID:    product.TenantID,
-			Name:        product.Name,
-			Description: product.Description,
-			Category:    product.Category,
-			SKU:         product.SKU,
-			Price:       product.Price,
-			Stock:       product.Stock,
-			Image:       product.Image,
-			IsActive:    product.IsActive,
-			CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:   product.CreatedBy,
-			UpdatedBy:   product.UpdatedBy,
-		},
+	utils.Success(c, "Product updated successfully", dto.ProductResponse{
+		ID:          product.ID,
+		TenantID:    product.TenantID,
+		Name:        product.Name,
+		Description: product.Description,
+		Category:    product.Category,
+		SKU:         product.SKU,
+		Price:       product.Price,
+		Stock:       product.Stock,
+		Image:       product.Image,
+		IsActive:    product.IsActive,
+		CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:   product.CreatedBy,
+		UpdatedBy:   product.UpdatedBy,
 	})
 }
 
@@ -435,13 +422,13 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		utils.BadRequest(c, "Invalid product ID")
 		return
 	}
 
@@ -449,13 +436,11 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 	currentUserID := c.GetUint("user_id")
 
 	if err := h.service.DeleteProduct(uint(id), tenantID.(uint), &currentUserID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Product deleted successfully",
-	})
+	utils.SuccessWithoutData(c, "Product deleted successfully")
 }
 
 // GetCategories godoc
@@ -469,19 +454,17 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 func (h *ProductHandler) GetCategories(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	categories, err := h.service.GetCategories(tenantID.(uint))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": categories,
-	})
+	utils.Success(c, "Categories retrieved successfully", categories)
 }
 
 // UploadProductImage godoc
@@ -497,27 +480,27 @@ func (h *ProductHandler) GetCategories(c *gin.Context) {
 func (h *ProductHandler) UploadProductImage(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		utils.BadRequest(c, "Invalid product ID")
 		return
 	}
 
 	// Get product first to verify it exists and belongs to tenant
 	product, err := h.service.GetProduct(uint(id), tenantID.(uint))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		utils.NotFound(c, "Product not found")
 		return
 	}
 
 	// Get uploaded file
 	file, err := c.FormFile("image")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
+		utils.BadRequest(c, "Image file is required")
 		return
 	}
 
@@ -531,20 +514,20 @@ func (h *ProductHandler) UploadProductImage(c *gin.Context) {
 		".webp": true,
 	}
 	if !allowedExts[ext] {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid file type. Allowed: jpg, jpeg, png, gif, webp"})
+		utils.BadRequest(c, "Invalid file type. Allowed: jpg, jpeg, png, gif, webp")
 		return
 	}
 
 	// Validate file size (max 5MB)
 	if file.Size > 5*1024*1024 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "File size too large. Maximum 5MB"})
+		utils.BadRequest(c, "File size too large. Maximum 5MB")
 		return
 	}
 
 	// Create uploads directory if not exists
 	uploadDir := "uploads/products"
 	if err := os.MkdirAll(uploadDir, 0755); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload directory"})
+		utils.InternalError(c, "Failed to create upload directory")
 		return
 	}
 
@@ -560,7 +543,7 @@ func (h *ProductHandler) UploadProductImage(c *gin.Context) {
 
 	// Save file
 	if err := c.SaveUploadedFile(file, filePath); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save photo"})
+		utils.InternalError(c, "Failed to save photo")
 		return
 	}
 
@@ -570,26 +553,24 @@ func (h *ProductHandler) UploadProductImage(c *gin.Context) {
 	if err != nil {
 		// Delete uploaded file if database update fails
 		os.Remove(filePath)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Image uploaded successfully",
-		"data": dto.ProductResponse{
-			ID:          updatedProduct.ID,
-			TenantID:    updatedProduct.TenantID,
-			Name:        updatedProduct.Name,
-			Description: updatedProduct.Description,
-			Category:    updatedProduct.Category,
-			SKU:         updatedProduct.SKU,
-			Price:       updatedProduct.Price,
-			Stock:       updatedProduct.Stock,
-			Image:       updatedProduct.Image,
-			IsActive:    updatedProduct.IsActive,
-			CreatedAt:   updatedProduct.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:   updatedProduct.UpdatedAt.Format("2006-01-02 15:04:05"),
-		},
+	utils.Success(c, "Image uploaded successfully", dto.ProductResponse{
+		ID:          updatedProduct.ID,
+		TenantID:    updatedProduct.TenantID,
+		Name:        updatedProduct.Name,
+		Description: updatedProduct.Description,
+		Category:    updatedProduct.Category,
+		SKU:         updatedProduct.SKU,
+		Price:       updatedProduct.Price,
+		Stock:       updatedProduct.Stock,
+		Image:       updatedProduct.Image,
+		IsActive:    updatedProduct.IsActive,
+		CreatedAt:   updatedProduct.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:   updatedProduct.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:   updatedProduct.CreatedBy,
 	})
 }
 
@@ -659,20 +640,20 @@ func (h *ProductHandler) handleImageUpload(file *multipart.FileHeader, productID
 func (h *ProductHandler) DeleteProductImage(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Tenant not found"})
+		utils.Unauthorized(c, "Tenant not found")
 		return
 	}
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		utils.BadRequest(c, "Invalid product ID")
 		return
 	}
 
 	// Get product first
 	product, err := h.service.GetProduct(uint(id), tenantID.(uint))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+		utils.NotFound(c, "Product not found")
 		return
 	}
 
@@ -686,11 +667,9 @@ func (h *ProductHandler) DeleteProductImage(c *gin.Context) {
 	// Update database
 	_, err = h.service.UpdateProductImage(uint(id), tenantID.(uint), "")
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		utils.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Image deleted successfully",
-	})
+	utils.SuccessWithoutData(c, "Image deleted successfully")
 }

@@ -4,20 +4,22 @@ import (
 	"myposcore/config"
 	"myposcore/dto"
 	"myposcore/services"
-	"net/http"
+	"myposcore/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AdminChangePINHandler struct {
 	*BaseHandler
-	service *services.AdminChangePINService
+	service           *services.AdminChangePINService
+	auditTrailService *services.AuditTrailService
 }
 
-func NewAdminChangePINHandler(cfg *config.Config) *AdminChangePINHandler {
+func NewAdminChangePINHandler(cfg *config.Config, auditTrailService *services.AuditTrailService) *AdminChangePINHandler {
 	return &AdminChangePINHandler{
-		BaseHandler: NewBaseHandler(cfg),
-		service:     services.NewAdminChangePINService(),
+		BaseHandler:       NewBaseHandler(cfg),
+		service:           services.NewAdminChangePINService(),
+		auditTrailService: auditTrailService,
 	}
 }
 
@@ -34,20 +36,20 @@ func (h *AdminChangePINHandler) Handle(c *gin.Context) {
 	// Get admin user ID from context (set by auth middleware)
 	userID, exists := c.Get("user_id")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		utils.Unauthorized(c, "User not authenticated")
 		return
 	}
 
 	var req dto.AdminChangePINRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
 	if err := h.service.AdminChangePIN(userID.(uint), req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		utils.BadRequest(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "PIN changed successfully"})
+	utils.SuccessWithoutData(c, "PIN changed successfully")
 }
