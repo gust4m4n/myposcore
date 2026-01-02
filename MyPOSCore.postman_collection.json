@@ -3500,7 +3500,7 @@
 								"dashboard"
 							]
 						},
-						"description": "Get comprehensive dashboard statistics including:\n- Total counts: tenants, branches, users, products, categories\n- Transactions statistics (qty and total amount for all time, today, last 7/30/90/180/360 days) - for chart\n\nRequires superadmin role."
+						"description": "Get comprehensive dashboard statistics including:\n- Total counts: tenants, branches, users, products\n- Transactions statistics (qty and total amount for all time, today, last 7/30/90/180/360 days) - for chart\n\nRequires superadmin role."
 					},
 					"response": [
 						{
@@ -3537,7 +3537,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n  \"data\": {\n    \"total_tenants\": 10,\n    \"total_branches\": 25,\n    \"total_users\": 150,\n    \"total_products\": 500,\n    \"total_categories\": 50,\n    \"transactions\": {\n      \"all_time\": {\n        \"qty\": 1000,\n        \"total_amount\": 50000000.00\n      },\n      \"today\": {\n        \"qty\": 5,\n        \"total_amount\": 250000.00\n      },\n      \"last_7_days\": {\n        \"qty\": 45,\n        \"total_amount\": 2250000.00\n      },\n      \"last_30_days\": {\n        \"qty\": 200,\n        \"total_amount\": 10000000.00\n      },\n      \"last_90_days\": {\n        \"qty\": 550,\n        \"total_amount\": 27500000.00\n      },\n      \"last_180_days\": {\n        \"qty\": 800,\n        \"total_amount\": 40000000.00\n      },\n      \"last_360_days\": {\n        \"qty\": 950,\n        \"total_amount\": 47500000.00\n      }\n    }\n  }\n}"
+							"body": "{\n  \"data\": {\n    \"total_tenants\": 10,\n    \"total_branches\": 25,\n    \"total_users\": 150,\n    \"total_products\": 500,\n    \"transactions\": {\n      \"all_time\": 50000000.00,\n      \"today\": 250000.00,\n      \"this_week\": 1500000.00,\n      \"this_month\": 8500000.00,\n      \"last_7_days\": 2250000.00,\n      \"last_30_days\": 10000000.00,\n      \"last_90_days\": 27500000.00,\n      \"last_180_days\": 40000000.00,\n      \"last_360_days\": 47500000.00\n    }\n  }\n}"
 						}
 					]
 				},

@@ -95,15 +95,11 @@ type UserResponse struct {
 }
 
 type DashboardResponse struct {
-	TotalTenants    int64            `json:"total_tenants"`
-	TotalBranches   int64            `json:"total_branches"`
-	TotalUsers      int64            `json:"total_users"`
-	TotalProducts   int64            `json:"total_products"`
-	TotalCategories int64            `json:"total_categories"`
-	Orders          OrderStats       `json:"orders"`
-	Payments        PaymentStats     `json:"payments"`
-	Transactions    TransactionStats `json:"transactions"`
-	Tenants         []TenantResponse `json:"tenants"`
+	TotalTenants  int64            `json:"total_tenants"`
+	TotalBranches int64            `json:"total_branches"`
+	TotalUsers    int64            `json:"total_users"`
+	TotalProducts int64            `json:"total_products"`
+	Transactions  TransactionStats `json:"transactions"`
 }
 
 type OrderStats struct {
@@ -129,6 +125,8 @@ type PaymentStats struct {
 type TransactionStats struct {
 	AllTime     float64 `json:"all_time"`
 	Today       float64 `json:"today"`
+	ThisWeek    float64 `json:"this_week"`
+	ThisMonth   float64 `json:"this_month"`
 	Last7Days   float64 `json:"last_7_days"`
 	Last30Days  float64 `json:"last_30_days"`
 	Last90Days  float64 `json:"last_90_days"`
