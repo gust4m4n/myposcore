@@ -21,6 +21,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	categoryService := services.NewCategoryService(database.DB, auditTrailService)
 	userService := services.NewUserService(auditTrailService)
 	productService := services.NewProductService(auditTrailService)
+	configService := services.NewConfigService(database.DB)
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
@@ -34,13 +35,14 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	productHandler := handlers.NewProductHandler(cfg, productService)
 	orderHandler := handlers.NewOrderHandler(cfg, orderService)
 	paymentHandler := handlers.NewPaymentHandler(cfg, paymentService)
-	tncHandler := handlers.NewTnCHandler()
+	tncHandler := handlers.NewTnCHandler(configService)
 	faqHandler := handlers.NewFAQHandler(faqService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	userHandler := handlers.NewUserHandler(cfg, userService)
 	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 	auditTrailHandler := handlers.NewAuditTrailHandler(auditTrailService)
+	configHandler := handlers.NewConfigHandler(configService)
 
 	// Health check
 	router.GET("/health", healthHandler.Handle)
@@ -70,6 +72,10 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			// FAQ routes (public)
 			public.GET("/faq", faqHandler.GetAllFAQ)
 			public.GET("/faq/:id", faqHandler.GetFAQByID)
+
+			// Config routes (public)
+			public.POST("/config/set", configHandler.SetConfig)
+			public.GET("/config/get/:key", configHandler.GetConfig)
 		}
 
 		// Protected routes

@@ -5135,7 +5135,7 @@
 								"tnc"
 							]
 						},
-						"description": "Public endpoint untuk mendapatkan Terms & Conditions. Mengembalikan static content. Tidak memerlukan authentication."
+						"description": "Public endpoint untuk mendapatkan Terms & Conditions. Content dibaca dari config table dengan key 'tnc'. Tidak memerlukan authentication.\n\nContent TNC dapat diupdate melalui Config API:\n- POST /api/v1/config/set dengan key=\"tnc\" dan value berisi content baru\n- Perubahan akan langsung terlihat di endpoint ini"
 					},
 					"response": [
 						{
@@ -5166,6 +5166,205 @@
 							],
 							"cookie": [],
 							"body": "{\n  \"code\": 0,\n  \"message\": \"Terms and conditions retrieved successfully\",\n  \"data\": {\n    \"title\": \"Terms and Conditions - MyPOS Core System\",\n    \"content\": \"# Terms and Conditions - MyPOS Core System\\n\\n## 1. Introduction\\nWelcome to MyPOS Core, a comprehensive Point of Sale system designed for multi-tenant and multi-branch businesses.\\n\\n## 2. Acceptance of Terms\\nBy accessing and using MyPOS Core, you agree to be bound by these Terms and Conditions.\\n\\n## 3. Service Description\\nMyPOS Core provides:\\n- Multi-tenant and multi-branch POS system\\n- User management with role-based access control\\n- Product and inventory management\\n- Order and payment processing\\n- Dashboard and reporting features\\n\\n## 4. User Obligations\\n- Maintain the confidentiality of your account credentials\\n- Use the service in compliance with applicable laws\\n- Not attempt to gain unauthorized access to the system\\n- Report any security vulnerabilities to our team\\n\\n## 5. Data Privacy\\nWe are committed to protecting your data:\\n- All sensitive data is encrypted\\n- We do not share your data with third parties without consent\\n- You retain ownership of your business data\\n\\n## 6. Service Availability\\n- We strive for 99.9% uptime\\n- Scheduled maintenance will be announced in advance\\n- We are not liable for service interruptions beyond our control\\n\\n## 7. Payment Terms\\n- Subscription fees are billed monthly or annually\\n- Payment must be made in advance\\n- Refunds are handled on a case-by-case basis\\n\\n## 8. Limitation of Liability\\nMyPOS Core is provided \\\"as is\\\" without warranties. We are not liable for:\\n- Loss of data or business interruption\\n- Indirect or consequential damages\\n- Issues arising from misuse of the system\\n\\n## 9. Termination\\n- Either party may terminate the agreement with 30 days notice\\n- Upon termination, you will have 60 days to export your data\\n- Outstanding fees must be paid before termination\\n\\n## 10. Changes to Terms\\n- We reserve the right to modify these terms\\n- Users will be notified of material changes\\n- Continued use constitutes acceptance of modified terms\\n\\n## 11. Governing Law\\nThese terms are governed by the laws of Indonesia.\\n\\n## 12. Contact Information\\nFor questions about these terms, contact us at:\\n- Email: support@myposcore.com\\n- Phone: +62 xxx xxxx xxxx\\n\\nLast Updated: January 3, 2026\\nVersion: 1.0.0\"\n  }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Config",
+			"item": [
+				{
+					"name": "Set Config",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"key\": \"tnc_content\",\n  \"value\": \"# Terms and Conditions\\n\\nThis is a test TNC content with multiple lines.\\n\\n## Section 1\\nContent here...\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/config/set",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"config",
+								"set"
+							]
+						},
+						"description": "Public endpoint untuk menyimpan atau update config key-value pair. Mendukung value hingga 128KB+.\n\nRequest Body:\n- key (required): Config key sebagai identifier unik\n- value (required): Config value (TEXT, support large content)\n\nJika key sudah ada, value akan di-update (UPSERT pattern)."
+					},
+					"response": [
+						{
+							"name": "Set Config Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"key\": \"tnc_content\",\n  \"value\": \"# Terms and Conditions\\n\\nThis is a test TNC content with multiple lines.\\n\\n## Section 1\\nContent here...\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/config/set",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										"set"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 0,\n  \"message\": \"Config set successfully\",\n  \"data\": {\n    \"key\": \"tnc_content\",\n    \"value\": \"# Terms and Conditions\\n\\nThis is a test TNC content with multiple lines.\\n\\n## Section 1\\nContent here...\"\n  }\n}"
+						},
+						{
+							"name": "Set Config - Invalid Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"key\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/config/set",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										"set"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 1,\n  \"message\": \"Invalid request: Key: 'SetConfigRequest.Key' Error:Field validation for 'Key' failed on the 'required' tag\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Config",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/config/get/tnc_content",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"config",
+								"get",
+								"tnc_content"
+							]
+						},
+						"description": "Public endpoint untuk mendapatkan config value berdasarkan key.\n\nPath Parameter:\n- key (required): Config key yang ingin diambil\n\nMengembalikan key dan value jika ditemukan."
+					},
+					"response": [
+						{
+							"name": "Get Config Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/config/get/tnc_content",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										"get",
+										"tnc_content"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 0,\n  \"message\": \"Config retrieved successfully\",\n  \"data\": {\n    \"key\": \"tnc_content\",\n    \"value\": \"# Terms and Conditions\\n\\nThis is a test TNC content with multiple lines.\\n\\n## Section 1\\nContent here...\"\n  }\n}"
+						},
+						{
+							"name": "Get Config - Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/config/get/nonexistent_key",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"config",
+										"get",
+										"nonexistent_key"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": 4,\n  \"message\": \"Config key not found\"\n}"
 						}
 					]
 				}
