@@ -19,12 +19,10 @@ func NewFAQService(db *gorm.DB, auditTrailService *AuditTrailService) *FAQServic
 	}
 }
 
-func (s *FAQService) CreateFAQ(question, answer, category string, order int, createdBy *uint) (*models.FAQ, error) {
+func (s *FAQService) CreateFAQ(question, answer string, createdBy *uint) (*models.FAQ, error) {
 	faq := &models.FAQ{
 		Question:  question,
 		Answer:    answer,
-		Category:  category,
-		Order:     order,
 		IsActive:  true,
 		CreatedBy: createdBy,
 	}
@@ -37,8 +35,6 @@ func (s *FAQService) CreateFAQ(question, answer, category string, order int, cre
 	changes := map[string]interface{}{
 		"question":  faq.Question,
 		"answer":    faq.Answer,
-		"category":  faq.Category,
-		"order":     faq.Order,
 		"is_active": faq.IsActive,
 	}
 	changesJSON, _ := json.Marshal(changes)
@@ -61,7 +57,7 @@ func (s *FAQService) GetFAQByID(id uint) (*models.FAQ, error) {
 	return &faq, nil
 }
 
-func (s *FAQService) GetAllFAQ(category *string, activeOnly bool) ([]models.FAQ, error) {
+func (s *FAQService) GetAllFAQ(activeOnly bool) ([]models.FAQ, error) {
 	var faqs []models.FAQ
 	query := s.db.Preload("Creator").Preload("Updater")
 
@@ -69,18 +65,14 @@ func (s *FAQService) GetAllFAQ(category *string, activeOnly bool) ([]models.FAQ,
 		query = query.Where("is_active = ?", true)
 	}
 
-	if category != nil && *category != "" {
-		query = query.Where("category = ?", *category)
-	}
-
-	if err := query.Order("\"order\" ASC, created_at DESC").Find(&faqs).Error; err != nil {
+	if err := query.Order("created_at DESC").Find(&faqs).Error; err != nil {
 		return nil, err
 	}
 
 	return faqs, nil
 }
 
-func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, order *int, isActive *bool, updatedBy *uint) (*models.FAQ, error) {
+func (s *FAQService) UpdateFAQ(id uint, question, answer *string, isActive *bool, updatedBy *uint) (*models.FAQ, error) {
 	var faq models.FAQ
 	if err := s.db.First(&faq, id).Error; err != nil {
 		return nil, err
@@ -90,8 +82,6 @@ func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, orde
 	oldValues := map[string]interface{}{
 		"question":  faq.Question,
 		"answer":    faq.Answer,
-		"category":  faq.Category,
-		"order":     faq.Order,
 		"is_active": faq.IsActive,
 	}
 
@@ -101,12 +91,6 @@ func (s *FAQService) UpdateFAQ(id uint, question, answer, category *string, orde
 	}
 	if answer != nil {
 		updates["answer"] = *answer
-	}
-	if category != nil {
-		updates["category"] = *category
-	}
-	if order != nil {
-		updates["order"] = *order
 	}
 	if isActive != nil {
 		updates["is_active"] = *isActive
@@ -165,7 +149,6 @@ func (s *FAQService) DeleteFAQ(id uint, deletedBy *uint) error {
 	// Create audit trail
 	changes := map[string]interface{}{
 		"question": faq.Question,
-		"category": faq.Category,
 	}
 	changesJSON, _ := json.Marshal(changes)
 	var changesMap map[string]interface{}

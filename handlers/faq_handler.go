@@ -40,7 +40,7 @@ func (h *FAQHandler) CreateFAQ(c *gin.Context) {
 	currentUserID := c.GetUint("user_id")
 	req.CreatedBy = &currentUserID
 
-	faq, err := h.faqService.CreateFAQ(req.Question, req.Answer, req.Category, req.Order, req.CreatedBy)
+	faq, err := h.faqService.CreateFAQ(req.Question, req.Answer, req.CreatedBy)
 	if err != nil {
 		h.ErrorResponse(c, http.StatusInternalServerError, "Failed to create FAQ")
 		return
@@ -56,8 +56,6 @@ func (h *FAQHandler) CreateFAQ(c *gin.Context) {
 		ID:            faq.ID,
 		Question:      faq.Question,
 		Answer:        faq.Answer,
-		Category:      faq.Category,
-		Order:         faq.Order,
 		IsActive:      faq.IsActive,
 		CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
@@ -78,15 +76,9 @@ func (h *FAQHandler) CreateFAQ(c *gin.Context) {
 // @Success 200 {array} dto.FAQResponse
 // @Router /api/faq [get]
 func (h *FAQHandler) GetAllFAQ(c *gin.Context) {
-	category := c.Query("category")
 	activeOnly := c.Query("active_only") == "true"
 
-	var categoryPtr *string
-	if category != "" {
-		categoryPtr = &category
-	}
-
-	faqs, err := h.faqService.GetAllFAQ(categoryPtr, activeOnly)
+	faqs, err := h.faqService.GetAllFAQ(activeOnly)
 	if err != nil {
 		h.ErrorResponse(c, http.StatusInternalServerError, "Failed to retrieve FAQs")
 		return
@@ -108,8 +100,6 @@ func (h *FAQHandler) GetAllFAQ(c *gin.Context) {
 			ID:            faq.ID,
 			Question:      faq.Question,
 			Answer:        faq.Answer,
-			Category:      faq.Category,
-			Order:         faq.Order,
 			IsActive:      faq.IsActive,
 			CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 			UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
@@ -158,8 +148,6 @@ func (h *FAQHandler) GetFAQByID(c *gin.Context) {
 		ID:            faq.ID,
 		Question:      faq.Question,
 		Answer:        faq.Answer,
-		Category:      faq.Category,
-		Order:         faq.Order,
 		IsActive:      faq.IsActive,
 		CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
@@ -199,18 +187,15 @@ func (h *FAQHandler) UpdateFAQ(c *gin.Context) {
 	currentUserID := c.GetUint("user_id")
 	req.UpdatedBy = &currentUserID
 
-	var question, answer, category *string
+	var question, answer *string
 	if req.Question != "" {
 		question = &req.Question
 	}
 	if req.Answer != "" {
 		answer = &req.Answer
 	}
-	if req.Category != "" {
-		category = &req.Category
-	}
 
-	faq, err := h.faqService.UpdateFAQ(uint(id), question, answer, category, req.Order, req.IsActive, req.UpdatedBy)
+	faq, err := h.faqService.UpdateFAQ(uint(id), question, answer, req.IsActive, req.UpdatedBy)
 	if err != nil {
 		h.ErrorResponse(c, http.StatusInternalServerError, "Failed to update FAQ")
 		return
@@ -233,8 +218,6 @@ func (h *FAQHandler) UpdateFAQ(c *gin.Context) {
 		ID:            faq.ID,
 		Question:      faq.Question,
 		Answer:        faq.Answer,
-		Category:      faq.Category,
-		Order:         faq.Order,
 		IsActive:      faq.IsActive,
 		CreatedAt:     faq.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		UpdatedAt:     faq.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
