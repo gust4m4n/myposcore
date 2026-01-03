@@ -17,7 +17,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	// Initialize services with audit trail dependency
 	orderService := services.NewOrderService(database.DB, auditTrailService)
 	paymentService := services.NewPaymentService(database.DB, auditTrailService)
-	tncService := services.NewTnCService(database.DB, auditTrailService)
 	faqService := services.NewFAQService(database.DB, auditTrailService)
 	categoryService := services.NewCategoryService(database.DB, auditTrailService)
 	userService := services.NewUserService(auditTrailService)
@@ -35,7 +34,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	productHandler := handlers.NewProductHandler(cfg, productService)
 	orderHandler := handlers.NewOrderHandler(cfg, orderService)
 	paymentHandler := handlers.NewPaymentHandler(cfg, paymentService)
-	tncHandler := handlers.NewTnCHandler(tncService)
+	tncHandler := handlers.NewTnCHandler()
 	faqHandler := handlers.NewFAQHandler(faqService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	userHandler := handlers.NewUserHandler(cfg, userService)
@@ -65,10 +64,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		// Public routes
 		public := v1.Group("")
 		{
-			// TnC routes (public)
-			public.GET("/tnc/active", tncHandler.GetActiveTnC)
-			public.GET("/tnc", tncHandler.GetAllTnC)
-			public.GET("/tnc/:id", tncHandler.GetTnCByID)
+			// TnC route (public)
+			public.GET("/tnc", tncHandler.GetTnC)
 
 			// FAQ routes (public)
 			public.GET("/faq", faqHandler.GetAllFAQ)
@@ -158,11 +155,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			superadmin.PUT("/branches/:branch_id", superAdminHandler.UpdateBranch)
 			superadmin.DELETE("/branches/:branch_id", superAdminHandler.DeleteBranch)
 			superadmin.GET("/branches/:branch_id/users", superAdminHandler.ListUsers)
-
-			// TnC management routes (superadmin only)
-			superadmin.POST("/tnc", tncHandler.CreateTnC)
-			superadmin.PUT("/tnc/:id", tncHandler.UpdateTnC)
-			superadmin.DELETE("/tnc/:id", tncHandler.DeleteTnC)
 
 			// FAQ management routes (superadmin only)
 			superadmin.POST("/faq", faqHandler.CreateFAQ)
