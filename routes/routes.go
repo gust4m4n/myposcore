@@ -22,6 +22,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	userService := services.NewUserService(auditTrailService)
 	productService := services.NewProductService(auditTrailService)
 	configService := services.NewConfigService(database.DB)
+	branchService := services.NewSuperAdminBranchService()
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
@@ -43,6 +44,8 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 	auditTrailHandler := handlers.NewAuditTrailHandler(auditTrailService)
 	configHandler := handlers.NewConfigHandler(configService)
+	branchHandler := handlers.NewBranchHandler(cfg, branchService)
+	tenantHandler := handlers.NewTenantHandler(cfg)
 
 	// Health check
 	router.GET("/health", healthHandler.Handle)
@@ -104,6 +107,14 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			// Admin change PIN (for higher roles to change lower roles PIN)
 			protected.PUT("/admin/change-pin", adminChangePINHandler.Handle)
 
+			// Branch routes
+			protected.GET("/branches", branchHandler.GetBranches)
+			protected.GET("/branches/:id", branchHandler.GetBranch)
+			protected.POST("/branches", branchHandler.CreateBranch)
+			protected.PUT("/branches/:id", branchHandler.UpdateBranch)
+			protected.DELETE("/branches/:id", branchHandler.DeleteBranch)
+			protected.GET("/branches/:id/users", branchHandler.GetBranchUsers)
+
 			// Category routes
 			protected.GET("/categories", categoryHandler.ListCategories)
 			protected.GET("/categories/:id", categoryHandler.GetCategory)
@@ -140,6 +151,13 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.PUT("/users/:id", userHandler.UpdateUser)
 			protected.DELETE("/users/:id", userHandler.DeleteUser)
 
+			// Tenant routes
+			protected.GET("/tenants", tenantHandler.ListTenants)
+			protected.GET("/tenants/:id", tenantHandler.GetTenant)
+			protected.POST("/tenants", tenantHandler.CreateTenant)
+			protected.PUT("/tenants/:id", tenantHandler.UpdateTenant)
+			protected.DELETE("/tenants/:id", tenantHandler.DeleteTenant)
+
 			// Audit trail routes
 			protected.GET("/audit-trails", auditTrailHandler.ListAuditTrails)
 			protected.GET("/audit-trails/user/:user_id", auditTrailHandler.GetUserActivityLog)
@@ -152,15 +170,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		superadmin.Use(middleware.AuthMiddleware(cfg))
 		{
 			superadmin.GET("/dashboard", superAdminHandler.Dashboard)
-			superadmin.GET("/tenants", superAdminHandler.ListTenants)
-			superadmin.POST("/tenants", superAdminHandler.CreateTenant)
-			superadmin.PUT("/tenants/:tenant_id", superAdminHandler.UpdateTenant)
-			superadmin.DELETE("/tenants/:tenant_id", superAdminHandler.DeleteTenant)
-			superadmin.GET("/tenants/:tenant_id/branches", superAdminHandler.ListBranches)
-			superadmin.POST("/branches", superAdminHandler.CreateBranch)
-			superadmin.PUT("/branches/:branch_id", superAdminHandler.UpdateBranch)
-			superadmin.DELETE("/branches/:branch_id", superAdminHandler.DeleteBranch)
-			superadmin.GET("/branches/:branch_id/users", superAdminHandler.ListUsers)
 
 			// FAQ management routes (superadmin only)
 			superadmin.POST("/faq", faqHandler.CreateFAQ)
