@@ -40,7 +40,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	faqHandler := handlers.NewFAQHandler(faqService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	userHandler := handlers.NewUserHandler(cfg, userService)
-	devHandler := handlers.NewDevHandler(cfg)
 	superAdminHandler := handlers.NewSuperAdminHandler(cfg)
 	auditTrailHandler := handlers.NewAuditTrailHandler(auditTrailService)
 	configHandler := handlers.NewConfigHandler(configService)
@@ -49,13 +48,6 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 
 	// Health check
 	router.GET("/health", healthHandler.Handle)
-
-	// Dev routes (public - no authentication required)
-	dev := router.Group("/dev")
-	{
-		dev.GET("/tenants", devHandler.ListTenants)
-		dev.GET("/tenants/:tenant_id/branches", devHandler.ListBranchesByTenant)
-	}
 
 	// API v1
 	v1 := router.Group("/api/v1")
@@ -163,18 +155,14 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.GET("/audit-trails/user/:user_id", auditTrailHandler.GetUserActivityLog)
 			protected.GET("/audit-trails/entity/:entity_type/:entity_id", auditTrailHandler.GetEntityAuditHistory)
 			protected.GET("/audit-trails/:id", auditTrailHandler.GetAuditTrailByID)
-		}
 
-		// Superadmin routes - now accessible by all roles
-		superadmin := v1.Group("/superadmin")
-		superadmin.Use(middleware.AuthMiddleware(cfg))
-		{
-			superadmin.GET("/dashboard", superAdminHandler.Dashboard)
+			// Dashboard route
+			protected.GET("/dashboard", superAdminHandler.Dashboard)
 
-			// FAQ management routes (superadmin only)
-			superadmin.POST("/faq", faqHandler.CreateFAQ)
-			superadmin.PUT("/faq/:id", faqHandler.UpdateFAQ)
-			superadmin.DELETE("/faq/:id", faqHandler.DeleteFAQ)
+			// FAQ management routes
+			protected.POST("/faq", faqHandler.CreateFAQ)
+			protected.PUT("/faq/:id", faqHandler.UpdateFAQ)
+			protected.DELETE("/faq/:id", faqHandler.DeleteFAQ)
 		}
 	}
 }

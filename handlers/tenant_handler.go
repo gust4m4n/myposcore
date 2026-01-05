@@ -47,7 +47,10 @@ func (h *TenantHandler) ListTenants(c *gin.Context) {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}
 
-	tenants, total, err := h.tenantService.ListTenants(pagination.Page, pagination.PageSize)
+	// Get search parameter
+	search := c.Query("search")
+
+	tenants, total, err := h.tenantService.ListTenants(search, pagination.Page, pagination.PageSize)
 	if err != nil {
 		utils.InternalError(c, err.Error())
 		return

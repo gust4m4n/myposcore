@@ -22,17 +22,31 @@ func NewUserService(auditTrailService *AuditTrailService) *UserService {
 	}
 }
 
-func (s *UserService) ListUsers(tenantID uint, page, pageSize int) ([]models.User, int64, error) {
+func (s *UserService) ListUsers(tenantID uint, search string, page, pageSize int) ([]models.User, int64, error) {
 	var users []models.User
 	var total int64
 
 	query := s.db.Model(&models.User{}).Where("tenant_id = ?", tenantID)
+
+	// Search by full_name, email, or id if provided
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query = query.Where("full_name ILIKE ? OR email ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, searchPattern, search)
+	}
+
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
 	offset := (page - 1) * pageSize
-	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("full_name ASC").Limit(pageSize).Offset(offset).Find(&users).Error; err != nil {
+	query2 := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
+
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query2 = query2.Where("full_name ILIKE ? OR email ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, searchPattern, search)
+	}
+
+	if err := query2.Order("full_name ASC").Limit(pageSize).Offset(offset).Find(&users).Error; err != nil {
 		return nil, 0, err
 	}
 	return users, total, nil

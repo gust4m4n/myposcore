@@ -45,6 +45,9 @@ func NewSuperAdminHandler(cfg *config.Config) *SuperAdminHandler {
 // @Success 200 {object} dto.PaginationResponse
 // @Router /superadmin/tenants [get]
 func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
+	// Get search parameter (optional)
+	search := c.Query("search")
+
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
 	if err := c.ShouldBindQuery(&pagination); err != nil {
@@ -53,7 +56,7 @@ func (h *SuperAdminHandler) ListTenants(c *gin.Context) {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}
 
-	tenants, total, err := h.tenantService.ListTenants(pagination.Page, pagination.PageSize)
+	tenants, total, err := h.tenantService.ListTenants(search, pagination.Page, pagination.PageSize)
 	if err != nil {
 		utils.InternalError(c, err.Error())
 		return

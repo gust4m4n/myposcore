@@ -19,17 +19,31 @@ func NewSuperAdminBranchService() *SuperAdminBranchService {
 	}
 }
 
-func (s *SuperAdminBranchService) ListBranches(tenantID uint, page, pageSize int) ([]models.Branch, int64, error) {
+func (s *SuperAdminBranchService) ListBranches(tenantID uint, search string, page, pageSize int) ([]models.Branch, int64, error) {
 	var branches []models.Branch
 	var total int64
 
 	query := s.db.Model(&models.Branch{}).Where("tenant_id = ?", tenantID)
+
+	// Search by name or id if provided
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query = query.Where("name ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, search)
+	}
+
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
 	offset := (page - 1) * pageSize
-	if err := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID).Order("name ASC").Limit(pageSize).Offset(offset).Find(&branches).Error; err != nil {
+	query2 := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
+
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query2 = query2.Where("name ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, search)
+	}
+
+	if err := query2.Order("name ASC").Limit(pageSize).Offset(offset).Find(&branches).Error; err != nil {
 		return nil, 0, err
 	}
 	return branches, total, nil

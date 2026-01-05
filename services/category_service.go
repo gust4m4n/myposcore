@@ -70,7 +70,7 @@ func (s *CategoryService) GetCategory(categoryID, tenantID uint) (*models.Catego
 	return &category, nil
 }
 
-func (s *CategoryService) ListCategories(tenantID uint, activeOnly bool, page, pageSize int) ([]models.Category, int64, error) {
+func (s *CategoryService) ListCategories(tenantID uint, search string, activeOnly bool, page, pageSize int) ([]models.Category, int64, error) {
 	var categories []models.Category
 	var total int64
 
@@ -78,6 +78,12 @@ func (s *CategoryService) ListCategories(tenantID uint, activeOnly bool, page, p
 
 	if activeOnly {
 		query = query.Where("is_active = ?", true)
+	}
+
+	// Search by name or id if provided
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query = query.Where("name ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, search)
 	}
 
 	if err := query.Count(&total).Error; err != nil {
@@ -88,6 +94,10 @@ func (s *CategoryService) ListCategories(tenantID uint, activeOnly bool, page, p
 	query2 := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
 	if activeOnly {
 		query2 = query2.Where("is_active = ?", true)
+	}
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query2 = query2.Where("name ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, search)
 	}
 	if err := query2.Order("name ASC").Limit(pageSize).Offset(offset).Find(&categories).Error; err != nil {
 		return nil, 0, err

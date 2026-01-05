@@ -42,6 +42,9 @@ func NewUserHandler(cfg *config.Config, userService *services.UserService) *User
 func (h *UserHandler) ListUsers(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 
+	// Get search parameter (optional)
+	search := c.Query("search")
+
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
 	if err := c.ShouldBindQuery(&pagination); err != nil {
@@ -50,7 +53,7 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}
 
-	users, total, err := h.userService.ListUsers(tenantID, pagination.Page, pagination.PageSize)
+	users, total, err := h.userService.ListUsers(tenantID, search, pagination.Page, pagination.PageSize)
 	if err != nil {
 		utils.InternalError(c, err.Error())
 		return

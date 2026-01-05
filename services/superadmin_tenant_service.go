@@ -19,16 +19,31 @@ func NewSuperAdminTenantService() *SuperAdminTenantService {
 	}
 }
 
-func (s *SuperAdminTenantService) ListTenants(page, pageSize int) ([]models.Tenant, int64, error) {
+func (s *SuperAdminTenantService) ListTenants(search string, page, pageSize int) ([]models.Tenant, int64, error) {
 	var tenants []models.Tenant
 	var total int64
 
-	if err := s.db.Model(&models.Tenant{}).Count(&total).Error; err != nil {
+	query := s.db.Model(&models.Tenant{})
+
+	// Search by name or id if provided
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query = query.Where("name ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, search)
+	}
+
+	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
 	offset := (page - 1) * pageSize
-	if err := s.db.Preload("Creator").Preload("Updater").Order("name ASC").Limit(pageSize).Offset(offset).Find(&tenants).Error; err != nil {
+	query2 := s.db.Preload("Creator").Preload("Updater")
+
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query2 = query2.Where("name ILIKE ? OR CAST(id AS TEXT) = ?", searchPattern, search)
+	}
+
+	if err := query2.Order("name ASC").Limit(pageSize).Offset(offset).Find(&tenants).Error; err != nil {
 		return nil, 0, err
 	}
 	return tenants, total, nil

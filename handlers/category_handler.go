@@ -216,6 +216,8 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 	}
 
 	activeOnly := c.Query("active_only") == "true"
+	// Get search parameter (optional)
+	search := c.Query("search")
 
 	// Parse pagination parameters
 	var pagination dto.PaginationRequest
@@ -225,7 +227,7 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}
 
-	categories, total, err := h.categoryService.ListCategories(tenantID.(uint), activeOnly, pagination.Page, pagination.PageSize)
+	categories, total, err := h.categoryService.ListCategories(tenantID.(uint), search, activeOnly, pagination.Page, pagination.PageSize)
 	if err != nil {
 		utils.InternalError(c, err.Error())
 		return

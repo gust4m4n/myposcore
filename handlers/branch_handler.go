@@ -47,8 +47,11 @@ func (h *BranchHandler) GetBranches(c *gin.Context) {
 		return
 	}
 
+	// Get search parameter (optional)
+	search := c.Query("search")
+
 	// Get branches for this tenant (without pagination, get all)
-	branches, _, err := h.branchService.ListBranches(tenantID.(uint), 1, 9999)
+	branches, _, err := h.branchService.ListBranches(tenantID.(uint), search, 1, 9999)
 	if err != nil {
 		utils.InternalError(c, "Failed to retrieve branches: "+err.Error())
 		return
