@@ -1,10 +1,20 @@
 package utils
 
 import (
+	"myposcore/config"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+// GetFullImageURL converts a relative image path to a full URL
+// Returns empty string if imagePath is empty
+func GetFullImageURL(imagePath string) string {
+	if imagePath == "" {
+		return ""
+	}
+	return config.GetBaseURL() + imagePath
+}
 
 // APIResponse represents the standard API response structure
 type APIResponse struct {

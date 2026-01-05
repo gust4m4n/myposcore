@@ -10,6 +10,11 @@ import (
 
 const AppVersion = "1.0.0"
 
+// GetBaseURL returns the base URL for the application
+func GetBaseURL() string {
+	return getEnv("BASE_URL", "http://localhost:8080")
+}
+
 type Config struct {
 	ServerPort  string
 	DBHost      string

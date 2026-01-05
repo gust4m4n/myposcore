@@ -57,6 +57,11 @@ func (h *BranchHandler) GetBranches(c *gin.Context) {
 		return
 	}
 
+	// Convert image paths to full URLs
+	for i := range branches {
+		branches[i].Image = utils.GetFullImageURL(branches[i].Image)
+	}
+
 	utils.Success(c, "Branches retrieved successfully", branches)
 }
 
@@ -97,6 +102,9 @@ func (h *BranchHandler) GetBranch(c *gin.Context) {
 		utils.Forbidden(c, "Access denied to this branch")
 		return
 	}
+
+	// Convert image path to full URL
+	branch.Image = utils.GetFullImageURL(branch.Image)
 
 	utils.Success(c, "Branch retrieved successfully", branch)
 }
@@ -209,6 +217,9 @@ func (h *BranchHandler) CreateBranch(c *gin.Context) {
 		utils.BadRequest(c, err.Error())
 		return
 	}
+
+	// Convert image path to full URL
+	branch.Image = utils.GetFullImageURL(branch.Image)
 
 	utils.Success(c, "Branch created successfully", branch)
 }
@@ -348,6 +359,9 @@ func (h *BranchHandler) UpdateBranch(c *gin.Context) {
 		utils.BadRequest(c, err.Error())
 		return
 	}
+
+	// Convert image path to full URL
+	updatedBranch.Image = utils.GetFullImageURL(updatedBranch.Image)
 
 	utils.Success(c, "Branch updated successfully", updatedBranch)
 }

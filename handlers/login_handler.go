@@ -63,7 +63,7 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 			Website:     tenant.Website,
 			Email:       tenant.Email,
 			Phone:       tenant.Phone,
-			Image:       tenant.Image,
+			Image:       utils.GetFullImageURL(tenant.Image),
 			IsActive:    tenant.IsActive,
 		},
 		Branch: dto.BranchInfo{
@@ -74,7 +74,7 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 			Website:     branch.Website,
 			Email:       branch.Email,
 			Phone:       branch.Phone,
-			Image:       branch.Image,
+			Image:       utils.GetFullImageURL(branch.Image),
 			IsActive:    branch.IsActive,
 		},
 	}
