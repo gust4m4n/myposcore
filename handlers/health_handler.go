@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"myposcore/config"
 	"myposcore/database"
-	"net/http"
+	"myposcore/utils"
 	"os"
 	"runtime"
 	"time"
@@ -107,5 +107,5 @@ func (h *HealthHandler) Handle(c *gin.Context) {
 		},
 	}
 
-	c.JSON(http.StatusOK, response)
+	utils.Success(c, "Health check successful", response)
 }

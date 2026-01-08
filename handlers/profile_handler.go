@@ -6,7 +6,6 @@ import (
 	"myposcore/dto"
 	"myposcore/services"
 	"myposcore/utils"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,7 +39,7 @@ func (h *ProfileHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, profile)
+	utils.Success(c, "Profile retrieved successfully", profile)
 }
 
 // UpdateProfile godoc

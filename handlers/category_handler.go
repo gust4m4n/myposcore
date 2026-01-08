@@ -261,8 +261,15 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 		}
 	}
 
-	paginatedResponse := dto.NewPaginationResponse(pagination.Page, pagination.PageSize, total, responses)
-	c.JSON(http.StatusOK, paginatedResponse)
+	c.JSON(http.StatusOK, gin.H{
+		"code":        0,
+		"message":     "Categories retrieved successfully",
+		"page":        pagination.Page,
+		"page_size":   pagination.PageSize,
+		"total_items": total,
+		"total_pages": (int(total) + pagination.PageSize - 1) / pagination.PageSize,
+		"data":        responses,
+	})
 }
 
 // UpdateCategory godoc
