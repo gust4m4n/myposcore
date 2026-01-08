@@ -7,6 +7,7 @@ import (
 	"myposcore/database"
 	"myposcore/dto"
 	"myposcore/models"
+	"myposcore/services"
 	"myposcore/utils"
 	"net/http"
 	"net/http/httptest"
@@ -102,7 +103,8 @@ func TestAdminChangePassword_Success(t *testing.T) {
 	superadmin, _, admin, user := createTestUsers(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePasswordHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePasswordHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 
@@ -157,7 +159,8 @@ func TestAdminChangePassword_PasswordMismatch(t *testing.T) {
 	superadmin, _, _, user := createTestUsers(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePasswordHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePasswordHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 
@@ -189,7 +192,8 @@ func TestAdminChangePassword_InsufficientPermission(t *testing.T) {
 	_, _, admin, user := createTestUsers(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePasswordHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePasswordHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 
@@ -222,7 +226,8 @@ func TestAdminChangePassword_UserNotFound(t *testing.T) {
 	superadmin, _, _, _ := createTestUsers(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePasswordHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePasswordHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 

@@ -7,6 +7,7 @@ import (
 	"myposcore/database"
 	"myposcore/dto"
 	"myposcore/models"
+	"myposcore/services"
 	"myposcore/utils"
 	"net/http"
 	"net/http/httptest"
@@ -102,7 +103,8 @@ func TestAdminChangePIN_Success(t *testing.T) {
 	superadmin, _, admin, user := createTestUsersForPIN(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePINHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePINHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 
@@ -157,7 +159,8 @@ func TestAdminChangePIN_PINMismatch(t *testing.T) {
 	superadmin, _, _, user := createTestUsersForPIN(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePINHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePINHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 
@@ -189,7 +192,8 @@ func TestAdminChangePIN_InsufficientPermission(t *testing.T) {
 	_, _, admin, user := createTestUsersForPIN(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePINHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePINHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 
@@ -222,7 +226,8 @@ func TestAdminChangePIN_UserNotFound(t *testing.T) {
 	superadmin, _, _, _ := createTestUsersForPIN(db)
 
 	cfg := &config.Config{JWTSecret: "test-secret"}
-	handler := NewAdminChangePINHandler(cfg)
+	auditTrailService := services.NewAuditTrailService(db)
+	handler := NewAdminChangePINHandler(cfg, auditTrailService)
 
 	gin.SetMode(gin.TestMode)
 

@@ -116,6 +116,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 
 			// Product routes
 			protected.GET("/products/categories", productHandler.GetCategories)
+			protected.GET("/products/by-category/:category_id", productHandler.ListProductsByCategoryID)
 			protected.GET("/products", productHandler.ListProducts)
 			protected.GET("/products/:id", productHandler.GetProduct)
 			protected.POST("/products", productHandler.CreateProduct)

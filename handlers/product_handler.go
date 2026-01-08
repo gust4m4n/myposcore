@@ -5,6 +5,7 @@ import (
 	"mime/multipart"
 	"myposcore/config"
 	"myposcore/dto"
+	"myposcore/models"
 	"myposcore/services"
 	"myposcore/utils"
 	"net/http"
@@ -26,6 +27,19 @@ func NewProductHandler(cfg *config.Config, productService *services.ProductServi
 	return &ProductHandler{
 		BaseHandler: NewBaseHandler(cfg),
 		service:     productService,
+	}
+}
+
+// Helper function to map category to DTO
+func mapCategoryToDTO(category *models.Category) *dto.CategorySummary {
+	if category == nil {
+		return nil
+	}
+	return &dto.CategorySummary{
+		ID:          category.ID,
+		Name:        category.Name,
+		Description: category.Description,
+		Image:       utils.GetFullImageURL(category.Image),
 	}
 }
 
@@ -79,22 +93,99 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 		}
 
 		response = append(response, dto.ProductResponse{
-			ID:            product.ID,
-			TenantID:      product.TenantID,
-			Name:          product.Name,
-			Description:   product.Description,
-			Category:      product.Category,
-			SKU:           product.SKU,
-			Price:         product.Price,
-			Stock:         product.Stock,
-			Image:         utils.GetFullImageURL(product.Image),
-			IsActive:      product.IsActive,
-			CreatedAt:     product.CreatedAt.Format("2006-01-02 15:04:05"),
-			UpdatedAt:     product.UpdatedAt.Format("2006-01-02 15:04:05"),
-			CreatedBy:     product.CreatedBy,
-			CreatedByName: createdByName,
-			UpdatedBy:     product.UpdatedBy,
-			UpdatedByName: updatedByName,
+			ID:             product.ID,
+			TenantID:       product.TenantID,
+			Name:           product.Name,
+			Description:    product.Description,
+			Category:       product.Category,
+			CategoryID:     product.CategoryID,
+			CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
+			SKU:            product.SKU,
+			Price:          product.Price,
+			Stock:          product.Stock,
+			Image:          utils.GetFullImageURL(product.Image),
+			IsActive:       product.IsActive,
+			CreatedAt:      product.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:      product.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:      product.CreatedBy,
+			CreatedByName:  createdByName,
+			UpdatedBy:      product.UpdatedBy,
+			UpdatedByName:  updatedByName,
+		})
+	}
+
+	paginatedResponse := dto.NewPaginationResponse(pagination.Page, pagination.PageSize, total, response)
+	c.JSON(http.StatusOK, paginatedResponse)
+}
+
+// ListProductsByCategoryID godoc
+// @Summary List products by category ID
+// @Description Get list of products filtered by category ID with pagination
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param category_id path int true "Category ID"
+// @Param search query string false "Search by name or SKU"
+// @Param page query int false "Page number (default: 1)"
+// @Param page_size query int false "Page size (default: 10)"
+// @Success 200 {object} dto.PaginationResponse
+// @Router /api/v1/products/by-category/{category_id} [get]
+func (h *ProductHandler) ListProductsByCategoryID(c *gin.Context) {
+	tenantID, _ := c.Get("tenant_id")
+
+	// Get category_id from path
+	categoryID, err := strconv.Atoi(c.Param("category_id"))
+	if err != nil {
+		utils.BadRequest(c, "Invalid category ID")
+		return
+	}
+
+	// Get query parameters
+	search := c.Query("search")
+
+	// Parse pagination parameters
+	var pagination dto.PaginationRequest
+	if err := c.ShouldBindQuery(&pagination); err == nil {
+		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
+	}
+
+	products, total, err := h.service.ListProductsByCategoryID(tenantID.(uint), uint(categoryID), search, pagination.Page, pagination.PageSize)
+	if err != nil {
+		utils.InternalError(c, err.Error())
+		return
+	}
+
+	var response []dto.ProductResponse
+	for _, product := range products {
+		var createdByName, updatedByName *string
+		if product.Creator != nil {
+			name := product.Creator.FullName
+			createdByName = &name
+		}
+		if product.Updater != nil {
+			name := product.Updater.FullName
+			updatedByName = &name
+		}
+
+		response = append(response, dto.ProductResponse{
+			ID:             product.ID,
+			TenantID:       product.TenantID,
+			Name:           product.Name,
+			Description:    product.Description,
+			Category:       product.Category,
+			CategoryID:     product.CategoryID,
+			CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
+			SKU:            product.SKU,
+			Price:          product.Price,
+			Stock:          product.Stock,
+			Image:          utils.GetFullImageURL(product.Image),
+			IsActive:       product.IsActive,
+			CreatedAt:      product.CreatedAt.Format("2006-01-02 15:04:05"),
+			UpdatedAt:      product.UpdatedAt.Format("2006-01-02 15:04:05"),
+			CreatedBy:      product.CreatedBy,
+			CreatedByName:  createdByName,
+			UpdatedBy:      product.UpdatedBy,
+			UpdatedByName:  updatedByName,
 		})
 	}
 
@@ -141,22 +232,24 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 	}
 
 	utils.Success(c, "Product retrieved successfully", dto.ProductResponse{
-		ID:            product.ID,
-		TenantID:      product.TenantID,
-		Name:          product.Name,
-		Description:   product.Description,
-		Category:      product.Category,
-		SKU:           product.SKU,
-		Price:         product.Price,
-		Stock:         product.Stock,
-		Image:         utils.GetFullImageURL(product.Image),
-		IsActive:      product.IsActive,
-		CreatedAt:     product.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt:     product.UpdatedAt.Format("2006-01-02 15:04:05"),
-		CreatedBy:     product.CreatedBy,
-		CreatedByName: createdByName,
-		UpdatedBy:     product.UpdatedBy,
-		UpdatedByName: updatedByName,
+		ID:             product.ID,
+		TenantID:       product.TenantID,
+		Name:           product.Name,
+		Description:    product.Description,
+		Category:       product.Category,
+		CategoryID:     product.CategoryID,
+		CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
+		SKU:            product.SKU,
+		Price:          product.Price,
+		Stock:          product.Stock,
+		Image:          utils.GetFullImageURL(product.Image),
+		IsActive:       product.IsActive,
+		CreatedAt:      product.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:      product.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:      product.CreatedBy,
+		CreatedByName:  createdByName,
+		UpdatedBy:      product.UpdatedBy,
+		UpdatedByName:  updatedByName,
 	})
 }
 
@@ -262,19 +355,21 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 	}
 
 	utils.Success(c, "Product created successfully", dto.ProductResponse{
-		ID:          product.ID,
-		TenantID:    product.TenantID,
-		Name:        product.Name,
-		Description: product.Description,
-		Category:    product.Category,
-		SKU:         product.SKU,
-		Price:       product.Price,
-		Stock:       product.Stock,
-		Image:       utils.GetFullImageURL(product.Image),
-		IsActive:    product.IsActive,
-		CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
-		CreatedBy:   product.CreatedBy,
+		ID:             product.ID,
+		TenantID:       product.TenantID,
+		Name:           product.Name,
+		Description:    product.Description,
+		Category:       product.Category,
+		CategoryID:     product.CategoryID,
+		CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
+		SKU:            product.SKU,
+		Price:          product.Price,
+		Stock:          product.Stock,
+		Image:          utils.GetFullImageURL(product.Image),
+		IsActive:       product.IsActive,
+		CreatedAt:      product.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:      product.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:      product.CreatedBy,
 	})
 }
 
@@ -393,20 +488,22 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 	}
 
 	utils.Success(c, "Product updated successfully", dto.ProductResponse{
-		ID:          product.ID,
-		TenantID:    product.TenantID,
-		Name:        product.Name,
-		Description: product.Description,
-		Category:    product.Category,
-		SKU:         product.SKU,
-		Price:       product.Price,
-		Stock:       product.Stock,
-		Image:       utils.GetFullImageURL(product.Image),
-		IsActive:    product.IsActive,
-		CreatedAt:   product.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt:   product.UpdatedAt.Format("2006-01-02 15:04:05"),
-		CreatedBy:   product.CreatedBy,
-		UpdatedBy:   product.UpdatedBy,
+		ID:             product.ID,
+		TenantID:       product.TenantID,
+		Name:           product.Name,
+		Description:    product.Description,
+		Category:       product.Category,
+		CategoryID:     product.CategoryID,
+		CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
+		SKU:            product.SKU,
+		Price:          product.Price,
+		Stock:          product.Stock,
+		Image:          utils.GetFullImageURL(product.Image),
+		IsActive:       product.IsActive,
+		CreatedAt:      product.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:      product.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:      product.CreatedBy,
+		UpdatedBy:      product.UpdatedBy,
 	})
 }
 
@@ -558,19 +655,21 @@ func (h *ProductHandler) UploadProductImage(c *gin.Context) {
 	}
 
 	utils.Success(c, "Image uploaded successfully", dto.ProductResponse{
-		ID:          updatedProduct.ID,
-		TenantID:    updatedProduct.TenantID,
-		Name:        updatedProduct.Name,
-		Description: updatedProduct.Description,
-		Category:    updatedProduct.Category,
-		SKU:         updatedProduct.SKU,
-		Price:       updatedProduct.Price,
-		Stock:       updatedProduct.Stock,
-		Image:       utils.GetFullImageURL(updatedProduct.Image),
-		IsActive:    updatedProduct.IsActive,
-		CreatedAt:   updatedProduct.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt:   updatedProduct.UpdatedAt.Format("2006-01-02 15:04:05"),
-		CreatedBy:   updatedProduct.CreatedBy,
+		ID:             updatedProduct.ID,
+		TenantID:       updatedProduct.TenantID,
+		Name:           updatedProduct.Name,
+		Description:    updatedProduct.Description,
+		Category:       updatedProduct.Category,
+		CategoryID:     updatedProduct.CategoryID,
+		CategoryDetail: mapCategoryToDTO(updatedProduct.CategoryDetail),
+		SKU:            updatedProduct.SKU,
+		Price:          updatedProduct.Price,
+		Stock:          updatedProduct.Stock,
+		Image:          utils.GetFullImageURL(updatedProduct.Image),
+		IsActive:       updatedProduct.IsActive,
+		CreatedAt:      updatedProduct.CreatedAt.Format("2006-01-02 15:04:05"),
+		UpdatedAt:      updatedProduct.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedBy:      updatedProduct.CreatedBy,
 	})
 }
 

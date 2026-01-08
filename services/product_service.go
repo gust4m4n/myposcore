@@ -27,7 +27,7 @@ func (s *ProductService) ListProducts(tenantID uint, category, search string, pa
 
 	query := s.db.Model(&models.Product{}).Where("tenant_id = ?", tenantID)
 
-	// Filter by category if provided
+	// Filter by category if provided (legacy string field)
 	if category != "" {
 		query = query.Where("category = ?", category)
 	}
@@ -43,7 +43,7 @@ func (s *ProductService) ListProducts(tenantID uint, category, search string, pa
 	}
 
 	offset := (page - 1) * pageSize
-	query2 := s.db.Preload("Creator").Preload("Updater").Where("tenant_id = ?", tenantID)
+	query2 := s.db.Preload("Creator").Preload("Updater").Preload("CategoryDetail").Where("tenant_id = ?", tenantID)
 
 	if category != "" {
 		query2 = query2.Where("category = ?", category)
@@ -56,6 +56,36 @@ func (s *ProductService) ListProducts(tenantID uint, category, search string, pa
 	if err := query2.Order("name ASC").Limit(pageSize).Offset(offset).Find(&products).Error; err != nil {
 		return nil, 0, err
 	}
+	return products, total, nil
+}
+
+// ListProductsByCategoryID returns paginated products filtered by category_id
+func (s *ProductService) ListProductsByCategoryID(tenantID, categoryID uint, search string, page, pageSize int) ([]models.Product, int64, error) {
+	var products []models.Product
+	var total int64
+
+	query := s.db.Model(&models.Product{}).Where("tenant_id = ? AND category_id = ?", tenantID, categoryID)
+
+	// Search by name or SKU if provided
+	if search != "" {
+		searchPattern := "%" + search + "%"
+		query = query.Where("name ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern)
+	}
+
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	offset := (page - 1) * pageSize
+	if err := s.db.Preload("Creator").Preload("Updater").Preload("CategoryDetail").
+		Where("tenant_id = ? AND category_id = ?", tenantID, categoryID).
+		Order("name ASC").
+		Limit(pageSize).
+		Offset(offset).
+		Find(&products).Error; err != nil {
+		return nil, 0, err
+	}
+
 	return products, total, nil
 }
 
@@ -73,7 +103,7 @@ func (s *ProductService) GetCategories(tenantID uint) ([]string, error) {
 
 func (s *ProductService) GetProduct(id, tenantID uint) (*models.Product, error) {
 	var product models.Product
-	if err := s.db.Preload("Creator").Preload("Updater").Where("id = ? AND tenant_id = ?", id, tenantID).First(&product).Error; err != nil {
+	if err := s.db.Preload("Creator").Preload("Updater").Preload("CategoryDetail").Where("id = ? AND tenant_id = ?", id, tenantID).First(&product).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("product not found")
 		}
@@ -88,6 +118,7 @@ func (s *ProductService) CreateProduct(tenantID uint, req dto.CreateProductReque
 		Name:        req.Name,
 		Description: req.Description,
 		Category:    req.Category,
+		CategoryID:  req.CategoryID,
 		SKU:         req.SKU,
 		Price:       req.Price,
 		Stock:       req.Stock,
@@ -104,6 +135,7 @@ func (s *ProductService) CreateProduct(tenantID uint, req dto.CreateProductReque
 		"name":        product.Name,
 		"description": product.Description,
 		"category":    product.Category,
+		"category_id": product.CategoryID,
 		"sku":         product.SKU,
 		"price":       product.Price,
 		"stock":       product.Stock,
@@ -135,6 +167,9 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 	if req.Category != "" {
 		updates["category"] = req.Category
 	}
+	if req.CategoryID != nil {
+		updates["category_id"] = req.CategoryID
+	}
 	if req.SKU != "" {
 		updates["sku"] = req.SKU
 	}
@@ -158,6 +193,7 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 		"name":        product.Name,
 		"description": product.Description,
 		"category":    product.Category,
+		"category_id": product.CategoryID,
 		"sku":         product.SKU,
 		"price":       product.Price,
 		"stock":       product.Stock,

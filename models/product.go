@@ -11,7 +11,8 @@ type Product struct {
 	TenantID    uint           `gorm:"not null;index" json:"tenant_id"`
 	Name        string         `gorm:"size:255;not null;index" json:"name"`
 	Description string         `gorm:"type:text" json:"description"`
-	Category    string         `gorm:"size:100;index" json:"category"`
+	Category    string         `gorm:"size:100;index" json:"category"` // Legacy field, will be deprecated
+	CategoryID  *uint          `gorm:"index" json:"category_id"`
 	SKU         string         `gorm:"size:100;index" json:"sku"`
 	Price       float64        `gorm:"type:decimal(10,2);not null" json:"price"`
 	Stock       int            `gorm:"default:0" json:"stock"`
@@ -25,10 +26,11 @@ type Product struct {
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
 
 	// Relations
-	Tenant  Tenant `gorm:"foreignKey:TenantID" json:"-"`
-	Creator *User  `gorm:"foreignKey:CreatedBy;constraint:-" json:"creator,omitempty"`
-	Updater *User  `gorm:"foreignKey:UpdatedBy;constraint:-" json:"updater,omitempty"`
-	Deleter *User  `gorm:"foreignKey:DeletedBy;constraint:-" json:"deleter,omitempty"`
+	Tenant         Tenant    `gorm:"foreignKey:TenantID" json:"-"`
+	CategoryDetail *Category `gorm:"foreignKey:CategoryID" json:"category_detail,omitempty"`
+	Creator        *User     `gorm:"foreignKey:CreatedBy;constraint:-" json:"creator,omitempty"`
+	Updater        *User     `gorm:"foreignKey:UpdatedBy;constraint:-" json:"updater,omitempty"`
+	Deleter        *User     `gorm:"foreignKey:DeletedBy;constraint:-" json:"deleter,omitempty"`
 }
 
 func (Product) TableName() string {

@@ -1,0 +1,940 @@
+2026/01/08 15:27:57 Database connected successfully
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[11.137ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.359ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[19.550ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'tenants'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.998ms] [34;1m[rows:-][0m SELECT * FROM "tenants" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[13.607ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'tenants' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[9.415ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'tenants'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.509ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'tenants'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[1.672ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[1.189ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.945ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'description') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.986ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'address') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.887ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'website') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.857ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'email') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.158ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'phone') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.137ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'image') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'is_active') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.172ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.140ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.145ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.131ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.129ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.132ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'tenants' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'tenants' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[1.135ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'tenants' AND indexname = 'idx_tenants_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.360ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'tenants' AND indexname = 'idx_tenants_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.306ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'tenants' AND indexname = 'idx_tenants_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.304ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'tenants' AND indexname = 'idx_tenants_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.281ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.084ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[4.701ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'branches'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[2.010ms] [34;1m[rows:-][0m SELECT * FROM "branches" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[5.150ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'branches' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[5.411ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'branches'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.221ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'branches'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.193ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.166ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.163ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.145ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.169ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'tenant_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.149ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.139ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'description') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.155ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'address') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.159ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'website') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.149ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'email') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.150ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'phone') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.156ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'image') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.148ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'is_active') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.157ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.162ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.151ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'branches' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.721ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'branches' AND constraint_name = 'fk_branches_tenant'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.360ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'branches' AND indexname = 'idx_branches_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.325ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'branches' AND indexname = 'idx_branch_tenant' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.122ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'branches' AND indexname = 'idx_branches_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.111ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'branches' AND indexname = 'idx_branches_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.105ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'branches' AND indexname = 'idx_branches_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.298ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.090ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[3.684ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'users'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.603ms] [34;1m[rows:-][0m SELECT * FROM "users" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[6.011ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'users' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[5.312ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'users'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.244ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'users'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.177ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.204ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'tenant_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.201ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'branch_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.181ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'email') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.166ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'password') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.167ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'pin') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.159ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'full_name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.159ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'image') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.163ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'role') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.163ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'is_active') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.166ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.167ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.431ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.167ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.141ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.139ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'users' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.655ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND constraint_name = 'fk_users_updater'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.682ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND constraint_name = 'fk_users_deleter'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.523ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND constraint_name = 'fk_tenants_users'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.778ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND constraint_name = 'fk_users_creator'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.514ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'users' AND constraint_name = 'fk_branches_users'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.127ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_tenant_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.104ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_branch_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.115ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_email' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.094ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_full_name' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.117ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.112ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.092ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.090ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'users' AND indexname = 'idx_users_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.329ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.069ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[2.988ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'categories'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.464ms] [34;1m[rows:-][0m SELECT * FROM "categories" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[4.079ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'categories' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[4.240ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'categories'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.206ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'categories'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.169ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.136ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'tenant_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.136ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.167ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'description') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'image') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'is_active') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.133ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.130ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.098ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.110ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'categories' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.122ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'categories' AND constraint_name = 'fk_categories_tenant'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.129ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'categories' AND indexname = 'idx_categories_tenant_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.090ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'categories' AND indexname = 'idx_categories_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.090ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'categories' AND indexname = 'idx_categories_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.089ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'categories' AND indexname = 'idx_categories_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.088ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'categories' AND indexname = 'idx_categories_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.317ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.082ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[2.818ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'products'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.544ms] [34;1m[rows:-][0m SELECT * FROM "products" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[3.869ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'products' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[3.592ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'products'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.187ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'products'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.144ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.181ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'tenant_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.148ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'name') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.104ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'description') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.099ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'category') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.111ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'category_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.100ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'sku') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.102ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'price') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.111ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'stock') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.160ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'image') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.131ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'is_active') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.122ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.125ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.123ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.122ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.116ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'products' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.148ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND constraint_name = 'fk_products_tenant'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.141ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'products' AND constraint_name = 'fk_products_category_detail'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.080ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_tenant_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.080ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_name' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.089ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_category' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.087ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_category_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.085ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_sku' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.087ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.086ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.080ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.083ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'products' AND indexname = 'idx_products_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.246ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.075ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[2.337ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'orders'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.484ms] [34;1m[rows:-][0m SELECT * FROM "orders" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[3.175ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'orders' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[3.093ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'orders'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.189ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'orders'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.161ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.264ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'tenant_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.123ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'branch_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.115ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'user_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.103ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'order_number') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.105ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'total_amount') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'status') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.152ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'notes') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.136ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.140ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.117ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.115ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.125ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'orders' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.143ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND constraint_name = 'fk_orders_tenant'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.137ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND constraint_name = 'fk_orders_branch'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.141ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'orders' AND constraint_name = 'fk_orders_user'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.083ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_tenant_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.091ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_branch_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.105ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_user_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.095ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_order_number' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.119ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_status' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.077ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.070ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.075ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.073ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'orders' AND indexname = 'idx_orders_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.083ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.052ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.540ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'order_items'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[1.399ms] [34;1m[rows:-][0m SELECT * FROM "order_items" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.422ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'order_items' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.404ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'order_items'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.091ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'order_items'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.146ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.145ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'order_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.133ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'product_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.143ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'quantity') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.146ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'price') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.123ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'subtotal') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.120ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.118ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.141ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'order_items' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.133ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND constraint_name = 'fk_order_items_product'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.119ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'order_items' AND constraint_name = 'fk_orders_order_items'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.082ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'order_items' AND indexname = 'idx_order_items_order_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.109ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'order_items' AND indexname = 'idx_order_items_product_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.084ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'order_items' AND indexname = 'idx_order_items_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.083ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.081ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.620ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'payments'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.366ms] [34;1m[rows:-][0m SELECT * FROM "payments" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.497ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'payments' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.489ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'payments'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.096ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'payments'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.147ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.130ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'order_id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.127ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'amount') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.120ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'payment_method') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.117ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'status') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.118ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'notes') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.135ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.137ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.148ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.125ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.120ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.124ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'payments' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.125ms] [34;1m[rows:1][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'payments' AND constraint_name = 'fk_orders_payments'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.095ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'payments' AND indexname = 'idx_payments_order_id' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.098ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'payments' AND indexname = 'idx_payments_status' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.090ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'payments' AND indexname = 'idx_payments_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.102ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'payments' AND indexname = 'idx_payments_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.083ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'payments' AND indexname = 'idx_payments_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.094ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'payments' AND indexname = 'idx_payments_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.113ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.084ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.590ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.291ms] [34;1m[rows:-][0m SELECT * FROM "terms_and_conditions" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.462ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'terms_and_conditions' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.456ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'terms_and_conditions'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.091ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'terms_and_conditions'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.162ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.144ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'title') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.143ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'content') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.132ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'version') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.125ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'is_active') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.147ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.124ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.148ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.125ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.269ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.110ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'terms_and_conditions' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'terms_and_conditions' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.086ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'terms_and_conditions' AND indexname = 'idx_terms_and_conditions_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.068ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'terms_and_conditions' AND indexname = 'idx_terms_and_conditions_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.080ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'terms_and_conditions' AND indexname = 'idx_terms_and_conditions_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.073ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'terms_and_conditions' AND indexname = 'idx_terms_and_conditions_deleted_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.082ms] [34;1m[rows:1][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND table_type = 'BASE TABLE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.078ms] [34;1m[rows:1][0m SELECT CURRENT_DATABASE()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.620ms] [34;1m[rows:-][0m SELECT c.column_name, c.is_nullable = 'YES', c.udt_name, c.character_maximum_length, c.numeric_precision, c.numeric_precision_radix, c.numeric_scale, c.datetime_precision, 8 * typlen, c.column_default, pd.description, c.identity_increment FROM information_schema.columns AS c JOIN pg_type AS pgt ON c.udt_name = pgt.typname LEFT JOIN pg_catalog.pg_description as pd ON pd.objsubid = c.ordinal_position AND pd.objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = c.table_name AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = c.table_schema)) where table_catalog = 'myposcore' AND table_schema = CURRENT_SCHEMA() AND table_name = 'faqs'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.367ms] [34;1m[rows:-][0m SELECT * FROM "faqs" LIMIT 5
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.455ms] [34;1m[rows:-][0m SELECT constraint_name FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'faqs' AND constraint_type = 'UNIQUE'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.442ms] [34;1m[rows:-][0m SELECT c.column_name, constraint_name, constraint_type FROM information_schema.table_constraints tc JOIN information_schema.constraint_column_usage AS ccu USING (constraint_schema, constraint_catalog, table_name, constraint_name) JOIN information_schema.columns AS c ON c.table_schema = tc.constraint_schema AND tc.table_name = c.table_name AND ccu.column_name = c.column_name WHERE constraint_type IN ('PRIMARY KEY', 'UNIQUE') AND c.table_catalog = 'myposcore' AND c.table_schema = CURRENT_SCHEMA() AND c.table_name = 'faqs'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.081ms] [34;1m[rows:-][0m SELECT a.attname as column_name, format_type(a.atttypid, a.atttypmod) AS data_type
+		FROM pg_attribute a JOIN pg_class b ON a.attrelid = b.oid AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA())
+		WHERE a.attnum > 0 -- hide internal columns
+		AND NOT a.attisdropped -- hide deleted columns
+		AND b.relname = 'faqs'
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.135ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'id') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.137ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'question') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.128ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'answer') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.128ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'is_active') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.128ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'created_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.137ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'updated_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.122ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'deleted_at') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.129ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'created_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.147ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'updated_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.134ms] [34;1m[rows:0][0m SELECT description FROM pg_catalog.pg_description WHERE objsubid = (SELECT ordinal_position FROM information_schema.columns WHERE table_schema = CURRENT_SCHEMA() AND table_name = 'faqs' AND column_name = 'deleted_by') AND objoid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = 'faqs' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = CURRENT_SCHEMA()))
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.092ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'faqs' AND indexname = 'idx_faqs_deleted_at' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.084ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'faqs' AND indexname = 'idx_faqs_created_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.079ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'faqs' AND indexname = 'idx_faqs_updated_by' AND schemaname = CURRENT_SCHEMA()
+
+2026/01/08 15:27:57 [32m/Users/gustaman/Desktop/GUSTAMAN7/myposcore/database/database.go:38
+[0m[33m[0.082ms] [34;1m[rows:1][0m SELECT count(*) FROM pg_indexes WHERE tablename = 'faqs' AND indexname = 'idx_faqs_deleted_by' AND schemaname = CURRENT_SCHEMA()
+2026/01/08 15:27:57 Database migration completed
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /uploads/*filepath        --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] HEAD   /uploads/*filepath        --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] GET    /health                   --> myposcore/handlers.(*HealthHandler).Handle-fm (4 handlers)
+[GIN-debug] POST   /api/v1/auth/login        --> myposcore/handlers.(*LoginHandler).Handle-fm (4 handlers)
+[GIN-debug] GET    /api/v1/tnc               --> myposcore/handlers.(*TnCHandler).GetTnC-fm (4 handlers)
+[GIN-debug] GET    /api/v1/faq               --> myposcore/handlers.(*FAQHandler).GetAllFAQ-fm (4 handlers)
+[GIN-debug] GET    /api/v1/faq/:id           --> myposcore/handlers.(*FAQHandler).GetFAQByID-fm (4 handlers)
+[GIN-debug] POST   /api/v1/config/set        --> myposcore/handlers.(*ConfigHandler).SetConfig-fm (4 handlers)
+[GIN-debug] GET    /api/v1/config/get/:key   --> myposcore/handlers.(*ConfigHandler).GetConfig-fm (4 handlers)
+[GIN-debug] POST   /api/v1/logout            --> myposcore/handlers.(*LogoutHandler).Handle-fm (6 handlers)
+[GIN-debug] GET    /api/v1/profile           --> myposcore/handlers.(*ProfileHandler).Handle-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/profile           --> myposcore/handlers.(*ProfileHandler).UpdateProfile-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/change-password   --> myposcore/handlers.(*ChangePasswordHandler).Handle-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/admin/change-password --> myposcore/handlers.(*AdminChangePasswordHandler).Handle-fm (6 handlers)
+[GIN-debug] POST   /api/v1/profile/photo     --> myposcore/handlers.(*ProfileHandler).UploadProfileImage-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/profile/photo     --> myposcore/handlers.(*ProfileHandler).DeleteProfileImage-fm (6 handlers)
+[GIN-debug] POST   /api/v1/pin/create        --> myposcore/handlers.(*PINHandler).CreatePIN-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/pin/change        --> myposcore/handlers.(*PINHandler).ChangePIN-fm (6 handlers)
+[GIN-debug] GET    /api/v1/pin/check         --> myposcore/handlers.(*PINHandler).CheckPIN-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/admin/change-pin  --> myposcore/handlers.(*AdminChangePINHandler).Handle-fm (6 handlers)
+[GIN-debug] GET    /api/v1/branches          --> myposcore/handlers.(*BranchHandler).GetBranches-fm (6 handlers)
+[GIN-debug] GET    /api/v1/branches/:id      --> myposcore/handlers.(*BranchHandler).GetBranch-fm (6 handlers)
+[GIN-debug] POST   /api/v1/branches          --> myposcore/handlers.(*BranchHandler).CreateBranch-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/branches/:id      --> myposcore/handlers.(*BranchHandler).UpdateBranch-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/branches/:id      --> myposcore/handlers.(*BranchHandler).DeleteBranch-fm (6 handlers)
+[GIN-debug] GET    /api/v1/branches/:id/users --> myposcore/handlers.(*BranchHandler).GetBranchUsers-fm (6 handlers)
+[GIN-debug] GET    /api/v1/categories        --> myposcore/handlers.(*CategoryHandler).ListCategories-fm (6 handlers)
+[GIN-debug] GET    /api/v1/categories/:id    --> myposcore/handlers.(*CategoryHandler).GetCategory-fm (6 handlers)
+[GIN-debug] POST   /api/v1/categories        --> myposcore/handlers.(*CategoryHandler).CreateCategory-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/categories/:id    --> myposcore/handlers.(*CategoryHandler).UpdateCategory-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/categories/:id    --> myposcore/handlers.(*CategoryHandler).DeleteCategory-fm (6 handlers)
+[GIN-debug] GET    /api/v1/products/categories --> myposcore/handlers.(*ProductHandler).GetCategories-fm (6 handlers)
+[GIN-debug] GET    /api/v1/products/by-category/:category_id --> myposcore/handlers.(*ProductHandler).ListProductsByCategoryID-fm (6 handlers)
+[GIN-debug] GET    /api/v1/products          --> myposcore/handlers.(*ProductHandler).ListProducts-fm (6 handlers)
+[GIN-debug] GET    /api/v1/products/:id      --> myposcore/handlers.(*ProductHandler).GetProduct-fm (6 handlers)
+[GIN-debug] POST   /api/v1/products          --> myposcore/handlers.(*ProductHandler).CreateProduct-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/products/:id      --> myposcore/handlers.(*ProductHandler).UpdateProduct-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/products/:id      --> myposcore/handlers.(*ProductHandler).DeleteProduct-fm (6 handlers)
+[GIN-debug] POST   /api/v1/products/:id/photo --> myposcore/handlers.(*ProductHandler).UploadProductImage-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/products/:id/photo --> myposcore/handlers.(*ProductHandler).DeleteProductImage-fm (6 handlers)
+[GIN-debug] POST   /api/v1/orders            --> myposcore/handlers.(*OrderHandler).CreateOrder-fm (6 handlers)
+[GIN-debug] GET    /api/v1/orders            --> myposcore/handlers.(*OrderHandler).ListOrders-fm (6 handlers)
+[GIN-debug] GET    /api/v1/orders/:id        --> myposcore/handlers.(*OrderHandler).GetOrder-fm (6 handlers)
+[GIN-debug] GET    /api/v1/orders/:id/payments --> myposcore/handlers.(*PaymentHandler).GetPaymentsByOrder-fm (6 handlers)
+[GIN-debug] POST   /api/v1/payments          --> myposcore/handlers.(*PaymentHandler).CreatePayment-fm (6 handlers)
+[GIN-debug] GET    /api/v1/payments          --> myposcore/handlers.(*PaymentHandler).ListPayments-fm (6 handlers)
+[GIN-debug] GET    /api/v1/payments/:id      --> myposcore/handlers.(*PaymentHandler).GetPayment-fm (6 handlers)
+[GIN-debug] GET    /api/v1/payments/performance --> myposcore/handlers.(*PaymentHandler).GetPaymentPerformance-fm (6 handlers)
+[GIN-debug] GET    /api/v1/users             --> myposcore/handlers.(*UserHandler).ListUsers-fm (6 handlers)
+[GIN-debug] GET    /api/v1/users/:id         --> myposcore/handlers.(*UserHandler).GetUser-fm (6 handlers)
+[GIN-debug] POST   /api/v1/users             --> myposcore/handlers.(*UserHandler).CreateUser-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/users/:id         --> myposcore/handlers.(*UserHandler).UpdateUser-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/users/:id         --> myposcore/handlers.(*UserHandler).DeleteUser-fm (6 handlers)
+[GIN-debug] GET    /api/v1/tenants           --> myposcore/handlers.(*TenantHandler).ListTenants-fm (6 handlers)
+[GIN-debug] GET    /api/v1/tenants/:id       --> myposcore/handlers.(*TenantHandler).GetTenant-fm (6 handlers)
+[GIN-debug] POST   /api/v1/tenants           --> myposcore/handlers.(*TenantHandler).CreateTenant-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/tenants/:id       --> myposcore/handlers.(*TenantHandler).UpdateTenant-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/tenants/:id       --> myposcore/handlers.(*TenantHandler).DeleteTenant-fm (6 handlers)
+[GIN-debug] GET    /api/v1/audit-trails      --> myposcore/handlers.(*AuditTrailHandler).ListAuditTrails-fm (6 handlers)
+[GIN-debug] GET    /api/v1/audit-trails/user/:user_id --> myposcore/handlers.(*AuditTrailHandler).GetUserActivityLog-fm (6 handlers)
+[GIN-debug] GET    /api/v1/audit-trails/entity/:entity_type/:entity_id --> myposcore/handlers.(*AuditTrailHandler).GetEntityAuditHistory-fm (6 handlers)
+[GIN-debug] GET    /api/v1/audit-trails/:id  --> myposcore/handlers.(*AuditTrailHandler).GetAuditTrailByID-fm (6 handlers)
+[GIN-debug] GET    /api/v1/dashboard         --> myposcore/handlers.(*SuperAdminHandler).Dashboard-fm (6 handlers)
+[GIN-debug] POST   /api/v1/faq               --> myposcore/handlers.(*FAQHandler).CreateFAQ-fm (6 handlers)
+[GIN-debug] PUT    /api/v1/faq/:id           --> myposcore/handlers.(*FAQHandler).UpdateFAQ-fm (6 handlers)
+[GIN-debug] DELETE /api/v1/faq/:id           --> myposcore/handlers.(*FAQHandler).DeleteFAQ-fm (6 handlers)
+2026/01/08 15:27:57 Server starting on :8080
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
