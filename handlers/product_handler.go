@@ -91,11 +91,11 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 		}
 
 		response = append(response, dto.ProductResponse{
-			ID:             product.ID,
-			TenantID:       product.TenantID,
-			Name:           product.Name,
-			Description:    product.Description,
-			Category:       product.Category,
+			ID:          product.ID,
+			TenantID:    product.TenantID,
+			Name:        product.Name,
+			Description: product.Description,
+
 			CategoryID:     product.CategoryID,
 			CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
 			SKU:            product.SKU,
@@ -173,11 +173,11 @@ func (h *ProductHandler) ListProductsByCategoryID(c *gin.Context) {
 		}
 
 		response = append(response, dto.ProductResponse{
-			ID:             product.ID,
-			TenantID:       product.TenantID,
-			Name:           product.Name,
-			Description:    product.Description,
-			Category:       product.Category,
+			ID:          product.ID,
+			TenantID:    product.TenantID,
+			Name:        product.Name,
+			Description: product.Description,
+
 			CategoryID:     product.CategoryID,
 			CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
 			SKU:            product.SKU,
@@ -248,7 +248,6 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 		TenantID:       product.TenantID,
 		Name:           product.Name,
 		Description:    product.Description,
-		Category:       product.Category,
 		CategoryID:     product.CategoryID,
 		CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
 		SKU:            product.SKU,
@@ -275,7 +274,7 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 // @Param request body dto.CreateProductRequest true "Product data (JSON)" (when using application/json)
 // @Param name formData string true "Product name" (when using multipart/form-data)
 // @Param description formData string false "Product description" (when using multipart/form-data)
-// @Param category formData string false "Product category" (when using multipart/form-data)
+// @Param category_id formData integer false "Product category ID" (when using multipart/form-data)
 // @Param sku formData string false "Product SKU" (when using multipart/form-data)
 // @Param price formData number true "Product price" (when using multipart/form-data)
 // @Param stock formData integer false "Product stock" (when using multipart/form-data)
@@ -298,8 +297,16 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		// Parse form data
 		req.Name = c.PostForm("name")
 		req.Description = c.PostForm("description")
-		req.Category = c.PostForm("category")
 		req.SKU = c.PostForm("sku")
+
+		// Parse category_id
+		if categoryIDStr := c.PostForm("category_id"); categoryIDStr != "" {
+			categoryID, err := strconv.ParseUint(categoryIDStr, 10, 32)
+			if err == nil {
+				catID := uint(categoryID)
+				req.CategoryID = &catID
+			}
+		}
 
 		// Parse price
 		if priceStr := c.PostForm("price"); priceStr != "" {
@@ -371,7 +378,6 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		TenantID:       product.TenantID,
 		Name:           product.Name,
 		Description:    product.Description,
-		Category:       product.Category,
 		CategoryID:     product.CategoryID,
 		CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
 		SKU:            product.SKU,
@@ -396,7 +402,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 // @Param request body dto.UpdateProductRequest true "Product data (JSON)" (when using application/json)
 // @Param name formData string false "Product name" (when using multipart/form-data)
 // @Param description formData string false "Product description" (when using multipart/form-data)
-// @Param category formData string false "Product category" (when using multipart/form-data)
+// @Param category_id formData integer false "Product category ID" (when using multipart/form-data)
 // @Param sku formData string false "Product SKU" (when using multipart/form-data)
 // @Param price formData number false "Product price" (when using multipart/form-data)
 // @Param stock formData integer false "Product stock" (when using multipart/form-data)
@@ -429,8 +435,12 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		if description := c.PostForm("description"); description != "" {
 			req.Description = description
 		}
-		if category := c.PostForm("category"); category != "" {
-			req.Category = category
+		if categoryIDStr := c.PostForm("category_id"); categoryIDStr != "" {
+			categoryID, err := strconv.ParseUint(categoryIDStr, 10, 32)
+			if err == nil {
+				catID := uint(categoryID)
+				req.CategoryID = &catID
+			}
 		}
 		if sku := c.PostForm("sku"); sku != "" {
 			req.SKU = sku
@@ -504,7 +514,6 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 		TenantID:       product.TenantID,
 		Name:           product.Name,
 		Description:    product.Description,
-		Category:       product.Category,
 		CategoryID:     product.CategoryID,
 		CategoryDetail: mapCategoryToDTO(product.CategoryDetail),
 		SKU:            product.SKU,
@@ -671,7 +680,6 @@ func (h *ProductHandler) UploadProductImage(c *gin.Context) {
 		TenantID:       updatedProduct.TenantID,
 		Name:           updatedProduct.Name,
 		Description:    updatedProduct.Description,
-		Category:       updatedProduct.Category,
 		CategoryID:     updatedProduct.CategoryID,
 		CategoryDetail: mapCategoryToDTO(updatedProduct.CategoryDetail),
 		SKU:            updatedProduct.SKU,

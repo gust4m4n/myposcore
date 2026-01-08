@@ -3,7 +3,6 @@ package dto
 type CreateProductRequest struct {
 	Name        string  `json:"name" binding:"required"`
 	Description string  `json:"description"`
-	Category    string  `json:"category"` // Legacy field
 	CategoryID  *uint   `json:"category_id"`
 	SKU         string  `json:"sku"`
 	Price       float64 `json:"price" binding:"required,min=0"`
@@ -15,7 +14,6 @@ type CreateProductRequest struct {
 type UpdateProductRequest struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
-	Category    string  `json:"category"` // Legacy field
 	CategoryID  *uint   `json:"category_id"`
 	SKU         string  `json:"sku"`
 	Price       float64 `json:"price" binding:"omitempty,min=0"`
@@ -29,7 +27,6 @@ type ProductResponse struct {
 	TenantID       uint             `json:"tenant_id"`
 	Name           string           `json:"name"`
 	Description    string           `json:"description"`
-	Category       string           `json:"category"` // Legacy field
 	CategoryID     *uint            `json:"category_id"`
 	CategoryDetail *CategorySummary `json:"category_detail,omitempty"`
 	SKU            string           `json:"sku"`

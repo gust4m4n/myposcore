@@ -109,7 +109,6 @@ func (s *ProductService) CreateProduct(tenantID uint, req dto.CreateProductReque
 		TenantID:    tenantID,
 		Name:        req.Name,
 		Description: req.Description,
-		Category:    req.Category,
 		CategoryID:  req.CategoryID,
 		SKU:         req.SKU,
 		Price:       req.Price,
@@ -126,7 +125,6 @@ func (s *ProductService) CreateProduct(tenantID uint, req dto.CreateProductReque
 	changes := map[string]interface{}{
 		"name":        product.Name,
 		"description": product.Description,
-		"category":    product.Category,
 		"category_id": product.CategoryID,
 		"sku":         product.SKU,
 		"price":       product.Price,
@@ -156,9 +154,6 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 	if req.Description != "" {
 		updates["description"] = req.Description
 	}
-	if req.Category != "" {
-		updates["category"] = req.Category
-	}
 	if req.CategoryID != nil {
 		updates["category_id"] = req.CategoryID
 	}
@@ -184,7 +179,6 @@ func (s *ProductService) UpdateProduct(id, tenantID uint, req dto.UpdateProductR
 	oldValues := map[string]interface{}{
 		"name":        product.Name,
 		"description": product.Description,
-		"category":    product.Category,
 		"category_id": product.CategoryID,
 		"sku":         product.SKU,
 		"price":       product.Price,
@@ -248,9 +242,8 @@ func (s *ProductService) DeleteProduct(id, tenantID uint, deletedBy *uint) error
 		auditorID = *deletedBy
 	}
 	changes := map[string]interface{}{
-		"name":     product.Name,
-		"sku":      product.SKU,
-		"category": product.Category,
+		"name": product.Name,
+		"sku":  product.SKU,
 	}
 	_ = s.auditTrailService.CreateAuditTrail(&tenantID, nil, auditorID, "product", product.ID, "delete", changes, "", "")
 
