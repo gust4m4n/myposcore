@@ -49,7 +49,6 @@ func mapCategoryToDTO(category *models.Category) *dto.CategorySummary {
 // @Tags products
 // @Accept json
 // @Produce json
-// @Param category query string false "Filter by category"
 // @Param search query string false "Search by name, description, or SKU"
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Items per page" default(32)
@@ -63,7 +62,6 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 	}
 
 	// Get query parameters
-	category := c.Query("category")
 	search := c.Query("search")
 
 	// Parse pagination parameters
@@ -74,7 +72,7 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 		pagination = *dto.NewPaginationRequest(pagination.Page, pagination.PageSize)
 	}
 
-	products, total, err := h.service.ListProducts(tenantID.(uint), category, search, pagination.Page, pagination.PageSize)
+	products, total, err := h.service.ListProducts(tenantID.(uint), search, pagination.Page, pagination.PageSize)
 	if err != nil {
 		utils.InternalError(c, err.Error())
 		return

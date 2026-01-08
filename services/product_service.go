@@ -21,16 +21,11 @@ func NewProductService(auditTrailService *AuditTrailService) *ProductService {
 	}
 }
 
-func (s *ProductService) ListProducts(tenantID uint, category, search string, page, pageSize int) ([]models.Product, int64, error) {
+func (s *ProductService) ListProducts(tenantID uint, search string, page, pageSize int) ([]models.Product, int64, error) {
 	var products []models.Product
 	var total int64
 
 	query := s.db.Model(&models.Product{}).Where("tenant_id = ?", tenantID)
-
-	// Filter by category if provided (legacy string field)
-	if category != "" {
-		query = query.Where("category = ?", category)
-	}
 
 	// Search by name or SKU if provided
 	if search != "" {
@@ -45,9 +40,6 @@ func (s *ProductService) ListProducts(tenantID uint, category, search string, pa
 	offset := (page - 1) * pageSize
 	query2 := s.db.Preload("Creator").Preload("Updater").Preload("CategoryDetail").Where("tenant_id = ?", tenantID)
 
-	if category != "" {
-		query2 = query2.Where("category = ?", category)
-	}
 	if search != "" {
 		searchPattern := "%" + search + "%"
 		query2 = query2.Where("name ILIKE ? OR sku ILIKE ?", searchPattern, searchPattern)
