@@ -48,7 +48,12 @@ func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		// Set user info in context
 		c.Set("user_id", claims.UserID)
 		c.Set("tenant_id", claims.TenantID)
-		c.Set("branch_id", user.BranchID)
+		// Dereference branch_id pointer or set to 0 if nil
+		var branchID uint = 0
+		if user.BranchID != nil {
+			branchID = *user.BranchID
+		}
+		c.Set("branch_id", branchID)
 		c.Set("email", claims.Email)
 		c.Next()
 	}

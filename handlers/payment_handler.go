@@ -30,12 +30,13 @@ func (h *PaymentHandler) CreatePayment(c *gin.Context) {
 	}
 
 	tenantID := c.GetUint("tenant_id")
+	branchID := c.GetUint("branch_id")
 
 	// Set created_by to current user
 	currentUserID := c.GetUint("user_id")
 	req.CreatedBy = &currentUserID
 
-	payment, err := h.paymentService.CreatePayment(req.OrderID, req.Amount, req.PaymentMethod, req.Notes, tenantID, req.CreatedBy)
+	payment, err := h.paymentService.CreatePayment(req.OrderID, req.Amount, req.PaymentMethod, req.Notes, tenantID, branchID, req.CreatedBy)
 	if err != nil {
 		utils.InternalError(c, err.Error())
 		return

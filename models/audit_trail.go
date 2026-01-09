@@ -25,7 +25,7 @@ type AuditTrail struct {
 	ClientID       string     `gorm:"size:255;index" json:"client_id,omitempty"`
 	LocalTimestamp *time.Time `json:"local_timestamp,omitempty"`
 	Version        int        `gorm:"default:1" json:"version"`
-	ConflictData   string     `gorm:"type:jsonb" json:"conflict_data,omitempty"`
+	ConflictData   *string     `gorm:"type:jsonb" json:"conflict_data,omitempty"`
 
 	// Relations (constraint:- prevents GORM auto-FK creation, we manage FK via SQL migrations)
 	User   *User   `gorm:"foreignKey:UserID;references:ID;constraint:-" json:"-"`

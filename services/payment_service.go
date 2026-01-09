@@ -21,7 +21,7 @@ func NewPaymentService(db *gorm.DB, auditTrailService *AuditTrailService) *Payme
 	}
 }
 
-func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMethod, notes string, tenantID uint, createdBy *uint) (*models.Payment, error) {
+func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMethod, notes string, tenantID, branchID uint, createdBy *uint) (*models.Payment, error) {
 	// Verify order exists and belongs to tenant
 	var order models.Order
 	if err := s.db.Where("id = ? AND tenant_id = ?", orderID, tenantID).First(&order).Error; err != nil {
@@ -56,6 +56,8 @@ func (s *PaymentService) CreatePayment(orderID uint, amount float64, paymentMeth
 
 	// Create payment
 	payment := &models.Payment{
+		TenantID:      tenantID,
+		BranchID:      branchID,
 		OrderID:       orderID,
 		Amount:        amount,
 		PaymentMethod: paymentMethod,

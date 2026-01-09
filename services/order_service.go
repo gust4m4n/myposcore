@@ -146,14 +146,11 @@ func (s *OrderService) CreateOrder(tenantID, branchID, userID uint, createdBy *u
 		"status":       order.Status,
 		"items":        orderItemsData,
 	}
-	changesJSON, _ := json.Marshal(changes)
-	var changesMap map[string]interface{}
-	_ = json.Unmarshal(changesJSON, &changesMap)
 	var auditUserID uint
 	if createdBy != nil {
 		auditUserID = *createdBy
 	}
-	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &branchID, auditUserID, "order", order.ID, "create", changesMap, "", "")
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &branchID, auditUserID, "order", order.ID, "create", changes, "", "")
 
 	return order, nil
 }

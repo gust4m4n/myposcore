@@ -21,7 +21,7 @@ type Order struct {
 	ClientID       string     `gorm:"size:100;index" json:"client_id"`
 	LocalTimestamp *time.Time `json:"local_timestamp"`
 	Version        int        `gorm:"default:1" json:"version"`
-	ConflictData   string     `gorm:"type:jsonb" json:"conflict_data,omitempty"`
+	ConflictData   *string     `gorm:"type:jsonb" json:"conflict_data,omitempty"`
 
 	CreatedBy *uint          `gorm:"index" json:"created_by"`
 	UpdatedBy *uint          `gorm:"index" json:"updated_by"`
