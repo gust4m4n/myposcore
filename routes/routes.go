@@ -23,6 +23,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	productService := services.NewProductService(auditTrailService)
 	configService := services.NewConfigService(database.DB)
 	branchService := services.NewSuperAdminBranchService()
+	syncService := services.NewSyncService(database.DB)
 
 	// Initialize handlers
 	healthHandler := handlers.NewHealthHandler(cfg)
@@ -45,6 +46,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	configHandler := handlers.NewConfigHandler(configService)
 	branchHandler := handlers.NewBranchHandler(cfg, branchService)
 	tenantHandler := handlers.NewTenantHandler(cfg)
+	syncHandler := handlers.NewSyncHandler(syncService)
 
 	// Health check
 	router.GET("/health", healthHandler.Handle)
@@ -164,6 +166,17 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 			protected.POST("/faq", faqHandler.CreateFAQ)
 			protected.PUT("/faq/:id", faqHandler.UpdateFAQ)
 			protected.DELETE("/faq/:id", faqHandler.DeleteFAQ)
+
+			// Sync routes (offline mode support)
+			sync := protected.Group("/sync")
+			{
+				sync.POST("/upload", syncHandler.UploadFromClient)           // Upload data dari mobile
+				sync.POST("/download", syncHandler.DownloadToClient)         // Download master data
+				sync.GET("/status", syncHandler.GetSyncStatus)               // Check sync status
+				sync.GET("/logs", syncHandler.GetSyncLogs)                   // Get sync history
+				sync.POST("/conflicts/resolve", syncHandler.ResolveConflict) // Manual resolve conflict
+				sync.GET("/time", syncHandler.GetServerTime)                 // Get server time
+			}
 		}
 	}
 }

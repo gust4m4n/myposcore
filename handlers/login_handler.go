@@ -48,7 +48,7 @@ func (h *LoginHandler) Handle(c *gin.Context) {
 		User: dto.UserProfile{
 			ID:         user.ID,
 			TenantID:   user.TenantID,
-			BranchID:   user.BranchID,
+			BranchID:   *user.BranchID,
 			BranchName: branch.Name,
 			Email:      user.Email,
 			FullName:   user.FullName,

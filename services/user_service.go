@@ -92,7 +92,7 @@ func (s *UserService) CreateUser(tenantID uint, req dto.CreateUserRequest) (*mod
 
 	user := models.User{
 		TenantID:  tenantID,
-		BranchID:  req.BranchID,
+		BranchID:  &req.BranchID,
 		Email:     req.Email,
 		Password:  hashedPassword,
 		FullName:  req.FullName,
@@ -117,7 +117,7 @@ func (s *UserService) CreateUser(tenantID uint, req dto.CreateUserRequest) (*mod
 	if req.CreatedBy != nil {
 		auditUserID = *req.CreatedBy
 	}
-	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &user.BranchID, auditUserID, "user", user.ID, "create", changes, "", "")
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, user.BranchID, auditUserID, "user", user.ID, "create", changes, "", "")
 
 	return &user, nil
 }
@@ -222,7 +222,7 @@ func (s *UserService) UpdateUser(tenantID, userID uint, req dto.UpdateUserReques
 		if req.UpdatedBy != nil {
 			auditorID = *req.UpdatedBy
 		}
-		_ = s.auditTrailService.CreateAuditTrail(&tenantID, &user.BranchID, auditorID, "user", user.ID, "update", changes, "", "")
+		_ = s.auditTrailService.CreateAuditTrail(&tenantID, user.BranchID, auditorID, "user", user.ID, "update", changes, "", "")
 	}
 
 	return user, nil
@@ -256,7 +256,7 @@ func (s *UserService) DeleteUser(tenantID, userID uint, deletedBy *uint) error {
 		"full_name": user.FullName,
 		"role":      user.Role,
 	}
-	_ = s.auditTrailService.CreateAuditTrail(&tenantID, &user.BranchID, auditorID, "user", user.ID, "delete", changes, "", "")
+	_ = s.auditTrailService.CreateAuditTrail(&tenantID, user.BranchID, auditorID, "user", user.ID, "delete", changes, "", "")
 
 	return nil
 }

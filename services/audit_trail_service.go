@@ -33,7 +33,7 @@ func (s *AuditTrailService) CreateAuditTrail(tenantID, branchID *uint, userID ui
 		BranchID:   branchID,
 		UserID:     userID,
 		EntityType: entityType,
-		EntityID:   entityID,
+		EntityID:   &entityID,
 		Action:     action,
 		Changes:    changesJSON,
 		IPAddress:  ipAddress,

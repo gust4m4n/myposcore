@@ -46,6 +46,9 @@ type TenantResponse struct {
 	Name          string  `json:"name"`
 	Description   string  `json:"description"`
 	Address       string  `json:"address"`
+	City          string  `json:"city"`
+	Country       string  `json:"country"`
+	PostalCode    string  `json:"postal_code"`
 	Website       string  `json:"website"`
 	Email         string  `json:"email"`
 	Phone         string  `json:"phone"`
@@ -65,6 +68,9 @@ type BranchResponse struct {
 	Name          string  `json:"name"`
 	Description   string  `json:"description"`
 	Address       string  `json:"address"`
+	City          string  `json:"city"`
+	Country       string  `json:"country"`
+	PostalCode    string  `json:"postal_code"`
 	Website       string  `json:"website"`
 	Email         string  `json:"email"`
 	Phone         string  `json:"phone"`
@@ -81,9 +87,11 @@ type BranchResponse struct {
 type UserResponse struct {
 	ID            uint    `json:"id"`
 	TenantID      uint    `json:"tenant_id"`
-	BranchID      uint    `json:"branch_id"`
+	BranchID      *uint   `json:"branch_id,omitempty"`
+	BranchName    string  `json:"branch_name,omitempty"`
 	Email         string  `json:"email"`
 	FullName      string  `json:"full_name"`
+	Phone         string  `json:"phone"`
 	Image         string  `json:"image"`
 	Role          string  `json:"role"`
 	IsActive      bool    `json:"is_active"`

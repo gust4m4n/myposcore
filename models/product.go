@@ -25,6 +25,13 @@ type Product struct {
 	UpdatedAt   time.Time      `json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
 
+	// Offline Sync Fields
+	SyncStatus     string     `gorm:"size:20;default:'synced';index" json:"sync_status"`
+	ClientID       string     `gorm:"size:255;index" json:"client_id,omitempty"`
+	LocalTimestamp *time.Time `json:"local_timestamp,omitempty"`
+	Version        int        `gorm:"default:1" json:"version"`
+	ConflictData   string     `gorm:"type:jsonb" json:"conflict_data,omitempty"`
+
 	// Relations
 	Tenant         Tenant    `gorm:"foreignKey:TenantID" json:"-"`
 	CategoryDetail *Category `gorm:"foreignKey:CategoryID" json:"category_detail,omitempty"`

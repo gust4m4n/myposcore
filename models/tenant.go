@@ -11,6 +11,9 @@ type Tenant struct {
 	Name        string         `gorm:"size:255;not null" json:"name"`
 	Description string         `gorm:"type:text" json:"description"`
 	Address     string         `gorm:"type:text" json:"address"`
+	City        string         `gorm:"size:100" json:"city"`
+	Country     string         `gorm:"size:100" json:"country"`
+	PostalCode  string         `gorm:"size:20" json:"postal_code"`
 	Website     string         `gorm:"size:255" json:"website"`
 	Email       string         `gorm:"size:255" json:"email"`
 	Phone       string         `gorm:"size:50" json:"phone"`
@@ -24,6 +27,13 @@ type Tenant struct {
 	CreatedBy *uint `gorm:"index" json:"created_by,omitempty"`
 	UpdatedBy *uint `gorm:"index" json:"updated_by,omitempty"`
 	DeletedBy *uint `gorm:"index" json:"deleted_by,omitempty"`
+
+	// Offline Sync Fields
+	SyncStatus     string     `gorm:"size:20;default:'synced';index" json:"sync_status"`
+	ClientID       string     `gorm:"size:255;index" json:"client_id,omitempty"`
+	LocalTimestamp *time.Time `json:"local_timestamp,omitempty"`
+	Version        int        `gorm:"default:1" json:"version"`
+	ConflictData   string     `gorm:"type:jsonb" json:"conflict_data,omitempty"`
 
 	// Relations
 	Users   []User `gorm:"foreignKey:TenantID" json:"-"`
