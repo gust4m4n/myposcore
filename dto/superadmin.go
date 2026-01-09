@@ -90,6 +90,8 @@ type UserResponse struct {
 	BranchID      *uint   `json:"branch_id,omitempty"`
 	BranchName    string  `json:"branch_name,omitempty"`
 	Email         string  `json:"email"`
+	Password      string  `json:"password,omitempty"`
+	PIN           string  `json:"pin,omitempty"`
 	FullName      string  `json:"full_name"`
 	Phone         string  `json:"phone"`
 	Image         string  `json:"image"`

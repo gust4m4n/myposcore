@@ -912,6 +912,8 @@ func (s *SyncService) getUsersForSync(tenantID uint, lastSyncAt *time.Time) ([]d
 			TenantID: u.TenantID,
 			FullName: u.FullName,
 			Email:    u.Email,
+			Password: u.Password,
+			PIN:      u.PIN,
 			Phone:    u.Phone,
 			Role:     u.Role,
 			Image:    u.Image,
