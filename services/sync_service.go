@@ -755,7 +755,7 @@ func (s *SyncService) getProductsForSync(tenantID uint, lastSyncAt *time.Time) (
 		query = query.Where("updated_at > ?", lastSyncAt)
 	}
 
-	if err := query.Preload("Category").Find(&products).Error; err != nil {
+	if err := query.Preload("CategoryDetail").Find(&products).Error; err != nil {
 		return nil, err
 	}
 
@@ -1019,12 +1019,14 @@ func (s *SyncService) ResolveConflict(req *dto.ResolveConflictRequest, userID ui
 	switch req.ResolutionStrategy {
 	case "server_wins":
 		resolvedBytes, _ := json.Marshal(conflict.ServerData)
-		conflict.ResolvedData = string(resolvedBytes)
+		resolvedStr := string(resolvedBytes)
+		conflict.ResolvedData = &resolvedStr
 	case "client_wins":
 		resolvedBytes, _ := json.Marshal(conflict.ClientData)
-		conflict.ResolvedData = string(resolvedBytes)
+		resolvedStr := string(resolvedBytes)
+		conflict.ResolvedData = &resolvedStr
 	case "manual":
-		conflict.ResolvedData = req.ResolvedData
+		conflict.ResolvedData = &req.ResolvedData
 	}
 
 	return s.db.Save(&conflict).Error

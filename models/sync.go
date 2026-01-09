@@ -23,7 +23,7 @@ type SyncLog struct {
 	StartedAt         time.Time      `gorm:"not null" json:"started_at"`
 	CompletedAt       *time.Time     `json:"completed_at"`
 	DurationMs        int            `json:"duration_ms"`
-	Metadata          string         `gorm:"type:jsonb" json:"metadata"`
+	Metadata          *string        `gorm:"type:jsonb" json:"metadata,omitempty"`
 	CreatedAt         time.Time      `json:"created_at"`
 	DeletedAt         gorm.DeletedAt `gorm:"index" json:"-"`
 
@@ -50,7 +50,7 @@ type SyncConflict struct {
 	Resolved           bool           `gorm:"default:false;index" json:"resolved"`
 	ResolvedAt         *time.Time     `json:"resolved_at"`
 	ResolvedBy         *uint          `gorm:"index" json:"resolved_by"`
-	ResolvedData       string         `gorm:"type:jsonb" json:"resolved_data"`
+	ResolvedData       *string        `gorm:"type:jsonb" json:"resolved_data,omitempty"`
 	CreatedAt          time.Time      `json:"created_at"`
 	UpdatedAt          time.Time      `json:"updated_at"`
 	DeletedAt          gorm.DeletedAt `gorm:"index" json:"-"`
