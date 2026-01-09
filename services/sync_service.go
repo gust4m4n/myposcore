@@ -764,6 +764,7 @@ func (s *SyncService) getProductsForSync(tenantID uint, lastSyncAt *time.Time) (
 	for _, p := range products {
 		productResp := dto.ProductResponse{
 			ID:          p.ID,
+			TenantID:    p.TenantID,
 			Name:        p.Name,
 			Description: p.Description,
 			SKU:         p.SKU,
@@ -808,6 +809,7 @@ func (s *SyncService) getCategoriesForSync(tenantID uint, lastSyncAt *time.Time)
 	for _, c := range categories {
 		response = append(response, dto.CategoryResponse{
 			ID:          c.ID,
+			TenantID:    c.TenantID,
 			Name:        c.Name,
 			Description: c.Description,
 			Image:       c.Image,
