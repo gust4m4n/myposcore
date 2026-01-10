@@ -33,7 +33,7 @@ func NewSyncHandler(syncService *services.SyncService) *SyncHandler {
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 401 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /api/v1/sync/upload [post]
+// @Router /api/sync/upload [post]
 func (h *SyncHandler) UploadFromClient(c *gin.Context) {
 	var req dto.SyncUploadRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -77,7 +77,7 @@ func (h *SyncHandler) UploadFromClient(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 401 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /api/v1/sync/download [post]
+// @Router /api/sync/download [post]
 func (h *SyncHandler) DownloadToClient(c *gin.Context) {
 	var req dto.SyncDownloadRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -108,7 +108,7 @@ func (h *SyncHandler) DownloadToClient(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 401 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /api/v1/sync/status [get]
+// @Router /api/sync/status [get]
 func (h *SyncHandler) GetSyncStatus(c *gin.Context) {
 	clientID := c.Query("client_id")
 	if clientID == "" {
@@ -141,7 +141,7 @@ func (h *SyncHandler) GetSyncStatus(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 401 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /api/v1/sync/logs [get]
+// @Router /api/sync/logs [get]
 func (h *SyncHandler) GetSyncLogs(c *gin.Context) {
 	clientID := c.Query("client_id")
 	if clientID == "" {
@@ -193,7 +193,7 @@ func (h *SyncHandler) GetSyncLogs(c *gin.Context) {
 // @Failure 401 {object} dto.ErrorResponse
 // @Failure 404 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /api/v1/sync/conflicts/resolve [post]
+// @Router /api/sync/conflicts/resolve [post]
 func (h *SyncHandler) ResolveConflict(c *gin.Context) {
 	var req dto.ResolveConflictRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -222,7 +222,7 @@ func (h *SyncHandler) ResolveConflict(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} dto.SuccessResponse{data=map[string]string}
-// @Router /api/v1/sync/time [get]
+// @Router /api/sync/time [get]
 func (h *SyncHandler) GetServerTime(c *gin.Context) {
 	now := time.Now()
 	utils.Success(c, "Server time retrieved successfully", gin.H{

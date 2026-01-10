@@ -107,24 +107,24 @@ Updated 5 handlers to parse pagination params and return PaginationResponse:
 ## API Endpoints Updated
 
 ### Public / Regular User Endpoints
-1. **GET /api/v1/categories?page=1&page_size=10**
+1. **GET /api/categories?page=1&page_size=10**
    - Filter: `active_only` (optional)
    - Returns: Paginated category list
 
-2. **GET /api/v1/products?page=1&page_size=10**
+2. **GET /api/products?page=1&page_size=10**
    - Filters: `category`, `search` (optional)
    - Returns: Paginated product list
 
-3. **GET /api/v1/users?page=1&page_size=10**
+3. **GET /api/users?page=1&page_size=10**
    - Auto-filtered by tenant_id from JWT
    - Returns: Paginated user list
 
 ### Superadmin Endpoints
-4. **GET /api/v1/superadmin/tenants?page=1&page_size=10**
+4. **GET /api/superadmin/tenants?page=1&page_size=10**
    - Global tenant list
    - Returns: Paginated tenant list
 
-5. **GET /api/v1/superadmin/tenants/:tenant_id/branches?page=1&page_size=10**
+5. **GET /api/superadmin/tenants/:tenant_id/branches?page=1&page_size=10**
    - Branches for specific tenant
    - Returns: Paginated branch list
 
@@ -251,11 +251,11 @@ c.JSON(http.StatusOK, paginatedResponse)
 ### JavaScript/TypeScript Example
 ```typescript
 // Old code
-const response = await fetch('/api/v1/products');
+const response = await fetch('/api/products');
 const products = response.data;
 
 // New code
-const response = await fetch('/api/v1/products?page=1&page_size=10');
+const response = await fetch('/api/products?page=1&page_size=10');
 const { page, page_size, total_items, total_pages, data } = response;
 const products = data;
 ```

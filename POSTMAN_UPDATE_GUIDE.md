@@ -49,83 +49,83 @@ Collection menggunakan variable berikut (sudah dikonfigurasi):
 - **GET** `/dev/tenants/:tenant_id/branches` - List branches per tenant
 
 ### 3. Authentication
-- **POST** `/api/v1/auth/register` - Register user baru
-- **POST** `/api/v1/auth/login` - Login user
-- **POST** `/api/v1/auth/login` (Superadmin) - Login sebagai superadmin
+- **POST** `/api/auth/register` - Register user baru
+- **POST** `/api/auth/login` - Login user
+- **POST** `/api/auth/login` (Superadmin) - Login sebagai superadmin
 
 ### 4. Profile Management
-- **GET** `/api/v1/profile` - Get user profile
-- **PUT** `/api/v1/profile` - Update profile
-- **PUT** `/api/v1/change-password` - Change own password
-- **POST** `/api/v1/profile/photo` - Upload profile photo
-- **DELETE** `/api/v1/profile/photo` - Delete profile photo
+- **GET** `/api/profile` - Get user profile
+- **PUT** `/api/profile` - Update profile
+- **PUT** `/api/change-password` - Change own password
+- **POST** `/api/profile/photo` - Upload profile photo
+- **DELETE** `/api/profile/photo` - Delete profile photo
 
 ### 5. Admin Operations ⭐ NEW
-- **PUT** `/api/v1/admin/change-password` - Change password user lain (role tinggi)
+- **PUT** `/api/admin/change-password` - Change password user lain (role tinggi)
   - Contoh: Superadmin → Owner → Admin → User
-- **PUT** `/api/v1/admin/change-pin` - Change PIN user lain (role tinggi)
+- **PUT** `/api/admin/change-pin` - Change PIN user lain (role tinggi)
   - Contoh: Superadmin → Owner → Admin → User
 
 ### 6. PIN Management
-- **POST** `/api/v1/pin/create` - Create PIN
-- **PUT** `/api/v1/pin/change` - Change own PIN
-- **GET** `/api/v1/pin/check` - Check PIN status
-- **PUT** `/api/v1/admin/change-pin` ⭐ - Admin change PIN (NEW)
+- **POST** `/api/pin/create` - Create PIN
+- **PUT** `/api/pin/change` - Change own PIN
+- **GET** `/api/pin/check` - Check PIN status
+- **PUT** `/api/admin/change-pin` ⭐ - Admin change PIN (NEW)
 
 ### 7. Category Management
-- **GET** `/api/v1/categories` - List categories
-- **GET** `/api/v1/categories/:id` - Get category by ID
-- **POST** `/api/v1/categories` - Create category
-- **PUT** `/api/v1/categories/:id` - Update category
-- **DELETE** `/api/v1/categories/:id` - Delete category
+- **GET** `/api/categories` - List categories
+- **GET** `/api/categories/:id` - Get category by ID
+- **POST** `/api/categories` - Create category
+- **PUT** `/api/categories/:id` - Update category
+- **DELETE** `/api/categories/:id` - Delete category
 
 ### 8. Product Management
-- **GET** `/api/v1/products` - List products
-- **GET** `/api/v1/products/:id` - Get product by ID
-- **POST** `/api/v1/products` - Create product
-- **PUT** `/api/v1/products/:id` - Update product
-- **DELETE** `/api/v1/products/:id` - Delete product
-- **POST** `/api/v1/products/:id/photo` - Upload product photo
-- **DELETE** `/api/v1/products/:id/photo` - Delete product photo
+- **GET** `/api/products` - List products
+- **GET** `/api/products/:id` - Get product by ID
+- **POST** `/api/products` - Create product
+- **PUT** `/api/products/:id` - Update product
+- **DELETE** `/api/products/:id` - Delete product
+- **POST** `/api/products/:id/photo` - Upload product photo
+- **DELETE** `/api/products/:id/photo` - Delete product photo
 
 ### 9. Order Management
-- **GET** `/api/v1/orders` - List orders
-- **GET** `/api/v1/orders/:id` - Get order by ID
-- **POST** `/api/v1/orders` - Create order
+- **GET** `/api/orders` - List orders
+- **GET** `/api/orders/:id` - Get order by ID
+- **POST** `/api/orders` - Create order
 
 ### 10. Payment Management
-- **GET** `/api/v1/payments` - List payments
-- **GET** `/api/v1/payments/:id` - Get payment by ID
-- **POST** `/api/v1/payments` - Create payment
+- **GET** `/api/payments` - List payments
+- **GET** `/api/payments/:id` - Get payment by ID
+- **POST** `/api/payments` - Create payment
 
 ### 11. User Management
-- **GET** `/api/v1/users` - List users
-- **GET** `/api/v1/users/:id` - Get user by ID
-- **POST** `/api/v1/users` - Create user
-- **PUT** `/api/v1/users/:id` - Update user
-- **DELETE** `/api/v1/users/:id` - Delete user
+- **GET** `/api/users` - List users
+- **GET** `/api/users/:id` - Get user by ID
+- **POST** `/api/users` - Create user
+- **PUT** `/api/users/:id` - Update user
+- **DELETE** `/api/users/:id` - Delete user
 
 ### 12. FAQ Management
-- **GET** `/api/v1/faq` - Get all FAQ (Public)
-- **GET** `/api/v1/faq/:id` - Get FAQ by ID (Public)
-- **POST** `/api/v1/superadmin/faq` - Create FAQ (Superadmin only)
-- **PUT** `/api/v1/superadmin/faq/:id` - Update FAQ (Superadmin only)
-- **DELETE** `/api/v1/superadmin/faq/:id` - Delete FAQ (Superadmin only)
+- **GET** `/api/faq` - Get all FAQ (Public)
+- **GET** `/api/faq/:id` - Get FAQ by ID (Public)
+- **POST** `/api/superadmin/faq` - Create FAQ (Superadmin only)
+- **PUT** `/api/superadmin/faq/:id` - Update FAQ (Superadmin only)
+- **DELETE** `/api/superadmin/faq/:id` - Delete FAQ (Superadmin only)
 
 ### 13. Terms & Conditions Management
-- **GET** `/api/v1/tnc` - Get all TnC (Public)
-- **GET** `/api/v1/tnc/:id` - Get TnC by ID (Public)
-- **GET** `/api/v1/tnc/active` - Get active TnC (Public)
-- **POST** `/api/v1/superadmin/tnc` - Create TnC (Superadmin only)
-- **PUT** `/api/v1/superadmin/tnc/:id` - Update TnC (Superadmin only)
-- **DELETE** `/api/v1/superadmin/tnc/:id` - Delete TnC (Superadmin only)
+- **GET** `/api/tnc` - Get all TnC (Public)
+- **GET** `/api/tnc/:id` - Get TnC by ID (Public)
+- **GET** `/api/tnc/active` - Get active TnC (Public)
+- **POST** `/api/superadmin/tnc` - Create TnC (Superadmin only)
+- **PUT** `/api/superadmin/tnc/:id` - Update TnC (Superadmin only)
+- **DELETE** `/api/superadmin/tnc/:id` - Delete TnC (Superadmin only)
 
 ### 14. Superadmin Management
-- **GET** `/api/v1/superadmin/dashboard` - Dashboard statistics
-- **GET** `/api/v1/superadmin/tenants` - List all tenants
-- **POST** `/api/v1/superadmin/tenants` - Create tenant
-- **GET** `/api/v1/superadmin/tenants/:tenant_id/branches` - List branches
-- **GET** `/api/v1/superadmin/branches/:branch_id/users` - List users
+- **GET** `/api/superadmin/dashboard` - Dashboard statistics
+- **GET** `/api/superadmin/tenants` - List all tenants
+- **POST** `/api/superadmin/tenants` - Create tenant
+- **GET** `/api/superadmin/tenants/:tenant_id/branches` - List branches
+- **GET** `/api/superadmin/branches/:branch_id/users` - List users
 
 ## Cara Penggunaan
 

@@ -12,7 +12,7 @@ This document outlines the changes made to remove the `username` field from the 
 
 ### 2. API Changes
 
-#### Login API (`POST /api/v1/auth/login`)
+#### Login API (`POST /api/auth/login`)
 **Before:**
 ```json
 {
@@ -29,7 +29,7 @@ This document outlines the changes made to remove the `username` field from the 
 }
 ```
 
-#### Register API (`POST /api/v1/auth/register`)
+#### Register API (`POST /api/auth/register`)
 **Before:**
 ```json
 {
@@ -53,7 +53,7 @@ This document outlines the changes made to remove the `username` field from the 
 }
 ```
 
-#### Create User API (`POST /api/v1/users`)
+#### Create User API (`POST /api/users`)
 **Before:**
 ```json
 {
@@ -77,7 +77,7 @@ This document outlines the changes made to remove the `username` field from the 
 }
 ```
 
-#### Update User API (`PUT /api/v1/users/:id`)
+#### Update User API (`PUT /api/users/:id`)
 **Before:**
 ```json
 {
@@ -95,7 +95,7 @@ This document outlines the changes made to remove the `username` field from the 
 }
 ```
 
-#### Admin Change Password API (`POST /api/v1/auth/admin/change-password`)
+#### Admin Change Password API (`POST /api/auth/admin/change-password`)
 **Before:**
 ```json
 {

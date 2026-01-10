@@ -5,7 +5,7 @@ API endpoints untuk manajemen PIN (Personal Identification Number) 6 digit di My
 ## 📋 Endpoints
 
 ### 1. Create PIN
-**POST** `/api/v1/pin/create`
+**POST** `/api/pin/create`
 
 Membuat PIN 6 digit baru untuk user yang sedang login.
 
@@ -50,7 +50,7 @@ Content-Type: application/json
 ---
 
 ### 2. Change PIN
-**PUT** `/api/v1/pin/change`
+**PUT** `/api/pin/change`
 
 Mengganti PIN yang sudah ada dengan PIN baru.
 
@@ -109,7 +109,7 @@ Content-Type: application/json
 ---
 
 ### 3. Check PIN Status
-**GET** `/api/v1/pin/check`
+**GET** `/api/pin/check`
 
 Mengecek apakah user sudah memiliki PIN atau belum.
 
@@ -171,11 +171,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ### Use Case 1: First Time PIN Setup
 ```bash
 # Step 1: Check if user has PIN
-GET /api/v1/pin/check
+GET /api/pin/check
 Response: {"has_pin": false}
 
 # Step 2: Create PIN
-POST /api/v1/pin/create
+POST /api/pin/create
 {
   "pin": "123456",
   "confirm_pin": "123456"
@@ -186,11 +186,11 @@ Response: {"message": "PIN created successfully"}
 ### Use Case 2: Change Existing PIN
 ```bash
 # Step 1: Check if user has PIN
-GET /api/v1/pin/check
+GET /api/pin/check
 Response: {"has_pin": true}
 
 # Step 2: Change PIN with old PIN verification
-PUT /api/v1/pin/change
+PUT /api/pin/change
 {
   "old_pin": "123456",
   "new_pin": "654321",
@@ -251,9 +251,9 @@ Solusi: Masukkan old_pin yang benar
 
 ## 🔗 Related APIs
 
-- **Login API**: `/api/v1/auth/login` - Login dengan username/password
-- **Change Password API**: `/api/v1/change-password` - Change password (berbeda dari PIN)
-- **Profile API**: `/api/v1/profile` - Get user profile
+- **Login API**: `/api/auth/login` - Login dengan username/password
+- **Change Password API**: `/api/change-password` - Change password (berbeda dari PIN)
+- **Profile API**: `/api/profile` - Get user profile
 
 ## ⚠️ Important Notes
 
@@ -273,7 +273,7 @@ Solusi: Masukkan old_pin yang benar
 ```javascript
 // 1. Check PIN status on app load
 const checkPINStatus = async () => {
-  const response = await fetch('/api/v1/pin/check', {
+  const response = await fetch('/api/pin/check', {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -284,7 +284,7 @@ const checkPINStatus = async () => {
 
 // 2. Create PIN
 const createPIN = async (pin, confirmPin) => {
-  const response = await fetch('/api/v1/pin/create', {
+  const response = await fetch('/api/pin/create', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -300,7 +300,7 @@ const createPIN = async (pin, confirmPin) => {
 
 // 3. Change PIN
 const changePIN = async (oldPin, newPin, confirmPin) => {
-  const response = await fetch('/api/v1/pin/change', {
+  const response = await fetch('/api/pin/change', {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,

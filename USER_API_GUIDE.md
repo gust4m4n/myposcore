@@ -5,7 +5,7 @@ API endpoints untuk manajemen user di MyPOSCore.
 ## 📋 Endpoints
 
 ### 1. Create User
-**POST** `/api/v1/users`
+**POST** `/api/users`
 
 Membuat user baru untuk tenant.
 
@@ -58,7 +58,7 @@ Content-Type: application/json
 ---
 
 ### 2. Get All Users
-**GET** `/api/v1/users`
+**GET** `/api/users`
 
 Mendapatkan daftar semua user untuk tenant.
 
@@ -100,7 +100,7 @@ Authorization: Bearer {token}
 ---
 
 ### 3. Get User by ID
-**GET** `/api/v1/users/{id}`
+**GET** `/api/users/{id}`
 
 Mendapatkan detail user berdasarkan ID.
 
@@ -129,7 +129,7 @@ Authorization: Bearer {token}
 ---
 
 ### 4. Update User
-**PUT** `/api/v1/users/{id}`
+**PUT** `/api/users/{id}`
 
 Update data user yang sudah ada.
 
@@ -205,7 +205,7 @@ Update full name dan status:
 ---
 
 ### 5. Delete User
-**DELETE** `/api/v1/users/{id}`
+**DELETE** `/api/users/{id}`
 
 Hapus user (soft delete).
 
@@ -306,23 +306,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ## 🔗 Related APIs
 
-- **Auth API**: `/api/v1/auth/register` - Register user baru
-- **Profile API**: `/api/v1/profile` - Get user profile dari token
-- **Change Password API**: `/api/v1/change-password` - Change password user sendiri
+- **Auth API**: `/api/auth/register` - Register user baru
+- **Profile API**: `/api/profile` - Get user profile dari token
+- **Change Password API**: `/api/change-password` - Change password user sendiri
 
 ## 📌 Example Workflows
 
 ### 1. Create New Branch Admin
 ```bash
 # Step 1: Login as tenantadmin
-POST /api/v1/auth/login
+POST /api/auth/login
 {
   "username": "tenantadmin",
   "password": "password123"
 }
 
 # Step 2: Create new user with branchadmin role
-POST /api/v1/users
+POST /api/users
 {
   "username": "branchadmin1",
   "email": "branchadmin1@example.com",
@@ -335,7 +335,7 @@ POST /api/v1/users
 
 ### 2. Deactivate User
 ```bash
-PUT /api/v1/users/5
+PUT /api/users/5
 {
   "is_active": false
 }
@@ -343,7 +343,7 @@ PUT /api/v1/users/5
 
 ### 3. Change User Role
 ```bash
-PUT /api/v1/users/5
+PUT /api/users/5
 {
   "role": "tenantadmin"
 }
@@ -351,7 +351,7 @@ PUT /api/v1/users/5
 
 ### 4. Reset User Password
 ```bash
-PUT /api/v1/users/5
+PUT /api/users/5
 {
   "password": "newpassword123"
 }
@@ -359,7 +359,7 @@ PUT /api/v1/users/5
 
 ### 5. Move User to Different Branch
 ```bash
-PUT /api/v1/users/5
+PUT /api/users/5
 {
   "branch_id": 2
 }

@@ -206,7 +206,7 @@ if (fileInput.files[0]) {
 }
 
 // Send request
-fetch('http://localhost:8080/api/v1/superadmin/tenants', {
+fetch('http://localhost:8080/api/superadmin/tenants', {
   method: 'POST',
   headers: {
     'Authorization': `Bearer ${token}`

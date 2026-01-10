@@ -44,7 +44,7 @@ MyPOSCore.postman_collection.json
 
 ### Create User (JSON) - Lines ~3052
 ```http
-POST /api/v1/users
+POST /api/users
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -80,7 +80,7 @@ Authorization: Bearer {{auth_token}}
 
 ### Create User (Multipart with Image) - Lines ~3135
 ```http
-POST /api/v1/users
+POST /api/users
 Content-Type: multipart/form-data
 Authorization: Bearer {{auth_token}}
 
@@ -116,7 +116,7 @@ Form Fields:
 
 ### Update User (JSON) - Lines ~3283
 ```http
-PUT /api/v1/users/1
+PUT /api/users/1
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -149,7 +149,7 @@ Authorization: Bearer {{auth_token}}
 
 ### Update User (Multipart with Image) - Lines ~3368
 ```http
-PUT /api/v1/users/1
+PUT /api/users/1
 Content-Type: multipart/form-data
 Authorization: Bearer {{auth_token}}
 

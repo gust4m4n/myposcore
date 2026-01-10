@@ -53,7 +53,7 @@ PGPASSWORD=postgres psql -h localhost -U postgres -d myposcore -f migration_add_
 ## API Endpoints
 
 ### 1. Upload Data dari Client
-**POST** `/api/v1/sync/upload`
+**POST** `/api/sync/upload`
 
 Upload orders dan payments dari mobile app ke server.
 
@@ -130,7 +130,7 @@ Upload orders dan payments dari mobile app ke server.
 ---
 
 ### 2. Download Master Data
-**POST** `/api/v1/sync/download`
+**POST** `/api/sync/download`
 
 Download products dan categories ke mobile app.
 
@@ -181,7 +181,7 @@ Download products dan categories ke mobile app.
 ---
 
 ### 3. Check Sync Status
-**GET** `/api/v1/sync/status?client_id=device_uuid_12345`
+**GET** `/api/sync/status?client_id=device_uuid_12345`
 
 Get current sync status untuk device.
 
@@ -205,7 +205,7 @@ Get current sync status untuk device.
 ---
 
 ### 4. Get Sync History
-**GET** `/api/v1/sync/logs?client_id=device_uuid_12345&page=1&page_size=20`
+**GET** `/api/sync/logs?client_id=device_uuid_12345&page=1&page_size=20`
 
 Get paginated sync history logs.
 
@@ -241,7 +241,7 @@ Get paginated sync history logs.
 ---
 
 ### 5. Resolve Conflict
-**POST** `/api/v1/sync/conflicts/resolve`
+**POST** `/api/sync/conflicts/resolve`
 
 Manually resolve sync conflict.
 
@@ -262,7 +262,7 @@ Strategies:
 ---
 
 ### 6. Get Server Time
-**GET** `/api/v1/sync/time`
+**GET** `/api/sync/time`
 
 Get server timestamp untuk time synchronization.
 
@@ -460,7 +460,7 @@ async function syncPendingOrders() {
   
   // 4. Upload to server
   try {
-    const response = await fetch('http://server/api/v1/sync/upload', {
+    const response = await fetch('http://server/api/sync/upload', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + getAuthToken(),
@@ -517,7 +517,7 @@ async function downloadMasterData() {
   const db = await getDatabase();
   
   try {
-    const response = await fetch('http://server/api/v1/sync/download', {
+    const response = await fetch('http://server/api/sync/download', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + getAuthToken(),
@@ -659,13 +659,13 @@ async function initializeApp() {
 ### Check Sync Status
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/sync/status?client_id=device_123"
+  "http://localhost:8080/api/sync/status?client_id=device_123"
 ```
 
 ### View Sync Logs
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/sync/logs?client_id=device_123&page=1"
+  "http://localhost:8080/api/sync/logs?client_id=device_123&page=1"
 ```
 
 ### Check Database
@@ -729,7 +729,7 @@ SELECT * FROM sync_conflicts WHERE resolved = false;
 ## Support
 
 Untuk pertanyaan atau issues terkait offline mode:
-- Check sync logs: `/api/v1/sync/logs`
-- Check sync status: `/api/v1/sync/status`
+- Check sync logs: `/api/sync/logs`
+- Check sync status: `/api/sync/status`
 - Review migration file untuk schema details
 - Test dengan Postman collection (sync endpoints)

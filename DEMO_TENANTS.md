@@ -59,7 +59,7 @@ psql -U postgres -d myposcore -f init_demo_tenants.sql
 
 ```bash
 # Login sebagai admin resto
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "resto01",
@@ -69,7 +69,7 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
   }'
 
 # Login sebagai kasir
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "resto01",
@@ -137,7 +137,7 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
 
 ```bash
 # Login sebagai admin fashion
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "fashion01",
@@ -147,7 +147,7 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
   }'
 
 # Login sebagai kasir
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "fashion01",

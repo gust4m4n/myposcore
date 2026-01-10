@@ -23,7 +23,7 @@ func NewTnCHandler(configService *services.ConfigService) *TnCHandler {
 // @Tags TnC
 // @Produce json
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/tnc [get]
+// @Router /api/tnc [get]
 func (h *TnCHandler) GetTnC(c *gin.Context) {
 	// Get TnC content from config table with key "tnc"
 	content, err := h.configService.GetConfig("tnc")

@@ -72,7 +72,7 @@ Collection ini menggunakan environment variables:
 
 ### Step 2: Login User
 
-- Endpoint: `POST /api/v1/auth/login`
+- Endpoint: `POST /api/auth/login`
 - Body (JSON):
 
 ```json
@@ -109,7 +109,7 @@ Collection ini menggunakan environment variables:
 
 ### Step 3: Get Profile (Protected Route)
 
-- Endpoint: `GET /api/v1/profile`
+- Endpoint: `GET /api/profile`
 - Authorization: Bearer Token (otomatis menggunakan `{{auth_token}}`)
 - Mengembalikan informasi user yang sedang login
 
@@ -117,7 +117,7 @@ Collection ini menggunakan environment variables:
 
 #### Admin Change Password
 
-- Endpoint: `PUT /api/v1/admin/change-password`
+- Endpoint: `PUT /api/admin/change-password`
 - Untuk role tinggi mengubah password role rendah
 - Request body:
 
@@ -131,7 +131,7 @@ Collection ini menggunakan environment variables:
 
 #### Admin Change PIN
 
-- Endpoint: `PUT /api/v1/admin/change-pin`
+- Endpoint: `PUT /api/admin/change-pin`
 - Untuk role tinggi mengubah PIN role rendah
 - Request body:
 
@@ -153,7 +153,7 @@ superadmin > owner > admin > user
 
 #### Create FAQ
 
-- Endpoint: `POST /api/v1/superadmin/faq`
+- Endpoint: `POST /api/superadmin/faq`
 - Request body:
 
 ```json
@@ -167,7 +167,7 @@ superadmin > owner > admin > user
 
 #### Update TnC
 
-- Endpoint: `PUT /api/v1/superadmin/tnc/:id`
+- Endpoint: `PUT /api/superadmin/tnc/:id`
 - Request body:
 
 ```json

@@ -8,14 +8,14 @@ Berikut adalah contoh lengkap request dan response untuk semua API yang support 
 
 ### Endpoint
 ```
-GET /api/v1/users
+GET /api/users
 ```
 
 ### Example 1: Default Pagination (Page 1, 10 items)
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/users?page=1&page_size=10
+GET {{base_url}}/api/users?page=1&page_size=10
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -80,7 +80,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/users?page=2&page_size=5
+GET {{base_url}}/api/users?page=2&page_size=5
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -130,7 +130,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/users
+GET {{base_url}}/api/users
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -161,7 +161,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/users?page=1&page_size=50
+GET {{base_url}}/api/users?page=1&page_size=50
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -184,14 +184,14 @@ Authorization: Bearer {{auth_token}}
 
 ### Endpoint
 ```
-GET /api/v1/categories
+GET /api/categories
 ```
 
 ### Example 1: Page 1 with 10 items
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/categories?page=1&page_size=10
+GET {{base_url}}/api/categories?page=1&page_size=10
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -253,7 +253,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/categories?page=1&page_size=10&active_only=true
+GET {{base_url}}/api/categories?page=1&page_size=10&active_only=true
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -287,7 +287,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/categories?page=2&page_size=3
+GET {{base_url}}/api/categories?page=2&page_size=3
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -337,14 +337,14 @@ Authorization: Bearer {{auth_token}}
 
 ### Endpoint
 ```
-GET /api/v1/products
+GET /api/products
 ```
 
 ### Example 1: Page 1 with 10 items
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/products?page=1&page_size=10
+GET {{base_url}}/api/products?page=1&page_size=10
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -400,7 +400,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/products?page=1&page_size=10&category=Beverages
+GET {{base_url}}/api/products?page=1&page_size=10&category=Beverages
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -456,7 +456,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/products?page=1&page_size=5&search=kopi
+GET {{base_url}}/api/products?page=1&page_size=5&search=kopi
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -512,7 +512,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/products?page=2&page_size=5&category=Food&search=ayam
+GET {{base_url}}/api/products?page=2&page_size=5&category=Food&search=ayam
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -550,7 +550,7 @@ Authorization: Bearer {{auth_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/products?page=1&page_size=20
+GET {{base_url}}/api/products?page=1&page_size=20
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -573,14 +573,14 @@ Authorization: Bearer {{auth_token}}
 
 ### Endpoint
 ```
-GET /api/v1/superadmin/tenants
+GET /api/superadmin/tenants
 ```
 
 ### Example 1: Page 1 with 10 items
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/superadmin/tenants?page=1&page_size=10
+GET {{base_url}}/api/superadmin/tenants?page=1&page_size=10
 Authorization: Bearer {{superadmin_token}}
 ```
 
@@ -651,7 +651,7 @@ Authorization: Bearer {{superadmin_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/superadmin/tenants
+GET {{base_url}}/api/superadmin/tenants
 Authorization: Bearer {{superadmin_token}}
 ```
 
@@ -674,14 +674,14 @@ Authorization: Bearer {{superadmin_token}}
 
 ### Endpoint
 ```
-GET /api/v1/superadmin/tenants/:tenant_id/branches
+GET /api/superadmin/tenants/:tenant_id/branches
 ```
 
 ### Example 1: Page 1 with 10 items
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/superadmin/tenants/17/branches?page=1&page_size=10
+GET {{base_url}}/api/superadmin/tenants/17/branches?page=1&page_size=10
 Authorization: Bearer {{superadmin_token}}
 ```
 
@@ -755,7 +755,7 @@ Authorization: Bearer {{superadmin_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/superadmin/tenants/17/branches?page=1&page_size=2
+GET {{base_url}}/api/superadmin/tenants/17/branches?page=1&page_size=2
 Authorization: Bearer {{superadmin_token}}
 ```
 
@@ -811,7 +811,7 @@ Authorization: Bearer {{superadmin_token}}
 
 **Request:**
 ```
-GET {{base_url}}/api/v1/superadmin/tenants/17/branches?page=2&page_size=2
+GET {{base_url}}/api/superadmin/tenants/17/branches?page=2&page_size=2
 Authorization: Bearer {{superadmin_token}}
 ```
 
@@ -911,23 +911,23 @@ Make sure to set these variables in Postman:
 
 ```bash
 # Test List Users
-curl -X GET "http://localhost:8080/api/v1/users?page=1&page_size=10" \
+curl -X GET "http://localhost:8080/api/users?page=1&page_size=10" \
   -H "Authorization: Bearer YOUR_TOKEN"
 
 # Test List Products with filters
-curl -X GET "http://localhost:8080/api/v1/products?page=1&page_size=5&category=Beverages&search=kopi" \
+curl -X GET "http://localhost:8080/api/products?page=1&page_size=5&category=Beverages&search=kopi" \
   -H "Authorization: Bearer YOUR_TOKEN"
 
 # Test List Categories with active filter
-curl -X GET "http://localhost:8080/api/v1/categories?page=1&page_size=10&active_only=true" \
+curl -X GET "http://localhost:8080/api/categories?page=1&page_size=10&active_only=true" \
   -H "Authorization: Bearer YOUR_TOKEN"
 
 # Test List Tenants (Superadmin)
-curl -X GET "http://localhost:8080/api/v1/superadmin/tenants?page=1&page_size=10" \
+curl -X GET "http://localhost:8080/api/superadmin/tenants?page=1&page_size=10" \
   -H "Authorization: Bearer SUPERADMIN_TOKEN"
 
 # Test List Branches (Superadmin)
-curl -X GET "http://localhost:8080/api/v1/superadmin/tenants/17/branches?page=1&page_size=10" \
+curl -X GET "http://localhost:8080/api/superadmin/tenants/17/branches?page=1&page_size=10" \
   -H "Authorization: Bearer SUPERADMIN_TOKEN"
 ```
 

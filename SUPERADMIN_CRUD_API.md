@@ -13,7 +13,7 @@ All endpoints require:
 ## Tenant Management
 
 ### 1. List All Tenants
-**GET** `/api/v1/superadmin/tenants`
+**GET** `/api/superadmin/tenants`
 
 **Response Success (200):**
 ```json
@@ -38,7 +38,7 @@ All endpoints require:
 ---
 
 ### 2. Create Tenant
-**POST** `/api/v1/superadmin/tenants`
+**POST** `/api/superadmin/tenants`
 
 **Request Body:**
 ```json
@@ -76,7 +76,7 @@ All endpoints require:
 ---
 
 ### 3. Update Tenant
-**PUT** `/api/v1/superadmin/tenants/:tenant_id`
+**PUT** `/api/superadmin/tenants/:tenant_id`
 
 **Request Body:**
 ```json
@@ -114,7 +114,7 @@ All endpoints require:
 ---
 
 ### 4. Delete Tenant
-**DELETE** `/api/v1/superadmin/tenants/:tenant_id`
+**DELETE** `/api/superadmin/tenants/:tenant_id`
 
 **Response Success (200):**
 ```json
@@ -128,7 +128,7 @@ All endpoints require:
 ## Branch Management
 
 ### 1. List Branches by Tenant
-**GET** `/api/v1/superadmin/tenants/:tenant_id/branches`
+**GET** `/api/superadmin/tenants/:tenant_id/branches`
 
 **Response Success (200):**
 ```json
@@ -154,7 +154,7 @@ All endpoints require:
 ---
 
 ### 2. Create Branch
-**POST** `/api/v1/superadmin/branches`
+**POST** `/api/superadmin/branches`
 
 **Request Body:**
 ```json
@@ -194,7 +194,7 @@ All endpoints require:
 ---
 
 ### 3. Update Branch
-**PUT** `/api/v1/superadmin/branches/:branch_id`
+**PUT** `/api/superadmin/branches/:branch_id`
 
 **Request Body:**
 ```json
@@ -233,7 +233,7 @@ All endpoints require:
 ---
 
 ### 4. Delete Branch
-**DELETE** `/api/v1/superadmin/branches/:branch_id`
+**DELETE** `/api/superadmin/branches/:branch_id`
 
 **Response Success (200):**
 ```json

@@ -11,9 +11,9 @@ Setelah melakukan scanning menyeluruh terhadap semua handler dan route registrat
 
 | Handler | Method | Endpoint | Status |
 |---------|--------|----------|--------|
-| ProductHandler | PUT | `/api/v1/products/:id` | ✅ DITAMBAHKAN |
-| ProductHandler | DELETE | `/api/v1/products/:id` | ✅ DITAMBAHKAN |
-| ProductHandler | POST | `/api/v1/products/:id/photo` | ✅ DITAMBAHKAN |
+| ProductHandler | PUT | `/api/products/:id` | ✅ DITAMBAHKAN |
+| ProductHandler | DELETE | `/api/products/:id` | ✅ DITAMBAHKAN |
+| ProductHandler | POST | `/api/products/:id/photo` | ✅ DITAMBAHKAN |
 
 ### Route Statistics
 
@@ -26,31 +26,31 @@ Setelah melakukan scanning menyeluruh terhadap semua handler dan route registrat
 Berikut adalah **9 product endpoints** yang sekarang sudah lengkap:
 
 ```
-[GIN-debug] GET    /api/v1/products/categories
+[GIN-debug] GET    /api/products/categories
             -> ProductHandler.GetCategories
 
-[GIN-debug] GET    /api/v1/products/by-category/:category_id
+[GIN-debug] GET    /api/products/by-category/:category_id
             -> ProductHandler.ListProductsByCategoryID
 
-[GIN-debug] GET    /api/v1/products
+[GIN-debug] GET    /api/products
             -> ProductHandler.ListProducts
 
-[GIN-debug] GET    /api/v1/products/:id
+[GIN-debug] GET    /api/products/:id
             -> ProductHandler.GetProduct
 
-[GIN-debug] POST   /api/v1/products
+[GIN-debug] POST   /api/products
             -> ProductHandler.CreateProduct
 
-[GIN-debug] PUT    /api/v1/products/:id
+[GIN-debug] PUT    /api/products/:id
             -> ProductHandler.UpdateProduct
 
-[GIN-debug] DELETE /api/v1/products/:id
+[GIN-debug] DELETE /api/products/:id
             -> ProductHandler.DeleteProduct
 
-[GIN-debug] POST   /api/v1/products/:id/photo
+[GIN-debug] POST   /api/products/:id/photo
             -> ProductHandler.UploadProductImage
 
-[GIN-debug] DELETE /api/v1/products/:id/photo
+[GIN-debug] DELETE /api/products/:id/photo
             -> ProductHandler.DeleteProductImage
 ```
 
@@ -129,15 +129,15 @@ protected.DELETE("/products/:id/photo", productHandler.DeleteProductImage)
 ### Route Parser Output
 ```
 ProductHandler:
-  ✅ GET /api/v1/products                          -> ListProducts
-  ✅ GET /api/v1/products/:id                      -> GetProduct
-  ✅ POST /api/v1/products                         -> CreateProduct
-  ✅ PUT /api/v1/products/:id                      -> UpdateProduct
-  ✅ DELETE /api/v1/products/:id                   -> DeleteProduct
-  ✅ GET /api/v1/products/by-category/:category_id -> ListProductsByCategoryID
-  ✅ GET /api/v1/products/categories               -> GetCategories
-  ✅ POST /api/v1/products/:id/photo               -> UploadProductImage
-  ✅ DELETE /api/v1/products/:id/photo             -> DeleteProductImage
+  ✅ GET /api/products                          -> ListProducts
+  ✅ GET /api/products/:id                      -> GetProduct
+  ✅ POST /api/products                         -> CreateProduct
+  ✅ PUT /api/products/:id                      -> UpdateProduct
+  ✅ DELETE /api/products/:id                   -> DeleteProduct
+  ✅ GET /api/products/by-category/:category_id -> ListProductsByCategoryID
+  ✅ GET /api/products/categories               -> GetCategories
+  ✅ POST /api/products/:id/photo               -> UploadProductImage
+  ✅ DELETE /api/products/:id/photo             -> DeleteProductImage
 
 CategoryHandler:
   ✅ All 5 routes registered

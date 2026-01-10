@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "myposcore-api-collection",
     "name": "MyPOSCore API",
-    "description": "Collection untuk MyPOSCore Backend API - Multi-tenant & Multi-branch POS System\n\nFeatures:\n- Multi-tenancy support dengan tenant code\n- Multi-branch per tenant dengan branch code\n- JWT authentication (24h expiry)\n- User management per branch\n- Role-based access control (superadmin, tenantadmin, branchadmin, staff)\n- Product & Inventory management\n- Order & Payment processing\n- FAQ & Terms & Conditions management\n- Superadmin management panel\n\nArchitecture:\n- Separate services: RegisterService & LoginService\n- Clean architecture with handlers, services, models\n- PostgreSQL database with GORM\n- Gin web framework\n\nRoles:\n- superadmin: Full system access, manage tenants, FAQ & TnC\n- tenantadmin: Manage tenant-level resources\n- branchadmin: Manage branch-level resources\n- user: Regular user access\n\nPublic Endpoints:\n- /health - Health check\n- /dev/tenants - List all tenants (for testing)\n- /api/v1/faq - FAQ endpoints (public read access)\n- /api/v1/tnc - Terms & Conditions endpoints (public read access)",
+    "description": "Collection untuk MyPOSCore Backend API - Multi-tenant & Multi-branch POS System\n\nFeatures:\n- Multi-tenancy support dengan tenant code\n- Multi-branch per tenant dengan branch code\n- JWT authentication (24h expiry)\n- User management per branch\n- Role-based access control (superadmin, tenantadmin, branchadmin, staff)\n- Product & Inventory management\n- Order & Payment processing\n- FAQ & Terms & Conditions management\n- Superadmin management panel\n\nArchitecture:\n- Separate services: RegisterService & LoginService\n- Clean architecture with handlers, services, models\n- PostgreSQL database with GORM\n- Gin web framework\n\nRoles:\n- superadmin: Full system access, manage tenants, FAQ & TnC\n- tenantadmin: Manage tenant-level resources\n- branchadmin: Manage branch-level resources\n- user: Regular user access\n\nPublic Endpoints:\n- /health - Health check\n- /dev/tenants - List all tenants (for testing)\n- /api/faq - FAQ endpoints (public read access)\n- /api/tnc - Terms & Conditions endpoints (public read access)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "myposcore"
   },
@@ -87,7 +87,7 @@
               "raw": "{\n  \"tenant_code\": \"{{tenant_code}}\",\n  \"branch_code\": \"{{branch_code}}\",\n  \"email\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/register",
+              "raw": "{{base_url}}/api/auth/register",
               "host": [
                 "{{base_url}}"
               ],
@@ -116,7 +116,7 @@
                   "raw": "{\n  \"tenant_code\": \"TENANT001\",\n  \"branch_code\": \"BRANCH001\",\n  \"email\": \"johndoe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/auth/register",
+                  "raw": "{{base_url}}/api/auth/register",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -173,7 +173,7 @@
               "raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -202,7 +202,7 @@
                   "raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "raw": "{{base_url}}/api/auth/login",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -243,7 +243,7 @@
               "raw": "{\n  \"email\": \"admin@mypos.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -273,7 +273,7 @@
               "raw": "{\n  \"email\": \"admin@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -303,7 +303,7 @@
               "raw": "{\n  \"email\": \"john@foodcorner99.com\",\n  \"password\": \"password123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -334,7 +334,7 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/logout",
+              "raw": "{{base_url}}/api/logout",
               "host": [
                 "{{base_url}}"
               ],
@@ -359,7 +359,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/logout",
+                  "raw": "{{base_url}}/api/logout",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -399,7 +399,7 @@
               "raw": "{\n  \"email\": \"admin.pusat@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -429,7 +429,7 @@
               "raw": "{\n  \"email\": \"cashier.pusat@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -459,7 +459,7 @@
               "raw": "{\n  \"email\": \"admin.menteng@foodcorner99.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -489,7 +489,7 @@
               "raw": "{\n  \"email\": \"cashier.menteng@foodcorner99.com\",\n  \"password\": \"demo123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -519,7 +519,7 @@
               "raw": "{\n  \"email\": \"admin@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -549,7 +549,7 @@
               "raw": "{\n  \"email\": \"admin.gi@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -579,7 +579,7 @@
               "raw": "{\n  \"email\": \"cashier.gi@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -609,7 +609,7 @@
               "raw": "{\n  \"email\": \"admin.senayan@fashionstore101.com\",\n  \"password\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -639,7 +639,7 @@
               "raw": "{\n  \"email\": \"cashier.senayan@fashionstore101.com\",\n  \"password\": \"demo123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -675,7 +675,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/profile",
+              "raw": "{{base_url}}/api/profile",
               "host": [
                 "{{base_url}}"
               ],
@@ -700,7 +700,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/profile",
+                  "raw": "{{base_url}}/api/profile",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -750,7 +750,7 @@
               "raw": "{\n  \"old_password\": \"password123\",\n  \"new_password\": \"newpassword123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/change-password",
+              "raw": "{{base_url}}/api/change-password",
               "host": [
                 "{{base_url}}"
               ],
@@ -783,7 +783,7 @@
                   "raw": "{\n  \"old_password\": \"password123\",\n  \"new_password\": \"newpassword123\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/change-password",
+                  "raw": "{{base_url}}/api/change-password",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -833,7 +833,7 @@
               "raw": "{\n  \"email\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/admin/change-password",
+              "raw": "{{base_url}}/api/admin/change-password",
               "host": [
                 "{{base_url}}"
               ],
@@ -867,7 +867,7 @@
                   "raw": "{\n  \"email\": \"user123\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/admin/change-password",
+                  "raw": "{{base_url}}/api/admin/change-password",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -911,7 +911,7 @@
                   "raw": "{\n  \"email\": \"user123\",\n  \"password\": \"password1\",\n  \"confirm_password\": \"password2\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/admin/change-password",
+                  "raw": "{{base_url}}/api/admin/change-password",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -955,7 +955,7 @@
                   "raw": "{\n  \"email\": \"admin1\",\n  \"password\": \"newpassword123\",\n  \"confirm_password\": \"newpassword123\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/admin/change-password",
+                  "raw": "{{base_url}}/api/admin/change-password",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1006,7 +1006,7 @@
               "raw": "{\n  \"email\": \"newemail@example.com\",\n  \"full_name\": \"Updated Full Name\",\n  \"pin\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/profile",
+              "raw": "{{base_url}}/api/profile",
               "host": [
                 "{{base_url}}"
               ],
@@ -1039,7 +1039,7 @@
                   "raw": "{\n  \"email\": \"newemail@example.com\",\n  \"full_name\": \"Updated Full Name\",\n  \"pin\": \"123456\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/profile",
+                  "raw": "{{base_url}}/api/profile",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1090,7 +1090,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/profile/photo",
+              "raw": "{{base_url}}/api/profile/photo",
               "host": [
                 "{{base_url}}"
               ],
@@ -1126,7 +1126,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/profile/photo",
+                  "raw": "{{base_url}}/api/profile/photo",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1168,7 +1168,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/profile/photo",
+              "raw": "{{base_url}}/api/profile/photo",
               "host": [
                 "{{base_url}}"
               ],
@@ -1194,7 +1194,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/profile/photo",
+                  "raw": "{{base_url}}/api/profile/photo",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1241,7 +1241,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/tenants?page=1&page_size=32",
+              "raw": "{{base_url}}/api/tenants?page=1&page_size=32",
               "host": [
                 "{{base_url}}"
               ],
@@ -1278,7 +1278,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/tenants?page=1&page_size=32",
+                  "raw": "{{base_url}}/api/tenants?page=1&page_size=32",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1329,7 +1329,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/tenants/1",
+              "raw": "{{base_url}}/api/tenants/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -1355,7 +1355,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/tenants/1",
+                  "raw": "{{base_url}}/api/tenants/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1448,7 +1448,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/tenants",
+              "raw": "{{base_url}}/api/tenants",
               "host": [
                 "{{base_url}}"
               ],
@@ -1523,7 +1523,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/tenants",
+                  "raw": "{{base_url}}/api/tenants",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1615,7 +1615,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/tenants/1",
+              "raw": "{{base_url}}/api/tenants/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -1691,7 +1691,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/tenants/1",
+                  "raw": "{{base_url}}/api/tenants/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1733,7 +1733,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/tenants/1",
+              "raw": "{{base_url}}/api/tenants/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -1759,7 +1759,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/tenants/1",
+                  "raw": "{{base_url}}/api/tenants/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1806,7 +1806,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/branches",
+              "raw": "{{base_url}}/api/branches",
               "host": [
                 "{{base_url}}"
               ],
@@ -1831,7 +1831,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/branches",
+                  "raw": "{{base_url}}/api/branches",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1872,7 +1872,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/branches/1",
+              "raw": "{{base_url}}/api/branches/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -1898,7 +1898,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/branches/1",
+                  "raw": "{{base_url}}/api/branches/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -1993,7 +1993,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/branches",
+              "raw": "{{base_url}}/api/branches",
               "host": [
                 "{{base_url}}"
               ],
@@ -2063,7 +2063,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/branches",
+                  "raw": "{{base_url}}/api/branches",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2157,7 +2157,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/branches/1",
+              "raw": "{{base_url}}/api/branches/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -2203,7 +2203,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/branches/1",
+                  "raw": "{{base_url}}/api/branches/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2245,7 +2245,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/branches/1",
+              "raw": "{{base_url}}/api/branches/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -2271,7 +2271,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/branches/1",
+                  "raw": "{{base_url}}/api/branches/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2313,7 +2313,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/branches/1/users",
+              "raw": "{{base_url}}/api/branches/1/users",
               "host": [
                 "{{base_url}}"
               ],
@@ -2340,7 +2340,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/branches/1/users",
+                  "raw": "{{base_url}}/api/branches/1/users",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2388,7 +2388,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/categories?page=1&page_size=32",
+              "raw": "{{base_url}}/api/categories?page=1&page_size=32",
               "host": [
                 "{{base_url}}"
               ],
@@ -2431,7 +2431,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/categories?page=1&page_size=32",
+                  "raw": "{{base_url}}/api/categories?page=1&page_size=32",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2482,7 +2482,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/categories/1",
+              "raw": "{{base_url}}/api/categories/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -2508,7 +2508,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/categories/1",
+                  "raw": "{{base_url}}/api/categories/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2570,7 +2570,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/categories",
+              "raw": "{{base_url}}/api/categories",
               "host": [
                 "{{base_url}}"
               ],
@@ -2609,7 +2609,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/categories",
+                  "raw": "{{base_url}}/api/categories",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2659,7 +2659,7 @@
               "raw": "{\n  \"name\": \"Snacks\",\n  \"description\": \"Light snacks and finger foods\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/categories",
+              "raw": "{{base_url}}/api/categories",
               "host": [
                 "{{base_url}}"
               ],
@@ -2687,7 +2687,7 @@
                   "raw": "{\n  \"name\": \"Snacks\",\n  \"description\": \"Light snacks and finger foods\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/categories",
+                  "raw": "{{base_url}}/api/categories",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2737,7 +2737,7 @@
               "raw": "{\n  \"name\": \"Dessert Updated\",\n  \"description\": \"Kategori untuk makanan penutup dan kue\",\n  \"is_active\": true\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/categories/1",
+              "raw": "{{base_url}}/api/categories/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -2771,7 +2771,7 @@
                   "raw": "{\n  \"name\": \"Dessert Updated\",\n  \"description\": \"Kategori untuk makanan penutup dan kue\",\n  \"is_active\": true\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/categories/1",
+                  "raw": "{{base_url}}/api/categories/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2813,7 +2813,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/categories/1",
+              "raw": "{{base_url}}/api/categories/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -2839,7 +2839,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/categories/1",
+                  "raw": "{{base_url}}/api/categories/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2886,7 +2886,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products/categories",
+              "raw": "{{base_url}}/api/products/categories",
               "host": [
                 "{{base_url}}"
               ],
@@ -2912,7 +2912,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products/categories",
+                  "raw": "{{base_url}}/api/products/categories",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -2954,7 +2954,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products/by-category/17",
+              "raw": "{{base_url}}/api/products/by-category/17",
               "host": [
                 "{{base_url}}"
               ],
@@ -2993,7 +2993,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products/by-category/17?page=1&page_size=20",
+                  "raw": "{{base_url}}/api/products/by-category/17?page=1&page_size=20",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3046,7 +3046,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products?page=1&page_size=32",
+              "raw": "{{base_url}}/api/products?page=1&page_size=32",
               "host": [
                 "{{base_url}}"
               ],
@@ -3089,7 +3089,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products?page=1&page_size=32",
+                  "raw": "{{base_url}}/api/products?page=1&page_size=32",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3140,7 +3140,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products/1",
+              "raw": "{{base_url}}/api/products/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -3166,7 +3166,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products/1",
+                  "raw": "{{base_url}}/api/products/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3217,7 +3217,7 @@
               "raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/products",
+              "raw": "{{base_url}}/api/products",
               "host": [
                 "{{base_url}}"
               ],
@@ -3250,7 +3250,7 @@
                   "raw": "{\n  \"name\": \"Produk Baru\",\n  \"description\": \"Deskripsi produk baru\",\n  \"sku\": \"SKU-NEW-001\",\n  \"price\": 50000,\n  \"stock\": 100,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products",
+                  "raw": "{{base_url}}/api/products",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3300,7 +3300,7 @@
               "raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/products/1",
+              "raw": "{{base_url}}/api/products/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -3334,7 +3334,7 @@
                   "raw": "{\n  \"name\": \"Produk Updated\",\n  \"description\": \"Deskripsi produk yang sudah diupdate\",\n  \"sku\": \"SKU-UPD-001\",\n  \"price\": 75000,\n  \"stock\": 150,\n  \"is_active\": true,\n  \"category_id\": 13\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products/1",
+                  "raw": "{{base_url}}/api/products/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3376,7 +3376,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products/1",
+              "raw": "{{base_url}}/api/products/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -3402,7 +3402,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products/1",
+                  "raw": "{{base_url}}/api/products/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3454,7 +3454,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/products/1/photo",
+              "raw": "{{base_url}}/api/products/1/photo",
               "host": [
                 "{{base_url}}"
               ],
@@ -3491,7 +3491,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products/1/photo",
+                  "raw": "{{base_url}}/api/products/1/photo",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3534,7 +3534,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products/1/photo",
+              "raw": "{{base_url}}/api/products/1/photo",
               "host": [
                 "{{base_url}}"
               ],
@@ -3561,7 +3561,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products/1/photo",
+                  "raw": "{{base_url}}/api/products/1/photo",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3618,7 +3618,7 @@
               "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 27,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 42,\n      \"quantity\": 3\n    }\n  ],\n  \"notes\": \"Customer order from table 5\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/orders",
+              "raw": "{{base_url}}/api/orders",
               "host": [
                 "{{base_url}}"
               ],
@@ -3651,7 +3651,7 @@
                   "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 27,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 42,\n      \"quantity\": 3\n    }\n  ],\n  \"notes\": \"Customer order from table 5\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/orders",
+                  "raw": "{{base_url}}/api/orders",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3692,7 +3692,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/orders?page=1&per_page=32",
+              "raw": "{{base_url}}/api/orders?page=1&per_page=32",
               "host": [
                 "{{base_url}}"
               ],
@@ -3729,7 +3729,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/orders?page=1&per_page=32",
+                  "raw": "{{base_url}}/api/orders?page=1&per_page=32",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3780,7 +3780,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/orders/3",
+              "raw": "{{base_url}}/api/orders/3",
               "host": [
                 "{{base_url}}"
               ],
@@ -3806,7 +3806,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/orders/3",
+                  "raw": "{{base_url}}/api/orders/3",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3848,7 +3848,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/orders/3/payments",
+              "raw": "{{base_url}}/api/orders/3/payments",
               "host": [
                 "{{base_url}}"
               ],
@@ -3875,7 +3875,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/orders/3/payments",
+                  "raw": "{{base_url}}/api/orders/3/payments",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -3932,7 +3932,7 @@
               "raw": "{\n  \"order_id\": 3,\n  \"amount\": 85000,\n  \"payment_method\": \"cash\",\n  \"notes\": \"Cash payment\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/payments",
+              "raw": "{{base_url}}/api/payments",
               "host": [
                 "{{base_url}}"
               ],
@@ -3965,7 +3965,7 @@
                   "raw": "{\n  \"order_id\": 3,\n  \"amount\": 100000,\n  \"payment_method\": \"cash\",\n  \"notes\": \"Cash payment\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/payments",
+                  "raw": "{{base_url}}/api/payments",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4006,7 +4006,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/payments?page=1&per_page=32",
+              "raw": "{{base_url}}/api/payments?page=1&per_page=32",
               "host": [
                 "{{base_url}}"
               ],
@@ -4043,7 +4043,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/payments?page=1&per_page=32",
+                  "raw": "{{base_url}}/api/payments?page=1&per_page=32",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4094,7 +4094,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/payments/1",
+              "raw": "{{base_url}}/api/payments/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -4120,7 +4120,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/payments/1",
+                  "raw": "{{base_url}}/api/payments/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4162,7 +4162,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/payments/performance?days=7",
+              "raw": "{{base_url}}/api/payments/performance?days=7",
               "host": [
                 "{{base_url}}"
               ],
@@ -4195,7 +4195,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/payments/performance?days=7",
+                  "raw": "{{base_url}}/api/payments/performance?days=7",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4248,7 +4248,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/users?page=1&page_size=32",
+              "raw": "{{base_url}}/api/users?page=1&page_size=32",
               "host": [
                 "{{base_url}}"
               ],
@@ -4285,7 +4285,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/users?page=1&page_size=32",
+                  "raw": "{{base_url}}/api/users?page=1&page_size=32",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4336,7 +4336,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/users/1",
+              "raw": "{{base_url}}/api/users/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -4362,7 +4362,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/users/1",
+                  "raw": "{{base_url}}/api/users/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4446,7 +4446,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/users",
+              "raw": "{{base_url}}/api/users",
               "host": [
                 "{{base_url}}"
               ],
@@ -4511,7 +4511,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/users",
+                  "raw": "{{base_url}}/api/users",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4587,7 +4587,7 @@
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/users/1",
+              "raw": "{{base_url}}/api/users/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -4633,7 +4633,7 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/users/1",
+                  "raw": "{{base_url}}/api/users/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4675,7 +4675,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/users/1",
+              "raw": "{{base_url}}/api/users/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -4701,7 +4701,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/users/1",
+                  "raw": "{{base_url}}/api/users/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4748,7 +4748,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/dashboard",
+              "raw": "{{base_url}}/api/dashboard",
               "host": [
                 "{{base_url}}"
               ],
@@ -4773,7 +4773,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/dashboard",
+                  "raw": "{{base_url}}/api/dashboard",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4809,7 +4809,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/faq?active_only=true",
+              "raw": "{{base_url}}/api/faq?active_only=true",
               "host": [
                 "{{base_url}}"
               ],
@@ -4836,7 +4836,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/faq",
+                  "raw": "{{base_url}}/api/faq",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4867,7 +4867,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/faq/1",
+              "raw": "{{base_url}}/api/faq/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -4887,7 +4887,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/faq/1",
+                  "raw": "{{base_url}}/api/faq/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -4938,7 +4938,7 @@
               "raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun.\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/faq",
+              "raw": "{{base_url}}/api/faq",
               "host": [
                 "{{base_url}}"
               ],
@@ -4971,7 +4971,7 @@
                   "raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English.\",\n  \"category\": \"General\",\n  \"order\": 3\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/faq",
+                  "raw": "{{base_url}}/api/faq",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5021,7 +5021,7 @@
               "raw": "{\n  \"question\": \"Apakah MyPOS Core tersedia dalam bahasa Indonesia?\",\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun Anda.\",\n  \"is_active\": true\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/faq/1",
+              "raw": "{{base_url}}/api/faq/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -5055,7 +5055,7 @@
                   "raw": "{\n  \"answer\": \"Ya, MyPOS Core tersedia dalam bahasa Indonesia dan English. Anda dapat mengubah preferensi bahasa di pengaturan akun Anda.\",\n  \"is_active\": true\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/faq/1",
+                  "raw": "{{base_url}}/api/faq/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5097,7 +5097,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/faq/1",
+              "raw": "{{base_url}}/api/faq/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -5123,7 +5123,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/faq/1",
+                  "raw": "{{base_url}}/api/faq/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5160,7 +5160,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/tnc",
+              "raw": "{{base_url}}/api/tnc",
               "host": [
                 "{{base_url}}"
               ],
@@ -5170,7 +5170,7 @@
                 "tnc"
               ]
             },
-            "description": "Public endpoint untuk mendapatkan Terms & Conditions. Content dibaca dari config table dengan key 'tnc'. Tidak memerlukan authentication.\n\nContent TNC dapat diupdate melalui Config API:\n- POST /api/v1/config/set dengan key=\"tnc\" dan value berisi content baru\n- Perubahan akan langsung terlihat di endpoint ini"
+            "description": "Public endpoint untuk mendapatkan Terms & Conditions. Content dibaca dari config table dengan key 'tnc'. Tidak memerlukan authentication.\n\nContent TNC dapat diupdate melalui Config API:\n- POST /api/config/set dengan key=\"tnc\" dan value berisi content baru\n- Perubahan akan langsung terlihat di endpoint ini"
           },
           "response": [
             {
@@ -5179,7 +5179,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/tnc",
+                  "raw": "{{base_url}}/api/tnc",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5224,7 +5224,7 @@
               "raw": "{\n  \"key\": \"tnc_content\",\n  \"value\": \"# Terms and Conditions\\n\\nThis is a test TNC content with multiple lines.\\n\\n## Section 1\\nContent here...\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/config/set",
+              "raw": "{{base_url}}/api/config/set",
               "host": [
                 "{{base_url}}"
               ],
@@ -5253,7 +5253,7 @@
                   "raw": "{\n  \"key\": \"tnc_content\",\n  \"value\": \"# Terms and Conditions\\n\\nThis is a test TNC content with multiple lines.\\n\\n## Section 1\\nContent here...\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/config/set",
+                  "raw": "{{base_url}}/api/config/set",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5292,7 +5292,7 @@
                   "raw": "{\n  \"key\": \"\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/config/set",
+                  "raw": "{{base_url}}/api/config/set",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5324,7 +5324,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/config/get/tnc_content",
+              "raw": "{{base_url}}/api/config/get/tnc_content",
               "host": [
                 "{{base_url}}"
               ],
@@ -5345,7 +5345,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/config/get/tnc_content",
+                  "raw": "{{base_url}}/api/config/get/tnc_content",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5376,7 +5376,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/config/get/nonexistent_key",
+                  "raw": "{{base_url}}/api/config/get/nonexistent_key",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5437,7 +5437,7 @@
               "raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"email\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -5466,7 +5466,7 @@
                   "raw": "{\n  \"tenant_code\": \"resto01\",\n  \"branch_code\": \"resto01-pusat\",\n  \"email\": \"admin_resto\",\n  \"password\": \"demo123\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "raw": "{{base_url}}/api/auth/login",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5508,7 +5508,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products",
+              "raw": "{{base_url}}/api/products",
               "host": [
                 "{{base_url}}"
               ],
@@ -5533,7 +5533,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products",
+                  "raw": "{{base_url}}/api/products",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5587,7 +5587,7 @@
               "raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"email\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/auth/login",
+              "raw": "{{base_url}}/api/auth/login",
               "host": [
                 "{{base_url}}"
               ],
@@ -5616,7 +5616,7 @@
                   "raw": "{\n  \"tenant_code\": \"fashion01\",\n  \"branch_code\": \"fashion01-plaza\",\n  \"email\": \"admin_fashion\",\n  \"password\": \"demo123\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/auth/login",
+                  "raw": "{{base_url}}/api/auth/login",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5658,7 +5658,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/products",
+              "raw": "{{base_url}}/api/products",
               "host": [
                 "{{base_url}}"
               ],
@@ -5683,7 +5683,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/products",
+                  "raw": "{{base_url}}/api/products",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5738,7 +5738,7 @@
               "raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/pin/create",
+              "raw": "{{base_url}}/api/pin/create",
               "host": [
                 "{{base_url}}"
               ],
@@ -5772,7 +5772,7 @@
                   "raw": "{\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/pin/create",
+                  "raw": "{{base_url}}/api/pin/create",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5823,7 +5823,7 @@
               "raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/pin/change",
+              "raw": "{{base_url}}/api/pin/change",
               "host": [
                 "{{base_url}}"
               ],
@@ -5857,7 +5857,7 @@
                   "raw": "{\n  \"old_pin\": \"123456\",\n  \"new_pin\": \"654321\",\n  \"confirm_pin\": \"654321\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/pin/change",
+                  "raw": "{{base_url}}/api/pin/change",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5899,7 +5899,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/pin/check",
+              "raw": "{{base_url}}/api/pin/check",
               "host": [
                 "{{base_url}}"
               ],
@@ -5925,7 +5925,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/pin/check",
+                  "raw": "{{base_url}}/api/pin/check",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -5961,7 +5961,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/pin/check",
+                  "raw": "{{base_url}}/api/pin/check",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6012,7 +6012,7 @@
               "raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/admin/change-pin",
+              "raw": "{{base_url}}/api/admin/change-pin",
               "host": [
                 "{{base_url}}"
               ],
@@ -6046,7 +6046,7 @@
                   "raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"123456\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/admin/change-pin",
+                  "raw": "{{base_url}}/api/admin/change-pin",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6090,7 +6090,7 @@
                   "raw": "{\n  \"email\": \"user123\",\n  \"pin\": \"123456\",\n  \"confirm_pin\": \"654321\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/admin/change-pin",
+                  "raw": "{{base_url}}/api/admin/change-pin",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6134,7 +6134,7 @@
                   "raw": "{\n  \"email\": \"admin1\",\n  \"pin\": \"888999\",\n  \"confirm_pin\": \"888999\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/admin/change-pin",
+                  "raw": "{{base_url}}/api/admin/change-pin",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6192,7 +6192,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/audit-trails?page=1&limit=32&user_id=&entity_type=&entity_id=&action=&date_from=&date_to=",
+              "raw": "{{base_url}}/api/audit-trails?page=1&limit=32&user_id=&entity_type=&entity_id=&action=&date_from=&date_to=",
               "host": [
                 "{{base_url}}"
               ],
@@ -6264,7 +6264,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/audit-trails?page=1&limit=20",
+                  "raw": "{{base_url}}/api/audit-trails?page=1&limit=20",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6326,7 +6326,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/audit-trails/1",
+              "raw": "{{base_url}}/api/audit-trails/1",
               "host": [
                 "{{base_url}}"
               ],
@@ -6357,7 +6357,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/audit-trails/1",
+                  "raw": "{{base_url}}/api/audit-trails/1",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6410,7 +6410,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/audit-trails/entity/product/5?page=1&limit=20",
+              "raw": "{{base_url}}/api/audit-trails/entity/product/5?page=1&limit=20",
               "host": [
                 "{{base_url}}"
               ],
@@ -6455,7 +6455,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/audit-trails/entity/product/5?page=1&limit=20",
+                  "raw": "{{base_url}}/api/audit-trails/entity/product/5?page=1&limit=20",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6520,7 +6520,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/v1/audit-trails/user/2?page=1&limit=20",
+              "raw": "{{base_url}}/api/audit-trails/user/2?page=1&limit=20",
               "host": [
                 "{{base_url}}"
               ],
@@ -6564,7 +6564,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/audit-trails/user/2?page=1&limit=20",
+                  "raw": "{{base_url}}/api/audit-trails/user/2?page=1&limit=20",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6632,7 +6632,7 @@
               "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"client_timestamp\": \"2026-01-09T10:30:00Z\",\n  \"users\": [\n    {\n      \"local_id\": \"user_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"branch_id\": 3,\n      \"full_name\": \"John Cashier\",\n      \"email\": \"john@example.com\",\n      \"phone\": \"081234567890\",\n      \"role\": \"staff\",\n      \"is_active\": true,\n      \"local_timestamp\": \"2026-01-09T10:20:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"products\": [\n    {\n      \"local_id\": \"product_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"category_id\": 13,\n      \"name\": \"Espresso Coffee\",\n      \"description\": \"Strong black coffee\",\n      \"sku\": \"BV-ESP-001\",\n      \"price\": 25000,\n      \"stock\": 100,\n      \"is_active\": true,\n      \"local_timestamp\": \"2026-01-09T10:21:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"categories\": [\n    {\n      \"local_id\": \"category_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"name\": \"Hot Beverages\",\n      \"description\": \"Hot drinks category\",\n      \"is_active\": true,\n      \"local_timestamp\": \"2026-01-09T10:22:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"orders\": [\n    {\n      \"local_id\": \"order_local_uuid_1\",\n      \"order_number\": \"ORD-20260109-001\",\n      \"total_amount\": 150000,\n      \"status\": \"completed\",\n      \"notes\": \"Table 5\",\n      \"items\": [\n        {\n          \"product_id\": 27,\n          \"quantity\": 2,\n          \"price\": 50000,\n          \"subtotal\": 100000\n        },\n        {\n          \"product_id\": 42,\n          \"quantity\": 1,\n          \"price\": 50000,\n          \"subtotal\": 50000\n        }\n      ],\n      \"local_timestamp\": \"2026-01-09T10:25:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"payments\": [\n    {\n      \"local_id\": \"payment_local_uuid_1\",\n      \"order_local_id\": \"order_local_uuid_1\",\n      \"amount\": 150000,\n      \"payment_method\": \"cash\",\n      \"status\": \"completed\",\n      \"notes\": \"Cash received\",\n      \"local_timestamp\": \"2026-01-09T10:26:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"audit_trails\": [\n    {\n      \"local_id\": \"audit_local_uuid_1\",\n      \"tenant_id\": 17,\n      \"user_id\": 5,\n      \"action\": \"create\",\n      \"table_name\": \"orders\",\n      \"record_id\": 123,\n      \"new_values\": \"{\\\"total_amount\\\": 150000}\",\n      \"ip_address\": \"192.168.1.100\",\n      \"local_timestamp\": \"2026-01-09T10:27:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"last_sync_at\": \"2026-01-09T09:00:00Z\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/sync/upload",
+              "raw": "{{base_url}}/api/sync/upload",
               "host": [
                 "{{base_url}}"
               ],
@@ -6661,7 +6661,7 @@
                   "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"client_timestamp\": \"2026-01-09T10:30:00Z\",\n  \"orders\": [\n    {\n      \"local_id\": \"order_local_uuid_1\",\n      \"total_amount\": 150000,\n      \"status\": \"completed\",\n      \"notes\": \"Table 5\",\n      \"items\": [\n        {\n          \"product_id\": 27,\n          \"quantity\": 2,\n          \"price\": 50000,\n          \"subtotal\": 100000\n        }\n      ],\n      \"local_timestamp\": \"2026-01-09T10:25:00Z\",\n      \"version\": 1\n    }\n  ],\n  \"payments\": [\n    {\n      \"local_id\": \"payment_local_uuid_1\",\n      \"order_local_id\": \"order_local_uuid_1\",\n      \"amount\": 150000,\n      \"payment_method\": \"cash\",\n      \"status\": \"completed\",\n      \"local_timestamp\": \"2026-01-09T10:26:00Z\",\n      \"version\": 1\n    }\n  ]\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/sync/upload",
+                  "raw": "{{base_url}}/api/sync/upload",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6713,7 +6713,7 @@
               "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"last_sync_at\": \"2026-01-09T09:00:00Z\",\n  \"entity_types\": [\"tenants\", \"branches\", \"users\", \"products\", \"categories\"]\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/sync/download",
+              "raw": "{{base_url}}/api/sync/download",
               "host": [
                 "{{base_url}}"
               ],
@@ -6742,7 +6742,7 @@
                   "raw": "{\n  \"client_id\": \"device_uuid_12345\",\n  \"last_sync_at\": \"2026-01-09T09:00:00Z\",\n  \"entity_types\": [\"tenants\", \"branches\", \"users\", \"products\", \"categories\"]\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/sync/download",
+                  "raw": "{{base_url}}/api/sync/download",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6784,7 +6784,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/sync/status?client_id=device_uuid_12345",
+              "raw": "{{base_url}}/api/sync/status?client_id=device_uuid_12345",
               "host": [
                 "{{base_url}}"
               ],
@@ -6811,7 +6811,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/sync/status?client_id=device_uuid_12345",
+                  "raw": "{{base_url}}/api/sync/status?client_id=device_uuid_12345",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6859,7 +6859,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/sync/logs?client_id=device_uuid_12345&page=1&page_size=20",
+              "raw": "{{base_url}}/api/sync/logs?client_id=device_uuid_12345&page=1&page_size=20",
               "host": [
                 "{{base_url}}"
               ],
@@ -6896,7 +6896,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/sync/logs?client_id=device_uuid_12345&page=1&page_size=20",
+                  "raw": "{{base_url}}/api/sync/logs?client_id=device_uuid_12345&page=1&page_size=20",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -6962,7 +6962,7 @@
               "raw": "{\n  \"conflict_id\": 45,\n  \"resolution_strategy\": \"server_wins\",\n  \"resolved_data\": null\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/v1/sync/conflicts/resolve",
+              "raw": "{{base_url}}/api/sync/conflicts/resolve",
               "host": [
                 "{{base_url}}"
               ],
@@ -6992,7 +6992,7 @@
                   "raw": "{\n  \"conflict_id\": 45,\n  \"resolution_strategy\": \"server_wins\"\n}"
                 },
                 "url": {
-                  "raw": "{{base_url}}/api/v1/sync/conflicts/resolve",
+                  "raw": "{{base_url}}/api/sync/conflicts/resolve",
                   "host": [
                     "{{base_url}}"
                   ],
@@ -7025,7 +7025,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/v1/sync/time",
+              "raw": "{{base_url}}/api/sync/time",
               "host": [
                 "{{base_url}}"
               ],
@@ -7045,7 +7045,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{base_url}}/api/v1/sync/time",
+                  "raw": "{{base_url}}/api/sync/time",
                   "host": [
                     "{{base_url}}"
                   ],

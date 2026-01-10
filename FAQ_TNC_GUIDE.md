@@ -14,7 +14,7 @@ MyPOS Core menyediakan endpoints untuk mengelola FAQ (Frequently Asked Questions
 
 #### 1. Get All FAQ
 ```
-GET /api/v1/faq
+GET /api/faq
 ```
 
 **Query Parameters:**
@@ -23,7 +23,7 @@ GET /api/v1/faq
 
 **Example Request:**
 ```bash
-curl http://localhost:8080/api/v1/faq?category=General&active_only=true
+curl http://localhost:8080/api/faq?category=General&active_only=true
 ```
 
 **Example Response:**
@@ -46,12 +46,12 @@ curl http://localhost:8080/api/v1/faq?category=General&active_only=true
 
 #### 2. Get FAQ by ID
 ```
-GET /api/v1/faq/:id
+GET /api/faq/:id
 ```
 
 **Example Request:**
 ```bash
-curl http://localhost:8080/api/v1/faq/1
+curl http://localhost:8080/api/faq/1
 ```
 
 **Example Response:**
@@ -74,7 +74,7 @@ curl http://localhost:8080/api/v1/faq/1
 
 #### 3. Create FAQ
 ```
-POST /api/v1/superadmin/faq
+POST /api/superadmin/faq
 ```
 
 **Headers:**
@@ -118,7 +118,7 @@ Content-Type: application/json
 
 #### 4. Update FAQ
 ```
-PUT /api/v1/superadmin/faq/:id
+PUT /api/superadmin/faq/:id
 ```
 
 **Headers:**
@@ -157,7 +157,7 @@ Content-Type: application/json
 
 #### 5. Delete FAQ
 ```
-DELETE /api/v1/superadmin/faq/:id
+DELETE /api/superadmin/faq/:id
 ```
 
 **Headers:**
@@ -180,12 +180,12 @@ Authorization: Bearer <superadmin_token>
 
 #### 1. Get All TnC
 ```
-GET /api/v1/tnc
+GET /api/tnc
 ```
 
 **Example Request:**
 ```bash
-curl http://localhost:8080/api/v1/tnc
+curl http://localhost:8080/api/tnc
 ```
 
 **Example Response:**
@@ -216,12 +216,12 @@ curl http://localhost:8080/api/v1/tnc
 
 #### 2. Get Active TnC
 ```
-GET /api/v1/tnc/active
+GET /api/tnc/active
 ```
 
 **Example Request:**
 ```bash
-curl http://localhost:8080/api/v1/tnc/active
+curl http://localhost:8080/api/tnc/active
 ```
 
 **Example Response:**
@@ -241,12 +241,12 @@ curl http://localhost:8080/api/v1/tnc/active
 
 #### 3. Get TnC by ID
 ```
-GET /api/v1/tnc/:id
+GET /api/tnc/:id
 ```
 
 **Example Request:**
 ```bash
-curl http://localhost:8080/api/v1/tnc/1
+curl http://localhost:8080/api/tnc/1
 ```
 
 **Example Response:**
@@ -268,7 +268,7 @@ curl http://localhost:8080/api/v1/tnc/1
 
 #### 4. Create TnC
 ```
-POST /api/v1/superadmin/tnc
+POST /api/superadmin/tnc
 ```
 
 **Headers:**
@@ -309,7 +309,7 @@ Content-Type: application/json
 
 #### 5. Update TnC
 ```
-PUT /api/v1/superadmin/tnc/:id
+PUT /api/superadmin/tnc/:id
 ```
 
 **Headers:**
@@ -346,7 +346,7 @@ Content-Type: application/json
 
 #### 6. Delete TnC
 ```
-DELETE /api/v1/superadmin/tnc/:id
+DELETE /api/superadmin/tnc/:id
 ```
 
 **Headers:**
@@ -384,24 +384,24 @@ Berikut adalah kategori FAQ yang tersedia dalam dummy data:
 ### 1. Display FAQ on Website
 ```bash
 # Get all active FAQs grouped by category
-curl "http://localhost:8080/api/v1/faq?active_only=true"
+curl "http://localhost:8080/api/faq?active_only=true"
 ```
 
 ### 2. Show FAQ by Category
 ```bash
 # Get only Technical FAQs
-curl "http://localhost:8080/api/v1/faq?category=Technical&active_only=true"
+curl "http://localhost:8080/api/faq?category=Technical&active_only=true"
 ```
 
 ### 3. Display Terms & Conditions on Registration
 ```bash
 # Get active TnC for user to accept
-curl "http://localhost:8080/api/v1/tnc/active"
+curl "http://localhost:8080/api/tnc/active"
 ```
 
 ### 4. Admin: Add New FAQ
 ```bash
-curl -X POST http://localhost:8080/api/v1/superadmin/faq \
+curl -X POST http://localhost:8080/api/superadmin/faq \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -414,7 +414,7 @@ curl -X POST http://localhost:8080/api/v1/superadmin/faq \
 
 ### 5. Admin: Update TnC Version
 ```bash
-curl -X PUT http://localhost:8080/api/v1/superadmin/tnc/1 \
+curl -X PUT http://localhost:8080/api/superadmin/tnc/1 \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -480,7 +480,7 @@ psql -U postgres -d myposcore -f init_faq_dummy.sql
 
 ### Login as Superadmin
 ```json
-POST /api/v1/auth/login
+POST /api/auth/login
 {
   "tenant_code": "supertenant",
   "branch_code": "superbranch",

@@ -7,13 +7,13 @@ The MyPOSCore.postman_collection.json file has pre-existing JSON syntax errors (
 
 ### 1. ❌ REMOVE: Registration Endpoint
 **Location**: Line ~195  
-**Endpoint**: `POST /api/v1/auth/register`  
+**Endpoint**: `POST /api/auth/register`  
 **Action**: Delete entire "Register User" request block  
 **Reason**: Registration API removed - users created by admins only
 
 ### 2. ✏️ UPDATE: Tenant Management
 
-#### Create Tenant (`POST /api/v1/superadmin/tenants`)
+#### Create Tenant (`POST /api/superadmin/tenants`)
 **Remove from formdata**:
 ```json
 {
@@ -23,7 +23,7 @@ The MyPOSCore.postman_collection.json file has pre-existing JSON syntax errors (
 }
 ```
 
-#### Update Tenant (`PUT /api/v1/superadmin/tenants/:id`)
+#### Update Tenant (`PUT /api/superadmin/tenants/:id`)
 **Remove from formdata**:
 ```json
 {
@@ -47,7 +47,7 @@ The MyPOSCore.postman_collection.json file has pre-existing JSON syntax errors (
 
 ### 3. ✏️ UPDATE: Branch Management
 
-#### Create Branch (`POST /api/v1/superadmin/branches`)
+#### Create Branch (`POST /api/superadmin/branches`)
 **Remove from formdata**:
 ```json
 {
@@ -57,7 +57,7 @@ The MyPOSCore.postman_collection.json file has pre-existing JSON syntax errors (
 }
 ```
 
-#### Update Branch (`PUT /api/v1/superadmin/branches/:id`)
+#### Update Branch (`PUT /api/superadmin/branches/:id`)
 **Remove from formdata**:
 ```json
 {
@@ -81,7 +81,7 @@ The MyPOSCore.postman_collection.json file has pre-existing JSON syntax errors (
 ```
 
 ### 4. ✏️ UPDATE: Login Response Examples
-**Endpoint**: `POST /api/v1/auth/login`
+**Endpoint**: `POST /api/auth/login`
 
 Remove `code` from tenant and branch objects in response examples:
 ```json
@@ -106,8 +106,8 @@ Remove `code` from tenant and branch objects in response examples:
 
 ### 5. ✏️ UPDATE: List Tenant/Branch Responses
 **Endpoints**:
-- `GET /api/v1/superadmin/tenants`
-- `GET /api/v1/superadmin/branches`
+- `GET /api/superadmin/tenants`
+- `GET /api/superadmin/branches`
 - `GET /dev/tenants`
 - `GET /dev/tenants/:id/branches`
 

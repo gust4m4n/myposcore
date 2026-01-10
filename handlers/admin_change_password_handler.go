@@ -31,7 +31,7 @@ func NewAdminChangePasswordHandler(cfg *config.Config, auditTrailService *servic
 // @Produce json
 // @Param request body dto.AdminChangePasswordRequest true "Change password data"
 // @Success 200 {object} map[string]string
-// @Router /api/v1/admin/change-password [put]
+// @Router /api/admin/change-password [put]
 func (h *AdminChangePasswordHandler) Handle(c *gin.Context) {
 	// Get admin user ID from context (set by auth middleware)
 	userID, exists := c.Get("user_id")

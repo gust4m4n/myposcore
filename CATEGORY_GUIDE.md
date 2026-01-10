@@ -6,7 +6,7 @@ Product category feature memungkinkan filtering dan pencarian product berdasarka
 ## API Endpoints
 
 ### 1. Get Categories
-**Endpoint:** `GET /api/v1/products/categories`  
+**Endpoint:** `GET /api/products/categories`  
 **Auth:** Required (Bearer Token)  
 **Description:** Mendapatkan list kategori unik untuk tenant
 
@@ -22,7 +22,7 @@ Product category feature memungkinkan filtering dan pencarian product berdasarka
 ```
 
 ### 2. List Products with Filters
-**Endpoint:** `GET /api/v1/products`  
+**Endpoint:** `GET /api/products`  
 **Auth:** Required (Bearer Token)  
 **Query Parameters:**
 - `category` (optional): Filter by exact category name
@@ -31,16 +31,16 @@ Product category feature memungkinkan filtering dan pencarian product berdasarka
 **Examples:**
 ```bash
 # Get all products
-GET /api/v1/products
+GET /api/products
 
 # Filter by category
-GET /api/v1/products?category=Minuman
+GET /api/products?category=Minuman
 
 # Search by keyword
-GET /api/v1/products?search=ayam
+GET /api/products?search=ayam
 
 # Combined filter + search
-GET /api/v1/products?category=Makanan%20Utama&search=goreng
+GET /api/products?category=Makanan%20Utama&search=goreng
 ```
 
 **Response Example:**
@@ -109,7 +109,7 @@ CREATE INDEX idx_products_category ON products(category);
 
 ```bash
 # Login resto01
-TOKEN=$(curl -s -X POST http://localhost:8080/api/v1/auth/login \
+TOKEN=$(curl -s -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "resto01",
@@ -119,19 +119,19 @@ TOKEN=$(curl -s -X POST http://localhost:8080/api/v1/auth/login \
   }' | python3 -m json.tool | grep -o 'eyJ[^"]*' | head -1)
 
 # Get categories
-curl -X GET "http://localhost:8080/api/v1/products/categories" \
+curl -X GET "http://localhost:8080/api/products/categories" \
   -H "Authorization: Bearer $TOKEN"
 
 # Filter by category
-curl -X GET "http://localhost:8080/api/v1/products?category=Minuman" \
+curl -X GET "http://localhost:8080/api/products?category=Minuman" \
   -H "Authorization: Bearer $TOKEN"
 
 # Search keyword
-curl -X GET "http://localhost:8080/api/v1/products?search=ayam" \
+curl -X GET "http://localhost:8080/api/products?search=ayam" \
   -H "Authorization: Bearer $TOKEN"
 
 # Combined
-curl -X GET "http://localhost:8080/api/v1/products?category=Makanan%20Utama&search=goreng" \
+curl -X GET "http://localhost:8080/api/products?category=Makanan%20Utama&search=goreng" \
   -H "Authorization: Bearer $TOKEN"
 ```
 

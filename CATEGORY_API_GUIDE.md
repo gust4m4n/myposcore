@@ -5,7 +5,7 @@ API endpoints untuk manajemen kategori produk di MyPOSCore.
 ## 📋 Endpoints
 
 ### 1. Create Category
-**POST** `/api/v1/categories`
+**POST** `/api/categories`
 
 Membuat kategori produk baru untuk tenant.
 
@@ -42,7 +42,7 @@ Content-Type: application/json
 ---
 
 ### 2. Get All Categories
-**GET** `/api/v1/categories`
+**GET** `/api/categories`
 
 Mendapatkan daftar semua kategori untuk tenant.
 
@@ -83,7 +83,7 @@ Authorization: Bearer {token}
 ---
 
 ### 3. Get Category by ID
-**GET** `/api/v1/categories/{id}`
+**GET** `/api/categories/{id}`
 
 Mendapatkan detail kategori berdasarkan ID.
 
@@ -110,7 +110,7 @@ Authorization: Bearer {token}
 ---
 
 ### 4. Update Category
-**PUT** `/api/v1/categories/{id}`
+**PUT** `/api/categories/{id}`
 
 Update kategori yang sudah ada.
 
@@ -148,7 +148,7 @@ Content-Type: application/json
 ---
 
 ### 5. Delete Category
-**DELETE** `/api/v1/categories/{id}`
+**DELETE** `/api/categories/{id}`
 
 Hapus kategori (hanya jika tidak digunakan oleh produk).
 

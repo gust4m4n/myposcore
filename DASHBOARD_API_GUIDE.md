@@ -8,7 +8,7 @@ Dashboard API for superadmin to view comprehensive system statistics including:
 - Total products
 - Total orders (all time, today, this week, this month)
 
-**Base URL:** `/api/v1/superadmin`
+**Base URL:** `/api/superadmin`
 
 **Authentication:** Requires Bearer token with superadmin role
 
@@ -20,7 +20,7 @@ Get comprehensive dashboard statistics with all system metrics.
 
 ### Endpoint
 ```
-GET /api/v1/superadmin/dashboard
+GET /api/superadmin/dashboard
 ```
 
 ### Authentication
@@ -131,13 +131,13 @@ Authorization: Bearer <token>
 
 ### Using cURL
 ```bash
-curl -X GET http://localhost:8080/api/v1/superadmin/dashboard \
+curl -X GET http://localhost:8080/api/superadmin/dashboard \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
 ### Using Postman
 1. Open Postman
-2. Create a new GET request to `{{base_url}}/api/v1/superadmin/dashboard`
+2. Create a new GET request to `{{base_url}}/api/superadmin/dashboard`
 3. Go to Authorization tab
 4. Select "Bearer Token"
 5. Paste your superadmin token in the Token field
@@ -145,7 +145,7 @@ curl -X GET http://localhost:8080/api/v1/superadmin/dashboard \
 
 ### Using JavaScript (fetch)
 ```javascript
-fetch('http://localhost:8080/api/v1/superadmin/dashboard', {
+fetch('http://localhost:8080/api/superadmin/dashboard', {
   method: 'GET',
   headers: {
     'Authorization': 'Bearer YOUR_SUPERADMIN_TOKEN_HERE'

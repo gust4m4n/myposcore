@@ -35,7 +35,7 @@ func NewCategoryHandler(categoryService *services.CategoryService) *CategoryHand
 // @Param description formData string false "Category description"
 // @Param image formData file false "Category image (jpg, jpeg, png, gif, webp, max 5MB)"
 // @Success 200 {object} dto.CategoryResponse
-// @Router /api/v1/categories [post]
+// @Router /api/categories [post]
 func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -152,7 +152,7 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 // @Produce json
 // @Param id path int true "Category ID"
 // @Success 200 {object} dto.CategoryResponse
-// @Router /api/v1/categories/{id} [get]
+// @Router /api/categories/{id} [get]
 func (h *CategoryHandler) GetCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -207,7 +207,7 @@ func (h *CategoryHandler) GetCategory(c *gin.Context) {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
-// @Router /api/v1/categories [get]
+// @Router /api/categories [get]
 func (h *CategoryHandler) ListCategories(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -285,7 +285,7 @@ func (h *CategoryHandler) ListCategories(c *gin.Context) {
 // @Param is_active formData boolean false "Category status"
 // @Param image formData file false "Category image (jpg, jpeg, png, gif, webp, max 5MB)"
 // @Success 200 {object} dto.CategoryResponse
-// @Router /api/v1/categories/{id} [put]
+// @Router /api/categories/{id} [put]
 func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -442,7 +442,7 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 // @Produce json
 // @Param id path int true "Category ID"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/categories/{id} [delete]
+// @Router /api/categories/{id} [delete]
 func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {

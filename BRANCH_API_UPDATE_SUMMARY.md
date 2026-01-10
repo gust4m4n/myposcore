@@ -5,7 +5,7 @@
 ## Changes Made
 
 ### 1. New Endpoint Added
-**GET /api/v1/branches**
+**GET /api/branches**
 - **Authentication**: Required (Bearer Token)
 - **Description**: Get list of branches for the logged-in user's tenant
 - **Parameters**: None (automatically reads tenant_id from JWT token)
@@ -66,24 +66,24 @@
 ### Test with Food Corner Admin
 ```bash
 # Login
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@foodcorner.com","password":"123456"}'
 
 # Get branches (will show Food Corner branches)
-curl -X GET http://localhost:8080/api/v1/branches \
+curl -X GET http://localhost:8080/api/branches \
   -H "Authorization: Bearer <token>"
 ```
 
 ### Test with Fashion Store Admin
 ```bash
 # Login
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin.plaza@fashionstore.com","password":"123456"}'
 
 # Get branches (will show Fashion Store branches)
-curl -X GET http://localhost:8080/api/v1/branches \
+curl -X GET http://localhost:8080/api/branches \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -99,7 +99,7 @@ All responses properly formatted with `code` and `message` fields!
 
 - **Handler**: `handlers/branch_handler.go`
 - **Service**: Uses existing `SuperAdminBranchService`
-- **Route**: `protected.GET("/api/v1/branches", branchHandler.GetBranches)`
+- **Route**: `protected.GET("/api/branches", branchHandler.GetBranches)`
 - **Middleware**: AuthMiddleware (sets tenant_id in context)
 
 ## Notes

@@ -38,7 +38,7 @@ func NewUserHandler(cfg *config.Config, userService *services.UserService) *User
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
-// @Router /api/v1/users [get]
+// @Router /api/users [get]
 func (h *UserHandler) ListUsers(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 
@@ -109,7 +109,7 @@ func (h *UserHandler) ListUsers(c *gin.Context) {
 // @Produce json
 // @Param id path int true "User ID"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/users/{id} [get]
+// @Router /api/users/{id} [get]
 func (h *UserHandler) GetUser(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -173,7 +173,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 // @Param is_active formData boolean false "Is active" (when using multipart/form-data)
 // @Param image formData file false "User image file (optional)" (when using multipart/form-data)
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/users [post]
+// @Router /api/users [post]
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 
@@ -289,7 +289,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 // @Param is_active formData boolean false "Is active" (when using multipart/form-data)
 // @Param image formData file false "User image file (optional)" (when using multipart/form-data)
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/users/{id} [put]
+// @Router /api/users/{id} [put]
 func (h *UserHandler) UpdateUser(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -454,7 +454,7 @@ func (h *UserHandler) handleUserImageUpload(file *multipart.FileHeader, userID u
 // @Produce json
 // @Param id path int true "User ID"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/users/{id} [delete]
+// @Router /api/users/{id} [delete]
 func (h *UserHandler) DeleteUser(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)

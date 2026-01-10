@@ -18,7 +18,7 @@ func NewConfigHandler(configService *services.ConfigService) *ConfigHandler {
 	}
 }
 
-// SetConfig handles POST /api/v1/config/set
+// SetConfig handles POST /api/config/set
 func (h *ConfigHandler) SetConfig(c *gin.Context) {
 	var req dto.SetConfigRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -39,7 +39,7 @@ func (h *ConfigHandler) SetConfig(c *gin.Context) {
 	utils.Success(c, "Config set successfully", response)
 }
 
-// GetConfig handles GET /api/v1/config/get/:key
+// GetConfig handles GET /api/config/get/:key
 func (h *ConfigHandler) GetConfig(c *gin.Context) {
 	key := c.Param("key")
 	if key == "" {

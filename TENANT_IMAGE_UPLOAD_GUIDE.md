@@ -24,7 +24,7 @@ Fitur upload image untuk tenant logo/brand image dengan support multipart form d
 
 ### 1. Create Tenant with Image
 
-**Endpoint**: `POST /api/v1/superadmin/tenants`
+**Endpoint**: `POST /api/superadmin/tenants`
 
 **Content-Type**: `multipart/form-data`
 
@@ -77,7 +77,7 @@ Fitur upload image untuk tenant logo/brand image dengan support multipart form d
 
 ### 2. Update Tenant with Image
 
-**Endpoint**: `PUT /api/v1/superadmin/tenants/:tenant_id`
+**Endpoint**: `PUT /api/superadmin/tenants/:tenant_id`
 
 **Content-Type**: `multipart/form-data`
 
@@ -114,7 +114,7 @@ Fitur upload image untuk tenant logo/brand image dengan support multipart form d
 
 ### 3. Delete Tenant
 
-**Endpoint**: `DELETE /api/v1/superadmin/tenants/:tenant_id`
+**Endpoint**: `DELETE /api/superadmin/tenants/:tenant_id`
 
 **Behavior**:
 - Soft delete tenant record dari database
@@ -129,7 +129,7 @@ Fitur upload image untuk tenant logo/brand image dengan support multipart form d
 
 ### 4. List Tenants
 
-**Endpoint**: `GET /api/v1/superadmin/tenants`
+**Endpoint**: `GET /api/superadmin/tenants`
 
 Response sekarang include field `image`:
 ```json
@@ -227,7 +227,7 @@ COMMENT ON COLUMN tenants.image IS 'URL path to tenant logo/image file';
 
 ```javascript
 async function createTenantWithImage(formData) {
-  const response = await fetch('http://localhost:8080/api/v1/superadmin/tenants', {
+  const response = await fetch('http://localhost:8080/api/superadmin/tenants', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -277,7 +277,7 @@ const createTenantWithImage = async (tenantData, imageFile) => {
   }
   
   const response = await axios.post(
-    'http://localhost:8080/api/v1/superadmin/tenants',
+    'http://localhost:8080/api/superadmin/tenants',
     formData,
     {
       headers: {

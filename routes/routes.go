@@ -51,17 +51,17 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 	// Health check
 	router.GET("/health", healthHandler.Handle)
 
-	// API v1
-	v1 := router.Group("/api/v1")
+	// API routes
+	api := router.Group("/api")
 	{
 		// Auth routes (public)
-		auth := v1.Group("/auth")
+		auth := api.Group("/auth")
 		{
 			auth.POST("/login", loginHandler.Handle)
 		}
 
 		// Public routes
-		public := v1.Group("")
+		public := api.Group("")
 		{
 			// TnC route (public)
 			public.GET("/tnc", tncHandler.GetTnC)
@@ -76,7 +76,7 @@ func SetupRoutes(router *gin.Engine, cfg *config.Config) {
 		}
 
 		// Protected routes
-		protected := v1.Group("")
+		protected := api.Group("")
 		protected.Use(middleware.AuthMiddleware(cfg))
 		protected.Use(middleware.TenantMiddleware())
 		{

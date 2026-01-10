@@ -35,11 +35,11 @@ Semua paginated response mengikuti format berikut:
 
 ## List APIs yang Support Pagination
 
-1. **List Users** - `GET /api/v1/users`
-2. **List Tenants** - `GET /api/v1/superadmin/tenants`
-3. **List Branches** - `GET /api/v1/superadmin/tenants/:tenant_id/branches`
-4. **List Products** - `GET /api/v1/products`
-5. **List Categories** - `GET /api/v1/categories`
+1. **List Users** - `GET /api/users`
+2. **List Tenants** - `GET /api/superadmin/tenants`
+3. **List Branches** - `GET /api/superadmin/tenants/:tenant_id/branches`
+4. **List Products** - `GET /api/products`
+5. **List Categories** - `GET /api/categories`
 
 ## Examples
 
@@ -47,7 +47,7 @@ Semua paginated response mengikuti format berikut:
 
 **Request:**
 ```
-GET /api/v1/users?page=1&page_size=10
+GET /api/users?page=1&page_size=10
 Authorization: Bearer <token>
 ```
 
@@ -98,7 +98,7 @@ Authorization: Bearer <token>
 
 **Request:**
 ```
-GET /api/v1/products?category=Electronics&search=laptop&page=2&page_size=5
+GET /api/products?category=Electronics&search=laptop&page=2&page_size=5
 Authorization: Bearer <token>
 ```
 
@@ -137,7 +137,7 @@ Authorization: Bearer <token>
 
 **Request:**
 ```
-GET /api/v1/superadmin/tenants
+GET /api/superadmin/tenants
 Authorization: Bearer <superadmin_token>
 ```
 
@@ -192,7 +192,7 @@ Authorization: Bearer <superadmin_token>
 
 **Request:**
 ```
-GET /api/v1/categories?active_only=true&page=1&page_size=10
+GET /api/categories?active_only=true&page=1&page_size=10
 Authorization: Bearer <token>
 ```
 
@@ -241,7 +241,7 @@ Authorization: Bearer <token>
 
 **Request:**
 ```
-GET /api/v1/superadmin/tenants/17/branches?page=1&page_size=10
+GET /api/superadmin/tenants/17/branches?page=1&page_size=10
 Authorization: Bearer <superadmin_token>
 ```
 

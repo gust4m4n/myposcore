@@ -6,13 +6,13 @@
 
 ```bash
 # Default pagination (page 1, 10 items)
-curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/v1/products
+curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/products
 
 # Custom page and size
-curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/v1/products?page=2&page_size=20
+curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/products?page=2&page_size=20
 
 # With filters
-curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/v1/products?category=Minuman&page=1&page_size=5
+curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/products?category=Minuman&page=1&page_size=5
 ```
 
 ### Response Structure
@@ -33,11 +33,11 @@ curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/v1/products?cate
 
 | Endpoint | Method | Auth Required | Default Size | Filters |
 |----------|--------|---------------|--------------|---------|
-| `/api/v1/users` | GET | ✅ User | 10 | - |
-| `/api/v1/categories` | GET | ✅ User | 10 | `active_only` |
-| `/api/v1/products` | GET | ✅ User | 10 | `category`, `search` |
-| `/api/v1/superadmin/tenants` | GET | ✅ Superadmin | 10 | - |
-| `/api/v1/superadmin/tenants/:id/branches` | GET | ✅ Superadmin | 10 | - |
+| `/api/users` | GET | ✅ User | 10 | - |
+| `/api/categories` | GET | ✅ User | 10 | `active_only` |
+| `/api/products` | GET | ✅ User | 10 | `category`, `search` |
+| `/api/superadmin/tenants` | GET | ✅ Superadmin | 10 | - |
+| `/api/superadmin/tenants/:id/branches` | GET | ✅ Superadmin | 10 | - |
 
 ---
 
@@ -57,7 +57,7 @@ curl -H "Authorization: Bearer TOKEN" http://localhost:8080/api/v1/products?cate
 ```javascript
 async function fetchProducts(page = 1, pageSize = 10) {
   const response = await fetch(
-    `/api/v1/products?page=${page}&page_size=${pageSize}`,
+    `/api/products?page=${page}&page_size=${pageSize}`,
     {
       headers: { 'Authorization': `Bearer ${token}` }
     }
@@ -80,7 +80,7 @@ async function fetchProducts(page = 1, pageSize = 10) {
 
 ```javascript
 const fetchProducts = async (page = 1, pageSize = 10) => {
-  const { data } = await axios.get('/api/v1/products', {
+  const { data } = await axios.get('/api/products', {
     params: { page, page_size: pageSize },
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -195,7 +195,7 @@ func (h *Handler) ListItems(c *gin.Context) {
 ### Test Default Pagination
 
 ```bash
-curl -X GET http://localhost:8080/api/v1/products \
+curl -X GET http://localhost:8080/api/products \
   -H "Authorization: Bearer TOKEN"
 # Expected: page=1, page_size=10
 ```
@@ -203,7 +203,7 @@ curl -X GET http://localhost:8080/api/v1/products \
 ### Test Custom Page Size
 
 ```bash
-curl -X GET "http://localhost:8080/api/v1/products?page=2&page_size=50" \
+curl -X GET "http://localhost:8080/api/products?page=2&page_size=50" \
   -H "Authorization: Bearer TOKEN"
 # Expected: page=2, page_size=50
 ```
@@ -211,7 +211,7 @@ curl -X GET "http://localhost:8080/api/v1/products?page=2&page_size=50" \
 ### Test Max Limit
 
 ```bash
-curl -X GET "http://localhost:8080/api/v1/products?page_size=200" \
+curl -X GET "http://localhost:8080/api/products?page_size=200" \
   -H "Authorization: Bearer TOKEN"
 # Expected: page_size capped at 100
 ```
@@ -219,7 +219,7 @@ curl -X GET "http://localhost:8080/api/v1/products?page_size=200" \
 ### Test Invalid Page
 
 ```bash
-curl -X GET "http://localhost:8080/api/v1/products?page=0" \
+curl -X GET "http://localhost:8080/api/products?page=0" \
   -H "Authorization: Bearer TOKEN"
 # Expected: page defaults to 1
 ```
@@ -227,7 +227,7 @@ curl -X GET "http://localhost:8080/api/v1/products?page=0" \
 ### Test With Filters
 
 ```bash
-curl -X GET "http://localhost:8080/api/v1/products?category=Minuman&search=kopi&page=1&page_size=5" \
+curl -X GET "http://localhost:8080/api/products?category=Minuman&search=kopi&page=1&page_size=5" \
   -H "Authorization: Bearer TOKEN"
 # Expected: Filtered results with pagination
 ```

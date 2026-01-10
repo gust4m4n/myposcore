@@ -19,7 +19,7 @@ superadmin > owner > admin > user
 
 Mengubah PIN user lain berdasarkan username.
 
-**URL**: `/api/v1/admin/change-pin`
+**URL**: `/api/admin/change-pin`
 
 **Method**: `PUT`
 
@@ -119,7 +119,7 @@ Mengubah PIN user lain berdasarkan username.
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
+curl -X PUT http://localhost:8080/api/admin/change-pin \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SUPERADMIN_TOKEN" \
   -d '{
@@ -142,7 +142,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
+curl -X PUT http://localhost:8080/api/admin/change-pin \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_OWNER_TOKEN" \
   -d '{
@@ -165,7 +165,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
+curl -X PUT http://localhost:8080/api/admin/change-pin \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
   -d '{
@@ -188,7 +188,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
+curl -X PUT http://localhost:8080/api/admin/change-pin \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
@@ -211,7 +211,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
+curl -X PUT http://localhost:8080/api/admin/change-pin \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_USER_TOKEN" \
   -d '{
@@ -234,7 +234,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
+curl -X PUT http://localhost:8080/api/admin/change-pin \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
@@ -278,7 +278,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-pin \
 
 | Aspek | Admin Change PIN | Self Change PIN |
 |-------|------------------|-----------------|
-| Endpoint | `/api/v1/admin/change-pin` | `/api/v1/pin/change` |
+| Endpoint | `/api/admin/change-pin` | `/api/pin/change` |
 | Parameter | username, pin, confirm_pin | old_pin, new_pin, confirm_pin |
 | Old PIN Required | No | Yes |
 | Role Check | Yes (hierarchy) | No |
@@ -304,7 +304,7 @@ Untuk testing API ini di Postman:
 
 ## Related APIs
 
-- [POST /api/v1/pin/create](PIN_API_GUIDE.md#create-pin) - Create PIN (self)
-- [PUT /api/v1/pin/change](PIN_API_GUIDE.md#change-pin) - Change PIN (self)
-- [GET /api/v1/pin/check](PIN_API_GUIDE.md#check-pin) - Check PIN (self)
-- [PUT /api/v1/admin/change-password](ADMIN_CHANGE_PASSWORD_GUIDE.md) - Admin Change Password
+- [POST /api/pin/create](PIN_API_GUIDE.md#create-pin) - Create PIN (self)
+- [PUT /api/pin/change](PIN_API_GUIDE.md#change-pin) - Change PIN (self)
+- [GET /api/pin/check](PIN_API_GUIDE.md#check-pin) - Check PIN (self)
+- [PUT /api/admin/change-password](ADMIN_CHANGE_PASSWORD_GUIDE.md) - Admin Change Password

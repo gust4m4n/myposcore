@@ -12,12 +12,12 @@ Postman collection telah di-update untuk mendukung fitur category integration de
 
 ### 1. ✨ New Endpoint Added
 
-**Endpoint**: `GET /api/v1/products/by-category/:category_id`
+**Endpoint**: `GET /api/products/by-category/:category_id`
 
 ```
 Name: List Products by Category
 Method: GET
-URL: {{base_url}}/api/v1/products/by-category/13
+URL: {{base_url}}/api/products/by-category/13
 Query Params: 
   - page (optional)
   - page_size (optional)
@@ -147,7 +147,7 @@ Collection includes demo data with:
 
 ### 1. Test New Endpoint
 ```bash
-GET {{base_url}}/api/v1/products/by-category/13
+GET {{base_url}}/api/products/by-category/13
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -155,7 +155,7 @@ Expected: List of products with category_id = 13
 
 ### 2. Test Create with Category ID
 ```bash
-POST {{base_url}}/api/v1/products
+POST {{base_url}}/api/products
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
@@ -171,7 +171,7 @@ Expected: Product created with category_detail in response
 
 ### 3. Test List Products
 ```bash
-GET {{base_url}}/api/v1/products
+GET {{base_url}}/api/products
 Authorization: Bearer {{auth_token}}
 ```
 
@@ -179,7 +179,7 @@ Expected: All products include category_detail (if category_id is set)
 
 ### 4. Test Update with Category ID
 ```bash
-PUT {{base_url}}/api/v1/products/73
+PUT {{base_url}}/api/products/73
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 

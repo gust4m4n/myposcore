@@ -118,7 +118,7 @@ mysql -u root -p myposcore < init_products_with_categories.sql
 
 ### 1. Create Product with Category ID
 ```bash
-curl -X POST "http://localhost:8080/api/v1/products" \
+curl -X POST "http://localhost:8080/api/products" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -134,7 +134,7 @@ curl -X POST "http://localhost:8080/api/v1/products" \
 
 ### 2. Update Product Category
 ```bash
-curl -X PUT "http://localhost:8080/api/v1/products/1" \
+curl -X PUT "http://localhost:8080/api/products/1" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -145,20 +145,20 @@ curl -X PUT "http://localhost:8080/api/v1/products/1" \
 
 ### 3. List Products (will include category_detail)
 ```bash
-curl -X GET "http://localhost:8080/api/v1/products?page=1&page_size=10" \
+curl -X GET "http://localhost:8080/api/products?page=1&page_size=10" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ### 4. Get Products by Category
 ```bash
 # Menggunakan category string (legacy)
-curl -X GET "http://localhost:8080/api/v1/products?category=Coffee&page=1&page_size=10" \
+curl -X GET "http://localhost:8080/api/products?category=Coffee&page=1&page_size=10" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ### 5. List Categories
 ```bash
-curl -X GET "http://localhost:8080/api/v1/categories" \
+curl -X GET "http://localhost:8080/api/categories" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
@@ -202,14 +202,14 @@ mysql -u root -p myposcore < init_products_with_categories.sql
 go run main.go
 
 # Test list products
-curl -X GET "http://localhost:8080/api/v1/products" \
+curl -X GET "http://localhost:8080/api/products" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ## Backward Compatibility
 
 - Kolom `category` (string) tetap ada untuk backward compatibility
-- API masih support filter by category string: `GET /api/v1/products?category=Coffee`
+- API masih support filter by category string: `GET /api/products?category=Coffee`
 - Client bisa menggunakan `category_id` (recommended) atau `category` (legacy)
 - Response API mencakup both `category` dan `category_detail`
 

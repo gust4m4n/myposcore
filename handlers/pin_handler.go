@@ -31,7 +31,7 @@ func NewPINHandler(cfg *config.Config, auditTrailService *services.AuditTrailSer
 // @Produce json
 // @Param request body dto.CreatePINRequest true "PIN data"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/pin/create [post]
+// @Router /api/pin/create [post]
 func (h *PINHandler) CreatePIN(c *gin.Context) {
 	userID := c.GetUint("user_id")
 
@@ -57,7 +57,7 @@ func (h *PINHandler) CreatePIN(c *gin.Context) {
 // @Produce json
 // @Param request body dto.ChangePINRequest true "PIN data"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/pin/change [put]
+// @Router /api/pin/change [put]
 func (h *PINHandler) ChangePIN(c *gin.Context) {
 	userID := c.GetUint("user_id")
 
@@ -82,7 +82,7 @@ func (h *PINHandler) ChangePIN(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/pin/check [get]
+// @Router /api/pin/check [get]
 func (h *PINHandler) CheckPIN(c *gin.Context) {
 	userID := c.GetUint("user_id")
 

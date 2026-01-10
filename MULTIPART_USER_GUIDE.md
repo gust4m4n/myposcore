@@ -11,7 +11,7 @@ API **Create User** dan **Update User** mendukung **2 mode content-type**:
 
 ### Mode 1: JSON (Simple, No Image)
 
-**Endpoint:** `POST /api/v1/users`  
+**Endpoint:** `POST /api/users`  
 **Content-Type:** `application/json`
 
 **Request Body:**
@@ -48,7 +48,7 @@ API **Create User** dan **Update User** mendukung **2 mode content-type**:
 
 ### Mode 2: Multipart (With Image Upload)
 
-**Endpoint:** `POST /api/v1/users`  
+**Endpoint:** `POST /api/users`  
 **Content-Type:** `multipart/form-data`
 
 **Form Fields:**
@@ -99,7 +99,7 @@ Form Data:
 
 ### Mode 1: JSON (Simple, No Image)
 
-**Endpoint:** `PUT /api/v1/users/{id}`  
+**Endpoint:** `PUT /api/users/{id}`  
 **Content-Type:** `application/json`
 
 **Request Body (All fields optional - partial update):**
@@ -133,7 +133,7 @@ Form Data:
 
 ### Mode 2: Multipart (With Image Upload/Replacement)
 
-**Endpoint:** `PUT /api/v1/users/{id}`  
+**Endpoint:** `PUT /api/users/{id}`  
 **Content-Type:** `multipart/form-data`
 
 **Form Fields (ALL OPTIONAL - send only what you want to update):**
@@ -263,7 +263,7 @@ if strings.Contains(contentType, "multipart/form-data") {
 
 ### JavaScript/Fetch (JSON Mode)
 ```javascript
-const response = await fetch('http://localhost:8080/api/v1/users', {
+const response = await fetch('http://localhost:8080/api/users', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -291,7 +291,7 @@ formData.append('branch_id', '1');
 formData.append('is_active', 'true');
 formData.append('image', fileInput.files[0]); // File from <input type="file">
 
-const response = await fetch('http://localhost:8080/api/v1/users', {
+const response = await fetch('http://localhost:8080/api/users', {
   method: 'POST',
   headers: {
     'Authorization': `Bearer ${token}`
@@ -320,7 +320,7 @@ const handleSubmit = async (e) => {
   }
   
   try {
-    const response = await fetch(`${API_URL}/api/v1/users`, {
+    const response = await fetch(`${API_URL}/api/users`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -343,7 +343,7 @@ const handleSubmit = async (e) => {
 
 | Endpoint | Method | JSON Mode | Multipart Mode | Image Support |
 |----------|--------|-----------|----------------|---------------|
-| `/api/v1/users` | POST | ✅ Yes | ✅ Yes | ✅ Optional |
-| `/api/v1/users/{id}` | PUT | ✅ Yes | ✅ Yes | ✅ Optional |
+| `/api/users` | POST | ✅ Yes | ✅ Yes | ✅ Optional |
+| `/api/users/{id}` | PUT | ✅ Yes | ✅ Yes | ✅ Optional |
 
 **Both modes work independently - choose based on your needs!**

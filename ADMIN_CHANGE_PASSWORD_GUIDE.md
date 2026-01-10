@@ -19,7 +19,7 @@ superadmin > owner > admin > user
 
 Mengubah password user lain berdasarkan username.
 
-**URL**: `/api/v1/admin/change-password`
+**URL**: `/api/admin/change-password`
 
 **Method**: `PUT`
 
@@ -119,7 +119,7 @@ Mengubah password user lain berdasarkan username.
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-password \
+curl -X PUT http://localhost:8080/api/admin/change-password \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_SUPERADMIN_TOKEN" \
   -d '{
@@ -142,7 +142,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-password \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-password \
+curl -X PUT http://localhost:8080/api/admin/change-password \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_OWNER_TOKEN" \
   -d '{
@@ -165,7 +165,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-password \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-password \
+curl -X PUT http://localhost:8080/api/admin/change-password \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
   -d '{
@@ -188,7 +188,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-password \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-password \
+curl -X PUT http://localhost:8080/api/admin/change-password \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
@@ -211,7 +211,7 @@ curl -X PUT http://localhost:8080/api/v1/admin/change-password \
 **Request:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/v1/admin/change-password \
+curl -X PUT http://localhost:8080/api/admin/change-password \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_USER_TOKEN" \
   -d '{

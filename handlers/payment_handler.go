@@ -232,7 +232,7 @@ func (h *PaymentHandler) ListPayments(c *gin.Context) {
 // @Produce json
 // @Param days query int false "Number of days to look back" default(7)
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/payments/performance [get]
+// @Router /api/payments/performance [get]
 func (h *PaymentHandler) GetPaymentPerformance(c *gin.Context) {
 	tenantID := c.GetUint("tenant_id")
 	branchID := c.GetUint("branch_id")

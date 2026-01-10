@@ -10,7 +10,7 @@ MyPOSCore memiliki beberapa endpoint untuk mengelola branches (cabang):
 
 ## 1. USER BRANCH API
 
-### GET /api/v1/branches
+### GET /api/branches
 **Deskripsi**: Get branches dari tenant user yang sedang login
 **Authentication**: Required (Bearer Token)
 **Parameter**: Tidak ada (otomatis baca dari JWT token)
@@ -21,7 +21,7 @@ MyPOSCore memiliki beberapa endpoint untuk mengelola branches (cabang):
 
 **Example Request:**
 ```bash
-curl -X GET http://localhost:8080/api/v1/branches \
+curl -X GET http://localhost:8080/api/branches \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -71,7 +71,7 @@ curl -X GET http://localhost:8080/api/v1/branches \
 
 ## 2. SUPERADMIN BRANCH API
 
-### GET /api/v1/superadmin/tenants/:tenant_id/branches
+### GET /api/superadmin/tenants/:tenant_id/branches
 **Deskripsi**: List semua branches dari tenant tertentu
 **Authentication**: Required (Superadmin only)
 **Parameters:**
@@ -79,11 +79,11 @@ curl -X GET http://localhost:8080/api/v1/branches \
 
 **Example Request:**
 ```bash
-curl -X GET http://localhost:8080/api/v1/superadmin/tenants/17/branches \
+curl -X GET http://localhost:8080/api/superadmin/tenants/17/branches \
   -H "Authorization: Bearer <superadmin_token>"
 ```
 
-### POST /api/v1/superadmin/branches
+### POST /api/superadmin/branches
 **Deskripsi**: Create branch baru untuk tenant
 **Authentication**: Required (Superadmin only)
 **Content-Type**: multipart/form-data
@@ -101,7 +101,7 @@ curl -X GET http://localhost:8080/api/v1/superadmin/tenants/17/branches \
 
 **Example Request:**
 ```bash
-curl -X POST http://localhost:8080/api/v1/superadmin/branches \
+curl -X POST http://localhost:8080/api/superadmin/branches \
   -H "Authorization: Bearer <superadmin_token>" \
   -F "tenant_id=17" \
   -F "name=Cabang Baru" \
@@ -133,7 +133,7 @@ curl -X POST http://localhost:8080/api/v1/superadmin/branches \
 }
 ```
 
-### PUT /api/v1/superadmin/branches/:branch_id
+### PUT /api/superadmin/branches/:branch_id
 **Deskripsi**: Update data branch
 **Authentication**: Required (Superadmin only)
 **Content-Type**: multipart/form-data
@@ -152,7 +152,7 @@ curl -X POST http://localhost:8080/api/v1/superadmin/branches \
 
 **Example Request:**
 ```bash
-curl -X PUT http://localhost:8080/api/v1/superadmin/branches/31 \
+curl -X PUT http://localhost:8080/api/superadmin/branches/31 \
   -H "Authorization: Bearer <superadmin_token>" \
   -F "name=Cabang Baru Updated" \
   -F "phone=021-99999999" \
@@ -181,7 +181,7 @@ curl -X PUT http://localhost:8080/api/v1/superadmin/branches/31 \
 }
 ```
 
-### DELETE /api/v1/superadmin/branches/:branch_id
+### DELETE /api/superadmin/branches/:branch_id
 **Deskripsi**: Soft delete branch (tetap di database tapi ditandai deleted)
 **Authentication**: Required (Superadmin only)
 **Parameters:**
@@ -189,7 +189,7 @@ curl -X PUT http://localhost:8080/api/v1/superadmin/branches/31 \
 
 **Example Request:**
 ```bash
-curl -X DELETE http://localhost:8080/api/v1/superadmin/branches/31 \
+curl -X DELETE http://localhost:8080/api/superadmin/branches/31 \
   -H "Authorization: Bearer <superadmin_token>"
 ```
 
@@ -201,7 +201,7 @@ curl -X DELETE http://localhost:8080/api/v1/superadmin/branches/31 \
 }
 ```
 
-### GET /api/v1/superadmin/branches/:branch_id/users
+### GET /api/superadmin/branches/:branch_id/users
 **Deskripsi**: List semua users yang terdaftar di branch tertentu
 **Authentication**: Required (Superadmin only)
 **Parameters:**
@@ -209,7 +209,7 @@ curl -X DELETE http://localhost:8080/api/v1/superadmin/branches/31 \
 
 **Example Request:**
 ```bash
-curl -X GET http://localhost:8080/api/v1/superadmin/branches/25/users \
+curl -X GET http://localhost:8080/api/superadmin/branches/25/users \
   -H "Authorization: Bearer <superadmin_token>"
 ```
 
@@ -313,26 +313,26 @@ curl http://localhost:8080/dev/tenants/18/branches
 ### 1. Test User Branch API
 ```bash
 # Login sebagai admin tenant
-TOKEN=$(curl -X POST http://localhost:8080/api/v1/auth/login \
+TOKEN=$(curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@foodcorner.com","password":"123456"}' \
   2>/dev/null | jq -r '.data.token')
 
 # Get branches (akan tampil branch dari tenant Food Corner saja)
-curl -X GET http://localhost:8080/api/v1/branches \
+curl -X GET http://localhost:8080/api/branches \
   -H "Authorization: Bearer $TOKEN" | jq
 ```
 
 ### 2. Test dengan Tenant Berbeda
 ```bash
 # Login sebagai admin tenant lain
-TOKEN2=$(curl -X POST http://localhost:8080/api/v1/auth/login \
+TOKEN2=$(curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin.plaza@fashionstore.com","password":"123456"}' \
   2>/dev/null | jq -r '.data.token')
 
 # Get branches (akan tampil branch dari tenant Fashion Store saja)
-curl -X GET http://localhost:8080/api/v1/branches \
+curl -X GET http://localhost:8080/api/branches \
   -H "Authorization: Bearer $TOKEN2" | jq
 ```
 
@@ -352,14 +352,14 @@ curl http://localhost:8080/dev/tenants/18/branches | jq
 ✅ **Semua endpoint sudah ada di Postman dengan contoh response:**
 
 1. **User Branch API**
-   - ✅ GET /api/v1/branches (3 contoh response)
+   - ✅ GET /api/branches (3 contoh response)
 
 2. **Superadmin Branch API**
-   - ✅ GET /api/v1/superadmin/tenants/:tenant_id/branches
-   - ✅ POST /api/v1/superadmin/branches (dengan upload image)
-   - ✅ PUT /api/v1/superadmin/branches/:branch_id (dengan upload image)
-   - ✅ DELETE /api/v1/superadmin/branches/:branch_id
-   - ✅ GET /api/v1/superadmin/branches/:branch_id/users
+   - ✅ GET /api/superadmin/tenants/:tenant_id/branches
+   - ✅ POST /api/superadmin/branches (dengan upload image)
+   - ✅ PUT /api/superadmin/branches/:branch_id (dengan upload image)
+   - ✅ DELETE /api/superadmin/branches/:branch_id
+   - ✅ GET /api/superadmin/branches/:branch_id/users
 
 3. **Dev Branch API**
    - ✅ GET /dev/tenants/:tenant_id/branches
@@ -371,7 +371,7 @@ curl http://localhost:8080/dev/tenants/18/branches | jq
 
 ## Notes
 
-1. **Tenant Isolation**: User branch API (`GET /api/v1/branches`) otomatis filter berdasarkan tenant user yang login
+1. **Tenant Isolation**: User branch API (`GET /api/branches`) otomatis filter berdasarkan tenant user yang login
 2. **Image Upload**: Create & Update branch support multipart upload dengan validasi ukuran (max 5MB) dan format (jpg, jpeg, png, gif, webp)
 3. **Soft Delete**: DELETE endpoint tidak benar-benar menghapus data, hanya menandai sebagai deleted
 4. **Response Format**: Semua endpoint menggunakan format standard dengan `code`, `message`, dan `data`

@@ -38,7 +38,7 @@ func NewBranchHandler(cfg *config.Config, branchService *services.SuperAdminBran
 // @Success 200 {object} map[string]interface{}
 // @Failure 401 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
-// @Router /api/v1/branches [get]
+// @Router /api/branches [get]
 func (h *BranchHandler) GetBranches(c *gin.Context) {
 	// Get tenant_id from JWT context
 	tenantID, exists := c.Get("tenant_id")
@@ -77,7 +77,7 @@ func (h *BranchHandler) GetBranches(c *gin.Context) {
 // @Failure 401 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
-// @Router /api/v1/branches/{id} [get]
+// @Router /api/branches/{id} [get]
 func (h *BranchHandler) GetBranch(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -128,7 +128,7 @@ func (h *BranchHandler) GetBranch(c *gin.Context) {
 // @Failure 400 {object} map[string]interface{}
 // @Failure 401 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
-// @Router /api/v1/branches [post]
+// @Router /api/branches [post]
 func (h *BranchHandler) CreateBranch(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -246,7 +246,7 @@ func (h *BranchHandler) CreateBranch(c *gin.Context) {
 // @Failure 403 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
-// @Router /api/v1/branches/{id} [put]
+// @Router /api/branches/{id} [put]
 func (h *BranchHandler) UpdateBranch(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -380,7 +380,7 @@ func (h *BranchHandler) UpdateBranch(c *gin.Context) {
 // @Failure 403 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
-// @Router /api/v1/branches/{id} [delete]
+// @Router /api/branches/{id} [delete]
 func (h *BranchHandler) DeleteBranch(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -439,7 +439,7 @@ func (h *BranchHandler) DeleteBranch(c *gin.Context) {
 // @Failure 403 {object} map[string]interface{}
 // @Failure 404 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
-// @Router /api/v1/branches/{id}/users [get]
+// @Router /api/branches/{id}/users [get]
 func (h *BranchHandler) GetBranchUsers(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {

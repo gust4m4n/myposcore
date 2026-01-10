@@ -55,7 +55,7 @@ ALTER TABLE branches ADD COLUMN IF NOT EXISTS image VARCHAR(500);
 **After:** `Content-Type: multipart/form-data`
 
 ```
-POST /api/v1/superadmin/branches
+POST /api/superadmin/branches
 Form fields:
 - tenant_id (text)
 - name, code, description, address, website, email, phone (text)

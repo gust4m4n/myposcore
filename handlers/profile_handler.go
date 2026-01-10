@@ -50,7 +50,7 @@ func (h *ProfileHandler) Handle(c *gin.Context) {
 // @Produce json
 // @Param request body dto.UpdateProfileRequest true "Update Profile Request"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/profile [put]
+// @Router /api/profile [put]
 func (h *ProfileHandler) UpdateProfile(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -81,7 +81,7 @@ func (h *ProfileHandler) UpdateProfile(c *gin.Context) {
 // @Produce json
 // @Param image formData file true "Profile image file"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/profile/photo [post]
+// @Router /api/profile/photo [post]
 func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {
@@ -166,7 +166,7 @@ func (h *ProfileHandler) UploadProfileImage(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/profile/photo [delete]
+// @Router /api/profile/photo [delete]
 func (h *ProfileHandler) DeleteProfileImage(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {

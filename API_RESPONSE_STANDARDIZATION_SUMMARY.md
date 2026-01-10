@@ -137,12 +137,12 @@ cd handlers && grep -c "c\.JSON.*gin\.H{" *.go | grep -v ":0"
 # Should return nothing (exit code 1)
 
 # Test login API (success)
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@foodcorner.com","password":"123456"}' | jq .
 
 # Test error response
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"wrong@email.com","password":"wrong"}' | jq .
 

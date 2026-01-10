@@ -115,7 +115,7 @@ GET /health
 
 #### Register User
 ```
-POST /api/v1/auth/register
+POST /api/auth/register
 Content-Type: application/json
 
 {
@@ -147,7 +147,7 @@ Response:
 
 #### Login User
 ```
-POST /api/v1/auth/login
+POST /api/auth/login
 Content-Type: application/json
 
 {
@@ -177,13 +177,13 @@ Response:
 
 #### Get Profile (Protected)
 ```
-GET /api/v1/profile
+GET /api/profile
 Authorization: Bearer <token>
 ```
 
 #### Change Password (Protected)
 ```
-PUT /api/v1/change-password
+PUT /api/change-password
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -195,7 +195,7 @@ Content-Type: application/json
 
 #### Admin Change Password (Protected)
 ```
-PUT /api/v1/admin/change-password
+PUT /api/admin/change-password
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -215,7 +215,7 @@ Lihat [ADMIN_CHANGE_PASSWORD_GUIDE.md](ADMIN_CHANGE_PASSWORD_GUIDE.md) untuk dok
 
 #### Admin Change PIN (Protected)
 ```
-PUT /api/v1/admin/change-pin
+PUT /api/admin/change-pin
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -276,7 +276,7 @@ Setelah menjalankan `init_demo_tenants.sql`, Anda bisa langsung testing dengan c
 **Restoran:**
 ```bash
 # Login sebagai admin resto
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "resto01",
@@ -289,7 +289,7 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
 **Fashion Store:**
 ```bash
 # Login sebagai admin fashion
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "fashion01",
@@ -319,7 +319,7 @@ VALUES (1, 'Branch Demo', 'BRANCH001', 'Jl. Demo No. 1', '021-12345678', true, N
 
 ```bash
 # Register User
-curl -X POST http://localhost:8080/api/v1/auth/register \
+curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "TENANT001",
@@ -331,7 +331,7 @@ curl -X POST http://localhost:8080/api/v1/auth/register \
   }'
 
 # Login
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "tenant_code": "TENANT001",
@@ -341,11 +341,11 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
   }'
 
 # Get Profile (ganti <TOKEN> dengan token dari login)
-curl -X GET http://localhost:8080/api/v1/profile \
+curl -X GET http://localhost:8080/api/profile \
   -H "Authorization: Bearer <TOKEN>"
 
 # Get Products (tenant isolated)
-curl -X GET http://localhost:8080/api/v1/products \
+curl -X GET http://localhost:8080/api/products \
   -H "Authorization: Bearer <TOKEN>"
 ```
 

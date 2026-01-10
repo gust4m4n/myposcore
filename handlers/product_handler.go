@@ -53,7 +53,7 @@ func mapCategoryToDTO(category *models.Category) *dto.CategorySummary {
 // @Param page query int false "Page number" default(1)
 // @Param page_size query int false "Items per page" default(32)
 // @Success 200 {object} dto.PaginationResponse
-// @Router /api/v1/products [get]
+// @Router /api/products [get]
 func (h *ProductHandler) ListProducts(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -134,7 +134,7 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 // @Param page query int false "Page number (default: 1)"
 // @Param page_size query int false "Page size (default: 10)"
 // @Success 200 {object} dto.PaginationResponse
-// @Router /api/v1/products/by-category/{category_id} [get]
+// @Router /api/products/by-category/{category_id} [get]
 func (h *ProductHandler) ListProductsByCategoryID(c *gin.Context) {
 	tenantID, _ := c.Get("tenant_id")
 
@@ -213,7 +213,7 @@ func (h *ProductHandler) ListProductsByCategoryID(c *gin.Context) {
 // @Produce json
 // @Param id path int true "Product ID"
 // @Success 200 {object} dto.ProductResponse
-// @Router /api/v1/products/{id} [get]
+// @Router /api/products/{id} [get]
 func (h *ProductHandler) GetProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -281,7 +281,7 @@ func (h *ProductHandler) GetProduct(c *gin.Context) {
 // @Param is_active formData boolean false "Is product active" (when using multipart/form-data)
 // @Param image formData file false "Product image file (optional)" (when using multipart/form-data)
 // @Success 200 {object} dto.ProductResponse
-// @Router /api/v1/products [post]
+// @Router /api/products [post]
 func (h *ProductHandler) CreateProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -409,7 +409,7 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 // @Param is_active formData boolean false "Is product active" (when using multipart/form-data)
 // @Param image formData file false "Product image file (optional)" (when using multipart/form-data)
 // @Success 200 {object} dto.ProductResponse
-// @Router /api/v1/products/{id} [put]
+// @Router /api/products/{id} [put]
 func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -536,7 +536,7 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 // @Produce json
 // @Param id path int true "Product ID"
 // @Success 200 {object} map[string]string
-// @Router /api/v1/products/{id} [delete]
+// @Router /api/products/{id} [delete]
 func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -568,7 +568,7 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} map[string][]string
-// @Router /api/v1/products/categories [get]
+// @Router /api/products/categories [get]
 func (h *ProductHandler) GetCategories(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -594,7 +594,7 @@ func (h *ProductHandler) GetCategories(c *gin.Context) {
 // @Param id path int true "Product ID"
 // @Param image formData file true "Product image file"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/products/{id}/photo [post]
+// @Router /api/products/{id}/photo [post]
 func (h *ProductHandler) UploadProductImage(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {
@@ -755,7 +755,7 @@ func (h *ProductHandler) handleImageUpload(file *multipart.FileHeader, productID
 // @Produce json
 // @Param id path int true "Product ID"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/products/{id}/photo [delete]
+// @Router /api/products/{id}/photo [delete]
 func (h *ProductHandler) DeleteProductImage(c *gin.Context) {
 	tenantID, exists := c.Get("tenant_id")
 	if !exists {

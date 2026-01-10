@@ -58,7 +58,7 @@ ALTER TABLE orders ADD COLUMN conflict_data JSONB;
 
 ## 🔌 API Endpoints
 
-### 1. POST /api/v1/sync/upload
+### 1. POST /api/sync/upload
 Upload orders and payments dari mobile client.
 
 **Features:**
@@ -67,7 +67,7 @@ Upload orders and payments dari mobile client.
 - Version-based optimistic locking
 - Return mapping: local_id → server_id
 
-### 2. POST /api/v1/sync/download
+### 2. POST /api/sync/download
 Download master data (products, categories).
 
 **Features:**
@@ -76,7 +76,7 @@ Download master data (products, categories).
 - Filter by entity types
 - Pagination support
 
-### 3. GET /api/v1/sync/status
+### 3. GET /api/sync/status
 Check current sync status.
 
 **Returns:**
@@ -85,7 +85,7 @@ Check current sync status.
 - Pending conflicts count
 - Sync success rate
 
-### 4. GET /api/v1/sync/logs
+### 4. GET /api/sync/logs
 Get sync history with pagination.
 
 **Features:**
@@ -94,7 +94,7 @@ Get sync history with pagination.
 - Performance metrics
 - Error tracking
 
-### 5. POST /api/v1/sync/conflicts/resolve
+### 5. POST /api/sync/conflicts/resolve
 Manual conflict resolution.
 
 **Strategies:**
@@ -102,7 +102,7 @@ Manual conflict resolution.
 - client_wins - Use client data
 - manual - Custom merged data
 
-### 6. GET /api/v1/sync/time
+### 6. GET /api/sync/time
 Get server timestamp for time synchronization.
 
 ---
@@ -168,10 +168,10 @@ Complete SQLite schema provided in guide with:
 ### Sync Logs
 ```bash
 # Check sync status
-GET /api/v1/sync/status?client_id=device_123
+GET /api/sync/status?client_id=device_123
 
 # View sync history
-GET /api/v1/sync/logs?client_id=device_123&page=1
+GET /api/sync/logs?client_id=device_123&page=1
 
 # Database query
 SELECT * FROM sync_logs WHERE status = 'failed';
@@ -183,7 +183,7 @@ SELECT * FROM sync_logs WHERE status = 'failed';
 SELECT * FROM sync_conflicts WHERE resolved = false;
 
 # Resolve conflict
-POST /api/v1/sync/conflicts/resolve
+POST /api/sync/conflicts/resolve
 {
   "conflict_id": 45,
   "resolution_strategy": "server_wins"

@@ -5,7 +5,7 @@ API endpoints untuk manajemen produk di MyPOSCore.
 ## 📋 Endpoints
 
 ### 1. Create Product
-**POST** `/api/v1/products`
+**POST** `/api/products`
 
 Membuat produk baru untuk tenant.
 
@@ -51,7 +51,7 @@ Content-Type: application/json
 ---
 
 ### 2. Get All Products
-**GET** `/api/v1/products`
+**GET** `/api/products`
 
 Mendapatkan daftar semua produk untuk tenant dengan filter opsional.
 
@@ -65,9 +65,9 @@ Authorization: Bearer {token}
 - `search` (string, optional) - Pencarian berdasarkan nama, deskripsi, atau SKU
 
 **Examples:**
-- `/api/v1/products` - Get all products
-- `/api/v1/products?category=Food` - Filter by category
-- `/api/v1/products?search=goreng` - Search products
+- `/api/products` - Get all products
+- `/api/products?category=Food` - Filter by category
+- `/api/products?search=goreng` - Search products
 
 **Success Response (200):**
 ```json
@@ -106,7 +106,7 @@ Authorization: Bearer {token}
 ---
 
 ### 3. Get Product by ID
-**GET** `/api/v1/products/{id}`
+**GET** `/api/products/{id}`
 
 Mendapatkan detail produk berdasarkan ID.
 
@@ -137,7 +137,7 @@ Authorization: Bearer {token}
 ---
 
 ### 4. Update Product
-**PUT** `/api/v1/products/{id}`
+**PUT** `/api/products/{id}`
 
 Update produk yang sudah ada.
 
@@ -188,7 +188,7 @@ Content-Type: application/json
 ---
 
 ### 5. Delete Product
-**DELETE** `/api/v1/products/{id}`
+**DELETE** `/api/products/{id}`
 
 Hapus produk (soft delete).
 
@@ -207,7 +207,7 @@ Authorization: Bearer {token}
 ---
 
 ### 6. Get Product Categories
-**GET** `/api/v1/products/categories`
+**GET** `/api/products/categories`
 
 Mendapatkan daftar kategori unik dari produk tenant.
 
@@ -269,27 +269,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 - Produk yang dihapus menggunakan soft delete (tidak dihapus dari database)
 - SKU tidak harus unik, tergantung kebutuhan bisnis
 - Field `search` melakukan pencarian case-insensitive di name, description, dan SKU
-- Kategori bersifat free text, gunakan API `/api/v1/categories` untuk manajemen kategori terstruktur
+- Kategori bersifat free text, gunakan API `/api/categories` untuk manajemen kategori terstruktur
 
 ## 🔗 Related APIs
 
-- **Category API**: `/api/v1/categories` - Untuk manajemen kategori terstruktur
-- **Order API**: `/api/v1/orders` - Order menggunakan product_id
-- **Stock Management**: Update stock melalui PUT `/api/v1/products/{id}`
+- **Category API**: `/api/categories` - Untuk manajemen kategori terstruktur
+- **Order API**: `/api/orders` - Order menggunakan product_id
+- **Stock Management**: Update stock melalui PUT `/api/products/{id}`
 
 ## 📌 Example Workflows
 
 ### 1. Create Product with Category
 ```bash
 # Step 1: Create category (optional)
-POST /api/v1/categories
+POST /api/categories
 {
   "name": "Food",
   "description": "All food items"
 }
 
 # Step 2: Create product
-POST /api/v1/products
+POST /api/products
 {
   "name": "Nasi Goreng",
   "category": "Food",
@@ -301,18 +301,18 @@ POST /api/v1/products
 ### 2. Search and Filter
 ```bash
 # Search by name
-GET /api/v1/products?search=nasi
+GET /api/products?search=nasi
 
 # Filter by category
-GET /api/v1/products?category=Food
+GET /api/products?category=Food
 
 # Combine search and category
-GET /api/v1/products?category=Food&search=goreng
+GET /api/products?category=Food&search=goreng
 ```
 
 ### 3. Update Stock
 ```bash
-PUT /api/v1/products/1
+PUT /api/products/1
 {
   "stock": 75
 }
@@ -320,7 +320,7 @@ PUT /api/v1/products/1
 
 ### 4. Deactivate Product
 ```bash
-PUT /api/v1/products/1
+PUT /api/products/1
 {
   "is_active": false
 }

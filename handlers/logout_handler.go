@@ -29,7 +29,7 @@ func NewLogoutHandler(cfg *config.Config, auditTrailService *services.AuditTrail
 // @Security BearerAuth
 // @Success 200 {object} map[string]interface{} "Logout successful"
 // @Failure 401 {object} map[string]string "Unauthorized"
-// @Router /api/v1/logout [post]
+// @Router /api/logout [post]
 func (h *LogoutHandler) Handle(c *gin.Context) {
 	// Get user info from context (set by auth middleware)
 	userID, exists := c.Get("userID")

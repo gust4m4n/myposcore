@@ -6,11 +6,11 @@ Updated 5 list endpoints in MyPOSCore.postman_collection.json to support paginat
 ## ✅ Updated Endpoints
 
 ### 1. List Categories
-**Endpoint:** `GET /api/v1/categories`
+**Endpoint:** `GET /api/categories`
 
 **Updated URL with pagination:**
 ```
-{{base_url}}/api/v1/categories?page=1&page_size=10
+{{base_url}}/api/categories?page=1&page_size=10
 ```
 
 **Query Parameters:**
@@ -47,11 +47,11 @@ Updated 5 list endpoints in MyPOSCore.postman_collection.json to support paginat
 ---
 
 ### 2. List Products
-**Endpoint:** `GET /api/v1/products`
+**Endpoint:** `GET /api/products`
 
 **Updated URL with pagination:**
 ```
-{{base_url}}/api/v1/products?page=1&page_size=10
+{{base_url}}/api/products?page=1&page_size=10
 ```
 
 **Query Parameters:**
@@ -93,11 +93,11 @@ Updated 5 list endpoints in MyPOSCore.postman_collection.json to support paginat
 ---
 
 ### 3. List Users
-**Endpoint:** `GET /api/v1/users`
+**Endpoint:** `GET /api/users`
 
 **Updated URL with pagination:**
 ```
-{{base_url}}/api/v1/users?page=1&page_size=10
+{{base_url}}/api/users?page=1&page_size=10
 ```
 
 **Query Parameters:**
@@ -130,11 +130,11 @@ Updated 5 list endpoints in MyPOSCore.postman_collection.json to support paginat
 ---
 
 ### 4. List Tenants (Superadmin)
-**Endpoint:** `GET /api/v1/superadmin/tenants`
+**Endpoint:** `GET /api/superadmin/tenants`
 
 **Updated URL with pagination:**
 ```
-{{base_url}}/api/v1/superadmin/tenants?page=1&page_size=10
+{{base_url}}/api/superadmin/tenants?page=1&page_size=10
 ```
 
 **Query Parameters:**
@@ -173,11 +173,11 @@ Updated 5 list endpoints in MyPOSCore.postman_collection.json to support paginat
 ---
 
 ### 5. List Branches by Tenant (Superadmin)
-**Endpoint:** `GET /api/v1/superadmin/tenants/:tenant_id/branches`
+**Endpoint:** `GET /api/superadmin/tenants/:tenant_id/branches`
 
 **Example URL with pagination:**
 ```
-{{base_url}}/api/v1/superadmin/tenants/17/branches?page=1&page_size=10
+{{base_url}}/api/superadmin/tenants/17/branches?page=1&page_size=10
 ```
 
 **Query Parameters:**
@@ -249,32 +249,32 @@ All pagination parameters are **optional**:
 
 1. **Test default pagination:**
    ```
-   GET /api/v1/products
+   GET /api/products
    ```
    Should return page 1 with 10 items
 
 2. **Test custom page size:**
    ```
-   GET /api/v1/products?page=2&page_size=20
+   GET /api/products?page=2&page_size=20
    ```
    Should return page 2 with 20 items (if available)
 
 3. **Test max page size limit:**
    ```
-   GET /api/v1/products?page_size=200
+   GET /api/products?page_size=200
    ```
    Should automatically limit to 100 items
 
 4. **Test pagination with filters:**
    ```
-   GET /api/v1/products?category=Minuman&search=kopi&page=1&page_size=5
+   GET /api/products?category=Minuman&search=kopi&page=1&page_size=5
    ```
    Should apply filters AND pagination
 
 5. **Test invalid page numbers:**
    ```
-   GET /api/v1/products?page=0
-   GET /api/v1/products?page=-1
+   GET /api/products?page=0
+   GET /api/products?page=-1
    ```
    Should automatically default to page 1
 
@@ -315,13 +315,13 @@ For detailed pagination usage examples and frontend integration tips, refer to:
 
 **Before:**
 ```javascript
-const response = await fetch('/api/v1/products');
+const response = await fetch('/api/products');
 const products = response.data; // Direct access
 ```
 
 **After:**
 ```javascript
-const response = await fetch('/api/v1/products?page=1&page_size=10');
+const response = await fetch('/api/products?page=1&page_size=10');
 const products = response.data; // Still works
 const totalItems = response.total_items; // Now available
 const totalPages = response.total_pages; // Now available

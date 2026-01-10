@@ -197,7 +197,7 @@ Also converted old pagination format:
 ### Manual Test Results
 ```bash
 # Test Login
-curl -X POST http://localhost:8080/api/v1/auth/login \
+curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"tenant_code":"FAS","branch_code":"BR001","email":"admin@fashion.com","password":"test123"}'
 

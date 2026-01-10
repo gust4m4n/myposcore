@@ -35,7 +35,7 @@ func NewAuditTrailHandler(auditTrailService *services.AuditTrailService) *AuditT
 // @Param date_from query string false "Filter from date (YYYY-MM-DD)"
 // @Param date_to query string false "Filter to date (YYYY-MM-DD)"
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/audit-trails [get]
+// @Router /api/audit-trails [get]
 func (h *AuditTrailHandler) ListAuditTrails(c *gin.Context) {
 	// Get tenant ID from context
 	var tenantID *uint
@@ -163,7 +163,7 @@ func (h *AuditTrailHandler) ListAuditTrails(c *gin.Context) {
 // @Produce json
 // @Param id path int true "Audit Trail ID"
 // @Success 200 {object} dto.AuditTrailResponse
-// @Router /api/v1/audit-trails/{id} [get]
+// @Router /api/audit-trails/{id} [get]
 func (h *AuditTrailHandler) GetAuditTrailByID(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
@@ -228,7 +228,7 @@ func (h *AuditTrailHandler) GetAuditTrailByID(c *gin.Context) {
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Items per page" default(32)
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/audit-trails/entity/{entity_type}/{entity_id} [get]
+// @Router /api/audit-trails/entity/{entity_type}/{entity_id} [get]
 func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
 	entityType := c.Param("entity_type")
 	entityIDStr := c.Param("entity_id")
@@ -321,7 +321,7 @@ func (h *AuditTrailHandler) GetEntityAuditHistory(c *gin.Context) {
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Items per page" default(32)
 // @Success 200 {object} map[string]interface{}
-// @Router /api/v1/audit-trails/user/{user_id} [get]
+// @Router /api/audit-trails/user/{user_id} [get]
 func (h *AuditTrailHandler) GetUserActivityLog(c *gin.Context) {
 	userIDStr := c.Param("user_id")
 	userID, err := strconv.ParseUint(userIDStr, 10, 32)
